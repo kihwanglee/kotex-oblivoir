@@ -59,17 +59,15 @@ Oblivoir class also has its own commands for specifying Korean fonts.
 
 Please refer to the `oblivoir-test.tex` file provided by this package.
 
-License and copyright
----------------------
+License
+-------
 
 kotex-oblivoir is licensed under the LaTeX Project Public 
 License (LPPL).
-
-(C) Copyright 2006-2013 Kangsoo Kim <karnes@ktug.org>
 
 Contacts
 --------
 
 Please report any errors or suggestions to the package maintainer,
-Kihwang Lee <leekh@ktug.org>.
+Kihwang Lee <leekh@tug.org>.
 
