@@ -21,14 +21,14 @@ Call `oblivoir.cls` with class options as follows:
 
     \documentclass[<options>]{oblivoir}
 
-# Class options
+### Class options
 
 Oblivoir inherits many options from the memoir and underlying 
 Korean typesetting packages in addition to its own class options. 
 For a detailed description of the class options, please refer 
 to the included documentation (written in Korean).
 
-# Specifying Korean fonts
+### Specifying Korean fonts
 
 Specifying Korean fonts in oblivoir class depends on the Korean
 typesetting packages being used when compiling a document.
@@ -55,7 +55,7 @@ Oblivoir class also has its own commands for specifying Korean fonts.
     \setkorsansfont(<Bold>)(<Italic>){<Regular>}
     \setkormonofont{<Mono>}
 
-# Sample document
+### Sample document
 
 Please refer to the `oblivoir-test.tex` file provided by this package.
 
