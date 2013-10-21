@@ -69,5 +69,5 @@ Contacts
 --------
 
 Please report any errors or suggestions to the package maintainer,
-Kihwang Lee <leekh@tug.org>.
+Kihwang Lee <leekh@ktug.org>.
 
