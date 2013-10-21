@@ -4,9 +4,9 @@ kotex-oblivoir
 Introduction
 ------------
 
-This package contains the oblivoir class, which is a document class 
-based on the memoir class for typesetting Korean documents.  
-kotex-oblivoir comes with two sub-packages memhangul-ucs and memhangul-x
+This package contains the oblivoir class, a document class based on 
+the memoir class for typesetting Korean documents.  kotex-oblivoir 
+comes with two sub-packages memhangul-ucs and memhangul-x
 that provide interfaces between the memoir class and the Korean typesetting
 packages. 
 
@@ -25,7 +25,7 @@ Call `oblivoir.cls` with class options as follows:
 
 Oblivoir inherits many options from the memoir and underlying 
 Korean typesetting packages in addition to its own class options. 
-For a detailed description for the class options, please refer 
+For a detailed description of the class options, please refer 
 to the included documentation (written in Korean).
 
 # Specifying Korean fonts
@@ -57,7 +57,7 @@ Oblivoir class also has its own commands for specifying Korean fonts.
 
 # Sample document
 
-Please refer to the `oblivoir-test.tex` file.
+Please refer to the `oblivoir-test.tex` file provided by this package.
 
 License and copyright
 ---------------------
@@ -70,6 +70,6 @@ License (LPPL).
 Contacts
 --------
 
-Please report any errors or suggestions to the maintainer
+Please report any errors or suggestions to the package maintainer,
 Kihwang Lee <leekh@ktug.org>.
 
