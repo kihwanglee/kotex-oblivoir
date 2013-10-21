@@ -1,0 +1,1399 @@
+%%% file `memhangul-x.sty`
+%%    part of oblivoir v2
+%%
+\NeedsTeXFormat{LaTeX2e}
+\def\filedate{2013/10/26}
+\def\fileversion{11.7.15}
+\ProvidesPackage{memhangul-x}[\filedate Hangul Typography for (x)oblivoir]
+\typeout{Hangul Typography for (x)oblivoir}
+
+%% Options :
+
+\providecommand\DisabledOption[1]{%
+  \typeout{[#1] option to this class has been disabled!}}
+
+%%%% DisabledOptions
+\newif\if@interwordHWP\@interwordHWPfalse
+\DeclareOption{interwordHWP}{\DisabledOption{interwordHWP}}
+\newif\if@interworddefault\@interworddefaultfalse
+%\DeclareOption{interworddefault}{\DisabledOption{interworddefault}}
+\DeclareOption{interworddefault}{\@interworddefaulttrue}
+%\newif\if@finemath\@finemathfalse
+\DeclareOption{finemath}{\DisabledOption{finemath}}
+%\newif\if@nojosa\@nojosafalse
+\DeclareOption{nojosa}{\DisabledOption{nojosa}}
+%\newif\if@dvips{\@dvipsfalse}
+\DeclareOption{dvips}{\DisabledOption{dvips}}
+\DeclareOption{strictcharcheck}{\DisabledOption{strictcharcheck}}
+
+%%%% active options
+\newif\if@hsspace\@hsspacetrue
+\DeclareOption{nosetspace}{\@hsspacefalse}
+
+\newcommand\nosetspace{%
+  \@hsspacefalse
+}
+
+%\RequirePackage{ifluatex}
+%\RequirePackage{ifxetex}
+
+\newif\if@hsspacenoquote\@hsspacenoquotetrue
+\DeclareOption{quotespacing}{\@hsspacenoquotefalse}
+\newif\if@nonfrench\@nonfrenchfalse
+\DeclareOption{nonfrench}{\@nonfrenchtrue}
+\newif\if@hanja\@hanjafalse
+\DeclareOption{hanja}{\@hanjatrue}
+\newif\if@mathdisp\@mathdispfalse
+\DeclareOption{adjustmath}{\@mathdisptrue}
+
+\newif\if@arabicfrontmatter{\@arabicfrontmatterfalse}
+\DeclareOption{arabicfront}{\@arabicfrontmattertrue}
+\newif\if@defaulthangulpagestyle{\@defaulthangulpagestylefalse}
+\DeclareOption{hangulpagestyle}{\@defaulthangulpagestyletrue}
+\newif\if@pdfbookmark{\@pdfbookmarkfalse}
+\DeclareOption{pdfbookmark}{\@pdfbookmarktrue}
+
+\ifxetex
+%%% xetexko options
+\DeclareOption{gremph}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
+\DeclareOption{itemph}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
+%%% new option
+\DeclareOption{latinquote}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
+\DeclareOption{oldhangul}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
+\DeclareOption{manualfontspec}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
+\DeclareOption{nowinname}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
+\DeclareOption{unfonts}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
+\DeclareOption{nounfonts}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
+\else\ifluatex
+%%% luatexko options
+\DeclareOption{gremph}{\PassOptionsToPackage{\CurrentOption}{luatexko-xobfont}}
+\DeclareOption{itemph}{\PassOptionsToPackage{\CurrentOption}{luatexko-xobfont}}
+%%% new option
+\DeclareOption{latinquote}{\PassOptionsToPackage{\CurrentOption}{luatexko-xobfont}}
+\DeclareOption{oldhangul}{\PassOptionsToPackage{\CurrentOption}{luatexko-xobfont}}
+\DeclareOption{manualfontspec}{\PassOptionsToPackage{\CurrentOption}{luatexko-xobfont}}
+\DeclareOption{nowinname}{\PassOptionsToPackage{\CurrentOption}{luatexko-xobfont}}
+\DeclareOption{unfonts}{\PassOptionsToPackage{\CurrentOption}{luatexko-xobfont}}
+\DeclareOption{nounfonts}{\PassOptionsToPackage{\CurrentOption}{luatexko-xobfont}}
+\else
+%%% pdftex options
+\DeclareOption{gremph}{\DisabledOption{gremph}}
+\DeclareOption{itemph}{\DisabledOption{itemph}}
+\DeclareOption{latinquote}{\DisabledOption{latinquote}}
+\DeclareOption{oldhangul}{\DisabledOption{oldhangul}}
+\DeclareOption{manualfontspec}{\DisabledOption{manualfontspec}}
+\DeclareOption{nowinname}{\DisabledOption{nowinname}}
+\DeclareOption{unfonts}{\DisabledOption{unfonts}}
+\DeclareOption{nounfonts}{\DisabledOption{nounfonts}}
+\fi\fi
+
+%%% figtabcapt
+\newif\if@figtabcapt@\@figtabcapt@false
+\DeclareOption{figtabcapt}{\@figtabcapt@true}
+
+\newif\ifKOTEXCJK\KOTEXCJKtrue
+\DeclareOption{cjk}{\KOTEXCJKtrue}
+\DeclareOption{dhucs}{\KOTEXCJKfalse}
+\DeclareOption{uset1font}{\PassOptionsToPackage{usecjkt1font}{cjkutf8-ko}}
+\DeclareOption{usedotemph}{\PassOptionsToPackage{\CurrentOption}{cjkutf8-ko}}
+
+\ProcessOptions
+
+\ifluatex
+  \RequirePackage{luatexko}
+  \RequirePackage{luatexko-xobfont}
+\else\ifxetex
+  \RequirePackage{xetexko-var}
+  \else
+	\ifKOTEXCJK
+     \RequirePackage{cjkutf8-ko}
+%    \else
+%     \RequirePackage{dhucs}
+    \fi
+\fi\fi
+
+\ifKOTEXCJK\else
+	\RequirePackage{xob-dotemph}
+\fi
+
+%% define memh@hu
+\newdimen\memh@hu\memh@hu=0.059375em
+
+\newif\if@inthekoreancontext\@inthekoreancontexttrue
+
+%% memoir [ms] option
+\ifmsdoc
+\newcommand*\MSNormalSize{
+  \let\large\normalsize
+  \let\Large\normalsize
+  \let\LARGE\normalsize
+  \let\huge\normalsize
+  \let\Huge\normalsize
+  \let\HUGE\normalsize
+  \let\small\normalsize
+  \let\scriptsize\normalsize
+  \let\footnotesize\normalsize
+  \let\tiny\normalsize
+ }
+\AtBeginDocument{
+ \renewcommand{\msdoublespacing}{%
+    \renewcommand{\baselinestretch}{1.75}\large\normalsize}
+ \renewcommand{\mssinglespacing}{%
+    \renewcommand{\baselinestretch}{1.1}\large\normalsize}
+ \renewcommand{\familydefault}{cmtt}
+ \renewcommand{\rmdefault}{cmtt}
+ \renewcommand{\sfdefault}{cmtt}
+ \renewcommand{\bfdefault}{m}
+ \renewcommand{\itdefault}{n}
+ \renewcommand{\sldefault}{n}
+ \renewcommand{\scdefault}{n}
+ \renewcommand{\baselinestretch}{1.75}
+ \@twocolumnfalse
+ \onecolumn
+ \sloppy
+ \@twosidefalse
+ \raggedbottom
+ \pagestyle{plain}
+}
+\fi
+
+\if@pdfbookmark
+  \@ifpackageloaded{hyperref}{% hyperref is already loaded
+  	\typeout{hyperref is already loaded!}%
+	\RequirePackage{memhfixc}}%
+	{% 
+     \RequirePackage{hyperref}
+	 \RequirePackage{memhfixc}}
+\fi
+
+%%% interword
+\if@interworddefault
+ \RequirePackage{memucs-interword-x}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 한글 관련 이름 설정 (not from hangul.sty)
+
+\if@hanja
+\def\today{\number\year 年~\number\month 月~\number\day 日}
+\def\enclname{同封物}
+\def\ccname{寫本}
+\def\headtoname{受信人}
+\def\seename{\을~參照}
+\def\alsoname{\을~參照}
+\def\contentsname{目~次}
+\def\listfigurename{圖~目次}
+\def\listtablename{表~目次}
+\def\refname{參考~文獻}
+\def\indexname{索~引}
+\def\tablename{表}
+\def\figurename{圖}
+\def\abstractname{要~約}
+\def\bibname{參考~圖書}
+\def\appendixname{附錄}
+\def\subappendixname{附錄}
+\def\appendixtocname{附~錄}
+\def\appendixpagename{附~錄} 
+\def\partname{篇}
+\def\chaptername{章}
+\def\sectionname{節}
+\def\colorlayer{色相레이어}
+\def\glossaryname{語彙}
+\def\figurerefname{圖}
+\def\tablerefname{表}
+\def\pagename{面}
+\def\pagerefname{面}
+\def\partrefname{篇}
+\def\chapterrefname{章}
+\def\sectionrefname{\S}
+\else
+\def\today{\number\year 년~\number\month 월~\number\day 일}
+\def\enclname{동봉물}
+\def\ccname{사본}
+\def\headtoname{받는이}
+\def\seename{\을~참조}
+\def\alsoname{\을~함께~참조}
+\def\contentsname{차~례}
+\def\listfigurename{그림~차례}
+\def\listtablename{표~차례}
+\def\refname{참고~문헌}
+\def\indexname{찾아보기}
+\def\tablename{표}
+\def\figurename{그림}
+\def\abstractname{요~약}
+\def\bibname{참고~문헌}
+\def\appendixname{부록}
+\def\subappendixname{부록}
+\def\appendixtocname{부~록}
+\def\appendixpagename{부~록} 
+\def\partname{편}
+\def\chaptername{장}
+\def\sectionname{절}
+\def\colorlayer{환등판~색상}
+\def\glossaryname{용어집}
+\def\figurerefname{그림}
+\def\tablerefname{표}
+\def\pagename{페이지}
+\def\pagerefname{페이지}
+\def\partrefname{편}
+\def\chapterrefname{장}
+\def\sectionrefname{\S}
+\fi
+
+%% \marginparswitchtrue/false
+\providecommand{\marginparswitchtrue}{\@mparswitchtrue}
+\providecommand{\marginparswitchfalse}{\@mparswitchfalse}
+\providecommand{\reversemargintrue}{\@reversemargintrue}
+\providecommand{\reversemarginfalse}{\@reversemarginfalse}
+
+%% select textwidth with chars
+\def\testh@ng@lch@r@cters{가갸거겨고교구규그기}
+\newlength\t@nch@ars
+\newcommand*\setxxxlength[2]{%
+  \setbox0\hbox{\testh@ng@lch@r@cters}\setlength\t@nch@ars{\wd0}%
+  \@ifundefined{#1length}{\expandafter\newlength\csname #1length\endcsname}{}%
+  \expandafter\setlength\csname #1length\endcsname{#2\t@nch@ars}%
+  \expandafter\divide\csname #1length\endcsname by 10%
+}
+
+%%% kscntformat
+%%% HLaTeX의 \kscntformat 명령을 흉내냄
+%%% \kscntformat{section}{제}{절} 형식으로 쓴다.
+\newsavebox{\tmp@XXbox}
+\newdimen\tmp@XXdim
+\def\kscntformat#1#2#3{%
+	\sbox{\tmp@XXbox}{#2\expandafter\number\csname c@#1\endcsname#3}%
+	\setlength\tmp@XXdim{\wd\tmp@XXbox}\advance\tmp@XXdim by1em%
+	\expandafter\def\csname the#1\endcsname{#2\expandafter\number\csname c@#1\endcsname#3}%
+	\expandafter\renewcommand\csname cft#1numwidth\endcsname{\tmp@XXdim}%
+	\expandafter\renewcommand\csname cft#1presnum\endcsname{}%
+	\expandafter\renewcommand\csname cft#1aftersnum\endcsname{}%
+}
+
+\AtBeginDocument{%
+\ifnokorean\else
+\ifkosection
+\kscntformat{section}{제\ob@onethirdspace }{\ob@onethirdspace 절}
+\renewcommand\thesubsection{\arabic{section}.\arabic{subsection}}
+\fi\fi
+}
+
+%%
+%% 편, 장 섹션 타이틀 재설정
+%% 절의 섹션 타이틀은 수정하지 않음.
+%%
+
+\let\@CHAPAPP\@chapapp
+\def\refreshprepostchapters{%
+  \if@hanja
+     \def\pre@chapter{第}%
+  \else
+     \def\pre@chapter{제}%
+  \fi
+  \let\@chapapp\@CHAPAPP
+  \def\post@chapter{\@chapapp}%
+}
+\refreshprepostchapters
+%\renewcommand\@chapapp{장}
+\def\prechapternum{\pre@chapter}
+\def\postchapternum{\post@chapter}
+\newcommand\hchaptertitlehead{\pre@chapter\,\thechapter\,\post@chapter}
+\providecommand\partmark[1]{}
+
+\let\pre@part\pre@chapter
+\let\post@part\partname
+%\renewcommand{\printpartname}{\partnamefont \pre@part}
+\renewcommand{\printpartname}{} % disabled.
+\renewcommand{\partnamenum}{\space}
+\def\prepartnum{\partnamefont \pre@part}
+\def\postpartnum{\partnamefont \post@part}
+\newcommand\hparttitlehead{\pre@part\partnamenum\thepart\partnamenum\post@part}
+
+%% PART
+\long\def\@part[#1]#2{%
+  \M@gettitle{#1}%
+  \ifnum \c@secnumdepth >-2\relax
+    \refstepcounter{part}%
+    \addcontentsline{toc}{part}%
+      {\protect\partnumberline{\hparttitlehead}#1}%
+  \else
+    \addcontentsline{toc}{part}{#1}%
+  \fi
+%  \markboth{}{}%
+  \ifx#1\@empty\partmark{#2}\else\partmark{#1}\fi
+  {\centering
+   \interlinepenalty \@M
+   \normalfont
+   \ifnum \c@secnumdepth >-2\relax
+     \prepartnum \partnamenum \printpartnum \partnamenum \postpartnum
+     \midpartskip
+   \fi
+   \printparttitle{#2}\par}%
+  \@endpart}
+
+\def\@spart#1{%
+  \M@gettitle{#1}%
+  {\centering
+   \interlinepenalty \@M
+   \normalfont
+   \printparttitle{#1}\par}%
+  \@endpart}
+
+\def\@endpart{\afterpartskip
+  \if@twoside
+    \if@openright
+      \null
+      \thispagestyle{empty}%
+      \newpage
+    \fi
+  \fi
+  \if@tempswa
+    \twocolumn
+  \fi} 
+
+%% CHAPTER
+%%%%%%%%%%%
+%% we don't adapt mempatch 3.6, just retrieved to memoir-original manner.
+\renewcommand{\@m@mchapter}[1][\@empty]{%
+  \def\ch@pt@c{#1}% capture first optional arg
+  \@dblarg{\@chapter}}
+%%\def\m@m@empty{\@empty} 
+
+\def\@chapter[#1]#2{%
+  \ifx\ch@pt@c\m@m@empty % no optional args
+    \def\f@rtoc{#1}%
+    \def\f@rhdr{#1}%
+  \else                  % at least one opt arg
+    \def\f@rtoc{\ch@pt@c}%
+    \nametest{#1}{#2}%
+    \ifsamename          % one opt arg
+      \def\f@rhdr{\ch@pt@c}%
+    \else                % two opt args
+      \def\f@rhdr{#1}%
+    \fi
+  \fi 
+  \ifnum \c@secnumdepth >\m@ne
+    \if@mainmatter
+      \refstepcounter{chapter}%
+    \fi
+  \fi
+  \chaptermark{\f@rhdr}%
+  \ifartopt
+    \@makechapterhead{#2}%
+    \@afterheading
+  \else
+    \insertchapterspace
+    \if@twocolumn
+      \@topnewpage[\@makechapterhead{#2}]%
+    \else
+      \@makechapterhead{#2}%
+    \fi
+    \@afterheading
+  \fi
+  \ifnum \c@secnumdepth >\m@ne
+    \if@mainmatter
+      \addcontentsline{toc}{chapter}{%
+%        \protect\chapternumberline{\thechapter}\f@rtoc}%
+        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+    \else
+      \addcontentsline{toc}{chapter}{\f@rtoc}%
+    \fi
+  \else
+    \addcontentsline{toc}{chapter}{\f@rtoc}%
+  \fi
+  \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
+} 
+
+\def\@makechapterhead#1{%
+  \chapterheadstart%  \vspace*{50\p@}%
+  {\parindent \z@ \raggedright \normalfont
+   \ifnum \c@secnumdepth >\m@ne
+     \if@mainmatter
+       \memucsinterwordchapterskiphook
+%       \printchaptername \chapternamenum \printchapternum \chapternamenum \postchapternum
+       \prechapternum \chapternamenum \printchapternum \chapternamenum \postchapternum
+       \afterchapternum % \par\nobreak \vskip 20\p@
+     \else
+       \printchapternonum
+     \fi
+   \else
+     \printchapternonum
+   \fi
+   \interlinepenalty\@M
+   \printchaptertitle{#1} % \Huge \bfseries #1
+    \afterchaptertitle % \par\nobreak \vskip 40\p@
+  }}
+
+\def\@makeschapterhead#1{%
+  \chapterheadstart
+  {\parindent \z@ \raggedright \normalfont \memucsinterwordchapterskiphook
+   \printchapternonum
+   \interlinepenalty\@M
+   \printchaptertitle{#1}
+   \afterchaptertitle
+  }
+}
+
+\renewcommand{\@chs@def@ult}{%
+ \def\chapterheadstart{\vspace*{\beforechapskip}}
+%  \def\printchaptername{\chapnamefont \@chapapp}
+% \def\printchaptername{\chapnamefont \pre@chapter}
+ \def\printchaptername{} % disabled.
+%  \def\chapternamenum{\space}
+ \def\chapternamenum{\,}
+ \def\printchapternum{\chapnumfont \thechapter}
+ \def\prechapternum{\chapnamefont \pre@chapter}
+ \def\postchapternum{\chapnamefont \post@chapter}
+ \def\afterchapternum{\par\nobreak\vskip \midchapskip}
+ \def\printchapternonum{}
+ \def\printchaptertitle##1{\chaptitlefont ##1}
+ \def\postchaptertitle{\post@chapter}
+ \def\afterchaptertitle{\par\nobreak\vskip \afterchapskip}
+}
+
+%% l@chapter, l@part
+
+\setlength{\cftpartnumwidth}{4.5em}
+\setlength{\cftchapternumwidth}{4.0em}
+%% for compatibility with mempatch 3.12
+\def\@chapapp@head{}% 
+
+%% SECTION
+
+\renewcommand{\section}{%
+  \sechook\memucsinterwordhook%
+  \@startsection{section}{1}%  level 1
+      {\secindent}%            heading indent
+      {\beforesecskip}%        skip before the heading
+      {\aftersecskip}%         skip after the heading
+      {\normalfont\secheadstyle}} % font 
+
+%% PAGESTYLES
+%% headings, ruled, Ruled, companioin을 수정함
+
+%% pagestyle headings
+\if@twoside
+  \makepagestyle{headings}
+    \makepsmarks{headings}{%
+      \let\@mkboth\markboth
+      \def\chaptermark##1{%
+        \markboth{\MakeUppercase{%
+          \ifnum \c@secnumdepth >\m@ne
+            \if@mainmatter
+              \hchaptertitlehead \enskip\ %
+            \fi
+          \fi
+          ##1}}{}}%
+      \def\tocmark{\markboth{\MakeUppercase{\contentsname}}{}}%
+      \def\lofmark{\markboth{\MakeUppercase{\listfigurename}}{}}%
+      \def\lotmark{\markboth{\MakeUppercase{\listtablename}}{}}%
+      \def\bibmark{\markboth{\MakeUppercase{\bibname}}{}}%
+      \def\indexmark{\markboth{\MakeUppercase{\indexname}}{}}%
+      \def\sectionmark##1{%
+        \markright{\MakeUppercase{%
+          \ifnum \c@secnumdepth > \z@
+            \thesection \enskip\ %
+          \fi
+          ##1}}}%
+    }
+    \makeevenhead{headings}{\thepage}{}{\normalfont\slshape\leftmark}
+    \makeoddhead{headings}{\normalfont\slshape\rightmark}{}{\thepage}
+\else
+  \makepagestyle{headings}
+    \makepsmarks{headings}{%
+      \let\@mkboth\markboth
+      \def\chaptermark##1{%
+        \markright{\MakeUppercase{%
+          \ifnum \c@secnumdepth >\m@ne
+            \if@mainmatter
+              \hchaptertitlehead \enskip\ %
+            \fi
+          \fi
+          ##1}}}%
+      \def\tocmark{\markright{\MakeUppercase{\contentsname}}}%
+      \def\lofmark{\markright{\MakeUppercase{\listfigurename}}}%
+      \def\lotmark{\markright{\MakeUppercase{\listtablename}}}%
+      \def\bibmark{\markright{\MakeUppercase{\bibname}}}%
+      \def\indexmark{\markright{\MakeUppercase{\indexname}}}%
+    }
+    \makeoddhead{headings}{\normalfont\slshape\rightmark}{}{\thepage}
+\fi 
+
+%% Pagestyle ruled
+
+\makepagestyle{ruled}
+\makeevenfoot{ruled}{\thepage}{}{}
+\makeoddfoot{ruled}{}{}{\thepage}
+\makeheadrule{ruled}{\textwidth}{\normalrulethickness}
+\renewcommand{\@ruledmarks}{%
+  \let\@mkboth\markboth
+  \def\chaptermark##1{%
+    \markboth{%
+      \ifnum \c@secnumdepth >\m@ne
+        \if@mainmatter
+          \hchaptertitlehead \enskip\ %
+        \fi
+      \fi
+      ##1}{}}
+  \def\sectionmark##1{\markright{##1}}
+  \def\tocmark{\markboth{\contentsname}{}}
+  \def\lofmark{\markboth{\listfigurename}{}}
+  \def\lotmark{\markboth{\listtablename}{}}
+  \def\bibmark{\markboth{\bibname}{}}
+  \def\indexmark{\markboth{\indexname}{}}
+}
+\makepsmarks{ruled}{\@ruledmarks}
+\makeevenhead{ruled}{\normalfont\scshape\leftmark}{}{}
+\makeoddhead{ruled}{}{}{\normalfont\rightmark}  
+
+%% Pagestyle Ruled
+
+\makepagestyle{Ruled}
+\makerunningwidth{Ruled}{1.1\textwidth}
+\makeheadposition{Ruled}{flushright}{flushleft}{flushright}{flushleft}
+\makeevenfoot{Ruled}{\thepage}{}{}
+\makeoddfoot{Ruled}{}{}{\thepage}
+\makeheadrule{Ruled}{1.1\textwidth}{\normalrulethickness}
+\makepsmarks{Ruled}{\@ruledmarks}
+\makeevenhead{Ruled}{\normalfont\scshape\leftmark}{}{}
+\makeoddhead{Ruled}{}{}{\normalfont\rightmark}
+
+%% Pagestyle companion
+
+%\makepagestyle{companion}
+%\setlength{\headwidth}{\textwidth}
+%  \addtolength{\headwidth}{\marginparsep}
+%  \addtolength{\headwidth}{\marginparwidth}
+%\makerunningwidth{companion}{\headwidth}
+%\makeheadrule{companion}{\headwidth}{\normalrulethickness}
+%\makeheadposition{companion}{flushright}{flushleft}{}{}
+%\makepsmarks{companion}{%
+%  \let\@mkboth\markboth
+%  \def\chaptermark##1{\markboth{##1}{##1}}    % left mark & right marks
+%  \def\sectionmark##1{\markright{%
+%    \ifnum \c@secnumdepth>\z@
+%      \thesection. \ %
+%    \fi
+%    ##1}}
+%  \def\tocmark{\markboth{\contentsname}{\contentsname}}
+%  \def\lofmark{\markboth{\listfigurename}{\listfigurename}}
+%  \def\lotmark{\markboth{\listtablename}{\listtablename}}
+%  \def\bibmark{\markboth{\bibname}{\bibname}}
+%  \def\indexmark{\markboth{\indexname}{\indexname}}
+%}
+%\makeevenhead{companion}{\normalfont\bfseries\thepage}{}%
+%                        {\normalfont\bfseries\leftmark}
+%\makeoddhead{companion}{\normalfont\bfseries\rightmark}{}%
+%                       {\normalfont\bfseries\thepage} 
+
+%% 한글 pagestyle hangul
+\makepagestyle{hangul}
+\newdimen\pghgheadwidth\let\pghgheadwidth=\textwidth
+\makerunningwidth{hangul}{\pghgheadwidth}
+%\makeheadrule{hangul}{\pghgheadwidth}{0pt}
+\makeheadposition{hangul}{flushleft}{flushright}{flushleft}{flushright}
+\def\@hgpsmarks{%
+      \let\@mkboth\markboth
+      \def\chaptermark##1{%
+        \markboth{\scshape
+          \ifnum \c@secnumdepth >\m@ne
+            \if@mainmatter
+              \hchaptertitlehead \enskip\ %
+            \fi
+          \fi
+          ##1}{}}%
+      \def\tocmark{\markboth{\scshape\contentsname}{}}%
+      \def\lofmark{\markboth{\scshape\listfigurename}{}}%
+      \def\lotmark{\markboth{\scshape\listtablename}{}}%
+      \def\bibmark{\markboth{\scshape\bibname}{}}%
+      \def\indexmark{\markboth{\scshape\indexname}{}}%
+      \def\sectionmark##1{%
+        \markright{\scshape
+%% disabled printing \thesection.
+%          \ifnum \c@secnumdepth >\z@
+%            \thesection \enskip\ %
+%          \fi
+          ##1}}%
+    }
+\makepsmarks{hangul}{\@hgpsmarks}
+\makeoddhead{hangul}{}{}{\normalfont\small\rightmark~\makebox[2em][r]{\normalfont\normalsize\sffamily\thepage}}
+\makeevenhead{hangul}{\makebox[2em][l]{\normalfont\normalsize\sffamily\thepage}~\normalfont\small\leftmark}{}{}
+
+%%% CHAPTERSTYLE
+
+\makechapterstyle{default}{%
+  \renewcommand{\post@chapter}{장}%
+  \renewcommand{\chapnamefont}{\normalfont\huge\bfseries}
+  \renewcommand{\chapnumfont}{\normalfont\huge\bfseries}
+  \renewcommand{\chaptitlefont}{\normalfont\Huge\bfseries}
+  \setlength{\beforechapskip}{50pt}
+  \setlength{\midchapskip}{20pt}
+  \setlength{\afterchapskip}{40pt}
+}
+\chapterstyle{default}
+
+%% for Appendix
+\makechapterstyle{appendixdefault}{%
+  \renewcommand{\chapnamefont}{\normalfont\huge\bfseries}
+  \renewcommand{\chapnumfont}{\normalfont\huge\bfseries}
+  \renewcommand{\chaptitlefont}{\normalfont\Huge\bfseries}
+%  \renewcommand{\printchaptername}{\chapnumfont\@chapapp}
+  \renewcommand{\prechapternum}{\chapnumfont\@chapapp}
+  \renewcommand{\postchapternum}{}
+  \renewcommand{\chapternamenum}{\enskip}
+  \setlength{\beforechapskip}{50pt}
+  \setlength{\midchapskip}{20pt}
+  \setlength{\afterchapskip}{40pt}
+}
+
+\makechapterstyle{section}{%
+%  \renewcommand{\printchaptername}{}
+  \renewcommand{\chapternamenum}{\enskip}
+  \renewcommand{\prechapternum}{}
+  \renewcommand{\postchapternum}{}
+  \renewcommand{\chapnumfont}{\normalfont\Huge\bfseries}
+  \renewcommand{\printchapternum}{\chapnumfont \thechapter\space}
+  \renewcommand{\afterchapternum}{}
+}
+
+%% for appendix
+\makechapterstyle{appendixsection}{%
+%  \renewcommand{\printchaptername}{\chapnumfont\@chapapp}
+  \renewcommand{\chapternamenum}{\enskip}
+  \renewcommand{\prechapternum}{\chapnumfont\@chapapp}
+  \renewcommand{\postchapternum}{}
+  \renewcommand{\chapnumfont}{\normalfont\Huge\bfseries}
+  \renewcommand{\printchapternum}{\chapnumfont \thechapter\space}
+  \renewcommand{\afterchapternum}{}
+}
+
+\makechapterstyle{article}{%
+  \renewcommand{\chapterheadstart}{\vspace{\beforechapskip}}
+  \setlength{\beforechapskip}{3.5ex \@plus 1ex \@minus .2ex}
+  \setlength{\afterchapskip}{2.3ex \@plus .2ex}
+%  \renewcommand{\printchaptername}{}
+  \renewcommand{\prechapternum}{}
+  \renewcommand{\chapternamenum}{}
+  \renewcommand{\postchapternum}{}
+  \renewcommand{\chaptitlefont}{\normalfont\Large\bfseries}
+  \renewcommand{\chapnumfont}{\normalfont\Large\bfseries}
+  \renewcommand{\printchapternum}{\chapnumfont \thechapter\quad}
+  \renewcommand{\afterchapternum}{}
+}
+
+\makechapterstyle{hangnum}{%
+  \renewcommand{\chapnumfont}{\chaptitlefont}
+  \settowidth{\chapindent}{\chapnumfont 999}
+%  \renewcommand{\printchaptername}{}
+  \renewcommand{\chapternamenum}{}
+  \renewcommand{\prechapternum}{}
+  \renewcommand{\postchapternum}{}
+  \renewcommand{\printchapternum}{%
+    \noindent\llap{\makebox[\chapindent][l]{\chapnumfont \thechapter}}}
+  \renewcommand{\afterchapternum}{}
+}
+
+%\newlength{\chapindent}
+
+\makechapterstyle{companion}{%
+  \chapterstyle{default}
+  \renewcommand*{\chapnamefont}{\normalfont\LARGE\scshape}
+%  \renewcommand*{\printchaptername}{\raggedleft\chapnamefont \@chapapp}
+  \renewcommand*{\prechapternum}{\raggedleft\chapnamefont \pre@chapter}
+  \renewcommand*{\chapnumfont}{\normalfont\Huge}
+  \setlength{\chapindent}{\marginparsep}
+  \addtolength{\chapindent}{\marginparwidth}
+  \renewcommand*{\printchaptertitle}[1]{%
+    \begin{adjustwidth}{}{-\chapindent}
+      \raggedleft \chaptitlefont ##1\par\nobreak
+    \end{adjustwidth}}} 
+
+%% for appendix.
+\makechapterstyle{appendixcompanion}{%
+  \renewcommand{\chapnamefont}{\normalfont\LARGE\scshape}
+  \renewcommand{\prechapternum}{\raggedleft\chapnamefont \@chapapp}
+%  \renewcommand{\printchaptername}{\raggedleft\chapnamefont \pre@chapter}
+  \renewcommand{\chapnumfont}{\normalfont\Huge}
+  \renewcommand{\postchapternum}{}
+  \setlength{\chapindent}{\marginparsep}
+  \addtolength{\chapindent}{\marginparwidth}
+  \renewcommand{\printchaptertitle}[1]{%
+    \begin{adjustwidth}{}{-\chapindent}
+      \raggedleft \chaptitlefont ##1\par\nobreak
+    \end{adjustwidth}}
+}
+
+\makechapterstyle{demo}{
+%  \renewcommand{\printchaptername}{\centering}
+  \renewcommand{\prechapternum}{\centering}
+  \renewcommand{\printchapternum}{\chapnumfont \numtoName{\c@chapter}}
+  \renewcommand{\postchapternum}{}
+  \renewcommand{\chaptitlefont}{\normalfont\Huge\sffamily}
+  \renewcommand{\printchaptertitle}[1]{%
+    \hrule\vskip\onelineskip \raggedleft \chaptitlefont ##1}
+  \renewcommand{\afterchaptertitle}{\vskip\onelineskip \hrule\vskip \afterchapskip}
+}
+
+\makechapterstyle{demovar}{
+%  \renewcommand{\printchaptername}{\centering}
+  \renewcommand{\prechapternum}{\centering}
+  \renewcommand{\printchapternum}{\chapnumfont \hNum{chapter}}
+  \renewcommand{\postchapternum}{\post@chapter}
+  \renewcommand{\chaptitlefont}{\normalfont\Huge\sffamily}
+  \renewcommand{\printchaptertitle}[1]{%
+    \hrule\vskip\onelineskip \raggedleft \chaptitlefont ##1}
+  \renewcommand{\afterchaptertitle}{\vskip\onelineskip \hrule\vskip \afterchapskip}
+}
+
+%% for appendix
+\makechapterstyle{appendixdemo}{
+%  \renewcommand{\printchaptername}{\centering\chapnumfont\@chapapp}
+  \renewcommand{\prechapternum}{\centering\chapnumfont\@chapapp}
+  \renewcommand{\printchapternum}{\chapnumfont \@Alph\c@chapter}
+  \renewcommand{\postchapternum}{\ }
+  \renewcommand{\chaptitlefont}{\normalfont\Huge\sffamily}
+  \renewcommand{\printchaptertitle}[1]{%
+    \hrule\vskip\onelineskip \raggedleft \chaptitlefont ##1}
+  \renewcommand{\afterchaptertitle}{\vskip\onelineskip \hrule\vskip \afterchapskip}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%% appendix %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\set@appendix@chapsec{%
+   %%% SECTION in APPENDIX
+   \renewcommand{\section}{%
+   \sechook\memucsinterwordhook%
+   \@startsection{section}{1}%  level 1
+      {\secindent}%            heading indent
+      {\beforesecskip}%        skip before the heading
+      {\aftersecskip}%         skip after the heading
+      {\normalfont\secheadstyle}} % font 
+ \def\M@sect##1##2##3##4##5##6[##7][##8]##9{%
+  \ifheadnameref\M@gettitle{##8}\else\M@gettitle{##7}\fi
+  \ifnum ##2>\c@secnumdepth
+    \let\@svsec\@empty
+  \else
+    \refstepcounter{APP##1}%
+    \protected@edef\@svsec{\@seccntformat{##1}\relax}%
+  \fi
+  \@tempskipa ##5\relax
+  \ifdim \@tempskipa>\z@
+    \begingroup
+      ##6{%
+      \@hangfrom{\hskip ##3\relax\@svsec}%
+        \interlinepenalty \@M ##9\@@par}%
+    \endgroup
+    \csname ##1mark\endcsname{##8}%
+    \addcontentsline{toc}{##1}{%
+      \ifnum ##2>\c@secnumdepth \else
+        \protect\numberline{\noexpand\protect\csname the##1\endcsname}%
+      \fi
+      ##7}%
+  \else
+    \def\@svsechd{%
+      ##6{\hskip ##3\relax
+     \@svsec ##9}%
+     \csname ##1mark\endcsname{##8}%
+     \addcontentsline{toc}{##1}{%
+       \ifnum ##2>\c@secnumdepth \else
+        \protect\numberline{\csname the##1\endcsname}%
+       \fi
+       ##7}}%
+  \fi
+  \@xsect{##5}}%
+}
+
+\def\restorechapsec{%
+   %%% SECTION in APPENDIX
+   \renewcommand{\section}{%
+   \sechook\memucsinterwordhook%
+   \@startsection{section}{1}%  level 1
+      {\secindent}%            heading indent
+      {\beforesecskip}%        skip before the heading
+      {\aftersecskip}%         skip after the heading
+      {\normalfont\secheadstyle}} % font 
+ \def\M@sect##1##2##3##4##5##6[##7][##8]##9{%
+  \ifheadnameref\M@gettitle{##8}\else\M@gettitle{##7}\fi
+  \ifnum ##2>\c@secnumdepth
+    \let\@svsec\@empty
+  \else
+    \refstepcounter{##1}%
+    \protected@edef\@svsec{\@seccntformat{##1}\relax}%
+  \fi
+  \@tempskipa ##5\relax
+  \ifdim \@tempskipa>\z@
+    \begingroup
+      ##6{%
+      \@hangfrom{\hskip ##3\relax\@svsec}%
+        \interlinepenalty \@M ##9\@@par}%
+    \endgroup
+    \csname ##1mark\endcsname{##8}%
+    \addcontentsline{toc}{##1}{%
+      \ifnum ##2>\c@secnumdepth \else
+        \protect\numberline{\noexpand\protect\csname the##1\endcsname}%
+      \fi
+      ##7}%
+  \else
+    \def\@svsechd{%
+      ##6{\hskip ##3\relax
+     \@svsec ##9}%
+     \csname ##1mark\endcsname{##8}%
+     \addcontentsline{toc}{##1}{%
+       \ifnum ##2>\c@secnumdepth \else
+        \protect\numberline{\csname the##1\endcsname}%
+       \fi
+       ##7}}%
+  \fi
+  \@xsect{##5}}
+}
+
+\renewcommand{\appendix}{\par
+%  \setcounter{chapter}{0}%
+%  \setcounter{section}{0}%
+%  \gdef\@chapapp{\appendixname}%
+%  \gdef\thechapter{\@Alph\c@chapter}%
+  \set@appendix@chapter
+  \anappendixtrue
+  \chapterstyle{appendixdefault}%
+}
+
+\newcounter{APPchapter}\setcounter{APPchapter}{0}%
+\newcounter{APPsection}[APPchapter]\setcounter{APPsection}{0}%
+\newcounter{APPsubsection}[APPsection]\setcounter{APPsubsection}{0}%
+
+\def\set@appendix@chapter{%
+  \gdef\@chapapp{\appendixname}%
+  \gdef\thechapter{\Alph{APPchapter}}%
+  \gdef\thesection{\thechapter.\arabic{APPsection}}% 
+%  \counterwithout{figure}{chapter}\counterwithout{table}{chapter}%
+  \counterwithin{figure}{APPchapter}\counterwithin{table}{APPchapter}%
+  \counterwithin{equation}{APPchapter}%
+  \renewcommand\thefigure{\thechapter.\arabic{figure}}%
+  \renewcommand\thetable{\thechapter.\arabic{table}}%
+  \renewcommand\theequation{\thechapter.\arabic{equation}}%
+  \set@appendix@chapsec
+  \renewcommand\hchaptertitlehead{\appendixname\:\thechapter}%
+}
+
+%%% here, I will renewcommand chapterstyle,
+%%% to recover chapterstyle after appendices.
+\renewcommand{\chapterstyle}[1]{%
+  \@nameuse{chs@#1}%
+  \ifanappendix\else\gdef\CURR@chpstyle{#1}\fi
+}
+
+\def\restore@appendices@chapter{%
+  \refreshprepostchapters
+  \gdef\thechapter{\arabic{chapter}}%
+  \gdef\thesection{\thechapter.\arabic{section}}%
+  \def\hchaptertitlehead{\pre@chapter\:\thechapter}%
+  \counterwithin{figure}{chapter}\counterwithin{table}{chapter}%
+  \restorechapsec
+  \@ifundefined{CURR@chapstyle}{\chapterstyle{default}}%
+     {\expandafter\expandafter\chapterstyle{\CURR@chapstyle}}%
+}
+
+\renewcommand{\@resets@pp}{%
+  \par
+  \@ppsavesec
+%  \setcounter{section}{0}%
+%  \setcounter{chapter}{0}%
+%  \renewcommand\@chapapp{\appendixname}%
+%  \renewcommand\thechapter{\@Alph\c@chapter}%
+  \set@appendix@chapter
+  \chapterstyle{appendixdefault}
+  \restoreapp
+}
+
+\renewenvironment{appendices}%
+  {\@resets@pp\anappendixtrue}%
+  {\@ppsaveapp\@pprestoresec\restore@appendices@chapter\anappendixfalse}
+
+\renewenvironment{subappendices}{%
+  \@resets@ppsub
+  \def\addappheadtotoc{\phantomsection\addcontentsline{toc}{section}{\appendixtocname}} % <- mempatch 2.3
+  \ifnamesubappendix
+    \def\sectionname{\protect\subappendixname}%
+    \def\@seccntformat##1{\@ifundefined{##1name}{}{\csname ##1name\endcsname\ }%
+        \csname the##1\endcsname\quad}
+  \fi
+  }{} 
+
+%%% References
+\renewcommand\Cref[1]{%
+   \pre@chapter\,\ref{#1}\,\chapterrefname%
+}
+\renewcommand\Pref[1]{%
+   \pre@part\,\ref{#1}\,\partrefname%
+}
+\renewcommand\pref[1]{%
+   \pageref{#1}~\pagerefname
+}
+\renewcommand\tref[1]{%
+   \tablerefname~\ref{#1}%
+}
+\renewcommand\fref[1]{%
+   \figurerefname~\ref{#1}%
+}
+
+%% arabic, roman... etc.
+%%\def\HArabic#1{\arabic{#1}}
+\def\HAlph#1{\Alph{#1}}
+\def\Halph#1{\alph{#1}}
+\def\HROMAN#1{\hRoman{#1}}
+\def\Hroman#1{\hroman{#1}}
+%%
+
+%% phantomchapter = phantomsection
+\def\phantomchapter{%
+ \Hy@GlobalStepCount\Hy@linkcounter
+ \xdef\@currentHref{chapter*.\the\Hy@linkcounter}%
+ \Hy@raisedlink{\hyper@anchorstart{\@currentHref}\hyper@anchorend}%
+}
+
+%%% index
+\renewcommand{\@wrindexm@m}[1]{\@@wrindexhyp#1||\\} 
+
+\if@nonfrench\else
+ \frenchspacing
+\fi
+
+%%% hsetspace for memucs
+\if@hsspace
+  \RequirePackage[hangul,adjustverbatim,adjustfootnotesep]{memucs-setspace}
+  \if@hsspacenoquote\else\adjustquotespacing\fi
+\else
+  \RequirePackage{memucs-setspace}
+  \linespread{1.333}
+\fi
+%\SetHangulspace{1.333}{1.1}
+
+%%% 한글 문장부호 관련 명령
+%%% \hfontfamilynameprefix is deprecated. (ver1.5.0)
+\def\hfontfamilynameprefix{ut} % for compatibility only
+
+\def\cnm@char@open{〈}
+\def\cnm@char@close{〉}
+\def\ccnm@char@open{《}
+\def\ccnm@char@close{》}
+\def\snm@char@open{「}
+\def\snm@char@close{」}
+\def\bnm@char@open{『}
+\def\bnm@char@close{』}
+
+\def\memx@make@bnmcmd#1#2{%
+	\leavevmode
+	\unhbox0\memx@bnmcmd@prekern\csname #1@char@open\endcsname
+	#2\csname #1@char@close\endcsname\memx@bnmcmd@postkern
+}
+
+\protected\def\cnm{%
+	\@ifnextchar*\cnm@star\cnm@nostar
+}
+
+\def\cnm@star*#1{% 
+	\def\memx@bnmcmd@prekern{\kern-.35em}%
+	\def\memx@bnmcmd@postkern{\kern-.4em}%
+	\memx@make@bnmcmd{cnm}{#1}%
+}
+
+\def\cnm@nostar#1{%
+    \let\memx@bnmcmd@prekern\relax
+    \let\memx@bnmcmd@postkern\relax
+	\memx@make@bnmcmd{cnm}{#1}%
+}
+
+\protected\def\ccnm{%
+	\@ifnextchar*\ccnm@star\ccnm@nostar
+}
+
+\def\ccnm@star*#1{%
+	\def\memx@bnmcmd@prekern{\kern-.35em}%
+	\def\memx@bnmcmd@postkern{\kern-.4em}%
+	\memx@make@bnmcmd{ccnm}{#1}%
+}
+
+\def\ccnm@nostar#1{%
+    \let\memx@bnmcmd@prekern\relax
+    \let\memx@bnmcmd@postkern\relax
+	\memx@make@bnmcmd{ccnm}{#1}%
+}
+
+
+\protected\def\snm{%
+	\@ifnextchar*\snm@star\snm@nostar
+}
+
+\def\snm@star*#1{%
+	\def\memx@bnmcmd@prekern{\kern-.35em}%
+	\def\memx@bnmcmd@postkern{\kern-.4em}%
+	\memx@make@bnmcmd{snm}{#1}%
+}
+
+\def\snm@nostar#1{% 
+    \let\memx@bnmcmd@prekern\relax
+    \let\memx@bnmcmd@postkern\relax
+	\memx@make@bnmcmd{snm}{#1}%
+}
+
+
+\protected\def\bnm{%
+	\@ifnextchar*\bnm@star\bnm@nostar
+}
+
+\def\bnm@star*#1{% 
+	\def\memx@bnmcmd@prekern{\kern-.35em}%
+	\def\memx@bnmcmd@postkern{\kern-.4em}%
+	\memx@make@bnmcmd{bnm}{#1}%
+}
+
+\def\bnm@nostar#1{%
+    \let\memx@bnmcmd@prekern\relax
+    \let\memx@bnmcmd@postkern\relax
+	\memx@make@bnmcmd{bnm}{#1}%
+}
+
+\AtBeginDocument{
+  \@ifpackageloaded{hyperref}{%
+    \pdfstringdefDisableCommands{%
+         \def\cnm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}
+	  \def\@@cnm#1{<#1>}
+	  \def\snm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}
+	  \def\ccnm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}
+	  \def\bnm#1{\ifx#1*\expandafter\@@cnm\else <#1>\fi}
+	  \def\oblivoirdblquote#1{\ifx#1*\expandafter\@@obquote\else "#1"\fi}
+	  \def\@@obquote#1{"#1"}
+	  \def\oblivoirquote#1{\ifx#1*\expandafter\@@obsquote\else '#1'\fi}
+	  \def\@@obsquote#1{'#1'}
+	  \def\cntrdots{…}
+    }%
+  }{}
+} 
+
+%%%% 따옴표
+\def\oblivoirdblquote@char@open{“}
+\def\oblivoirdblquote@char@close{”}
+\def\oblivoirquote@char@open{‘}
+\def\oblivoirquote@char@close{’}
+
+\protected\def\oblivoirdblquote{%
+	\@ifnextchar*\oblivoirdblquote@star\oblivoirdblquote@nostar
+}
+
+\def\oblivoirdblquote@star*#1{% 
+	\def\memx@bnmcmd@prekern{\kern-.35em}%
+	\def\memx@bnmcmd@postkern{\kern-.4em}%
+	\memx@make@bnmcmd{oblivoirdblquote}{#1}%
+}
+
+\def\oblivoirdblquote@nostar#1{%
+    \let\memx@bnmcmd@prekern\relax
+    \let\memx@bnmcmd@postkern\relax
+	\memx@make@bnmcmd{oblivoirdblquote}{#1}%
+}
+
+\protected\def\oblivoirquote{%
+	\@ifnextchar*\oblivoirquote@star\oblivoirquote@nostar
+}
+
+\def\oblivoirquote@star*#1{% 
+	\def\memx@bnmcmd@prekern{\kern-.35em}%
+	\def\memx@bnmcmd@postkern{\kern-.4em}%
+	\memx@make@bnmcmd{oblivoirquote}{#1}%
+}
+
+\def\oblivoirquote@nostar#1{%
+    \let\memx@bnmcmd@prekern\relax
+    \let\memx@bnmcmd@postkern\relax
+	\memx@make@bnmcmd{oblivoirquote}{#1}%
+}
+
+%%%% cntrdots
+
+\ifx\cntrdot\undefined
+\DeclareRobustCommand{\cntrdot}{%
+ 	\@ifnextchar*\@cntrd@t\@@cntrd@t
+}
+\else
+\renewcommand{\cntrdot}{%
+ 	\@ifnextchar*\@cntrd@t\@@cntrd@t
+}
+\fi
+
+\ifx\oblivoirallowbreak\undefined
+\let\oblivoirallowbreak\allowbreak
+\fi
+
+\def\@cntrd@t*{%
+	\leavevmode\kern.2em\@@cntrd@t\hskip.2em\oblivoirallowbreak
+}
+\def\@@cntrd@t{%
+    \leavevmode\nobreak\raise.02ex\hbox{·}\oblivoirallowbreak
+}
+
+\DeclareRobustCommand{\cntrdots}{%
+    \leavevmode…%\oblivoirallowbreak
+}
+
+\DeclareRobustCommand{\cntrdotss}{%
+	\leavevmode ……%
+}
+
+%% Punctuation Explanation Rule.
+%% usage: \explpunc.Some_running_texts.\ % last space must not be succeeded by ^M.
+\protected\def\explpunc.#1.\ {\leavevmode\,\XBrule#1\XErule\,}
+\protected\def\expldash{\leavevmode\,\XBrule\,}
+%
+\newsavebox\togetheightoffont\sbox\togetheightoffont{!}
+\newlength\htoffnt\setlength\htoffnt{\ht\togetheightoffont}
+\addtolength\htoffnt{\dp\togetheightoffont}
+\def\XBrule{\raise.45\htoffnt\hbox{\rule{1.25em}{.25pt}}}
+\def\XErule{\raise.45\htoffnt\hbox{\hskip1pt\rule{1.25em}{.25pt}}}
+
+%% Misc def.
+%\def\PageName{페이지}
+%\def\AltPageName{쪽}
+
+%% \titleref
+%%    -- 2009/02/11. revert to original definition.
+\let\M@TitleReference\@firstoftwo 
+\let\M@M@TitleReference\@firstoftwo
+\def\@mem@theTR{\let\M@M@TitleReference\@firstoftwo\theTitleReference}
+
+% 
+% \g@addto@macro\pdfstringdefPreHook{%
+%   \let\circemph\@firstofone
+%   \let\useremph\@firstofone
+% }
+
+%% vertical distance of math display
+\if@mathdisp
+\addtodef{\normalsize}{}{\abovedisplayskip 6\p@ \@plus2\p@ \@minus5\p@
+   \abovedisplayshortskip \z@ \@plus3\p@
+   \belowdisplayshortskip 3\p@ \@plus3\p@ \@minus3\p@
+   \belowdisplayskip \abovedisplayskip}
+\fi
+
+%% arabic frontmatter numbering
+\if@arabicfrontmatter
+\renewcommand{\@memfront}{%
+  \@smemfront\pagenumbering{arabic}}
+\fi
+
+%% default pagestyle
+\if@defaulthangulpagestyle
+ \pagestyle{hangul}
+\fi
+
+%% 할주.
+%%  still experimental not complete.
+%%  \hbox로 처리하기 때문에 행끝에서 할주 행나눔은 이루어지지 않는다.
+%%  글꼴이 \tiny로 고정. \footnotesize를 쓰면 행간이 흐트러짐.
+%%  TODO: 현재 설정은 10pt 문서에서 1pt정도가 행간에 추가됨.
+%%  \lineskiplimit를 이용해서 행간을 고정시켜둘 것인지는 아직
+%%  결정하지 못하였음.
+\newskip\divnoteskip
+\divnoteskip = .18em plus .02em minus .02em
+\def\divnotestyle{%
+ \spaceskip\divnoteskip\normalfont\tiny}
+\def\divnote#1{%
+  \settowidth{\@tempdima}{\divnotestyle #1}%
+  \hskip.1em$\big($\raise.2em\hbox{\parbox{.525\@tempdima}{\divnotestyle\singlespace #1}}$\big)$\hskip.1em%
+}
+
+%% 각주 설정을 위한 추가 매크로
+\def\SetFnmark#1#2{%
+   \expandafter\def\csname @makefnmark\endcsname{\bgroup #1\@thefnmark#2\egroup}%
+}
+
+%% chapter의 첫 단락 들여쓰기.
+\newcommand*\chapterindentfirst{%
+  \addtodef{\@afterheading}{\@afterindenttrue}{}
+}
+
+%% memhangul-patch
+\InputIfFileExists{memhangul-patch.sty}{}{}
+
+\ifx\memucsinterwordhook\undefined
+\def\memucsinterwordhook{}
+\fi 
+
+\ifx\memucsinterwordchapterskiphook\undefined
+\def\memucsinterwordchapterskiphook{}
+\fi
+
+%%% 
+%% hangul item titles
+%% replaced by kolabels.
+% \ifluatex\else
+% \newcommand*\jaso[1]{\@jaso{\@nameuse{c@#1}}}
+% \newcommand*\@jaso[1]{\ifcase#1\or
+  % ㄱ\or ㄴ\or ㄷ\or ㄹ\or ㅁ\or ㅂ\or ㅅ\or ㅇ\or
+  % ㅈ\or ㅊ\or ㅋ\or ㅌ\or ㅍ\or ㅎ\else\@ctrerr\fi}
+% \newcommand*\gana[1]{\@gana{\@nameuse{c@#1}}}
+% \newcommand*\@gana[1]{\ifcase#1\or
+  % 가\or 나\or 다\or 라\or 마\or 바\or 사\or 아\or
+  % 자\or 차\or 카\or 타\or 파\or 하\else\@ctrerr\fi}
+% \newcommand*\ojaso[1]{\@ojaso{\@nameuse{c@#1}}}
+% \newcommand*\@ojaso[1]{\ifcase#1\or
+  % ㉠\or ㉡\or ㉢\or ㉣\or ㉤\or ㉥\or ㉦\or ㉧\or
+  % ㉨\or ㉩\or ㉪\or ㉫\or ㉬\or ㉭\else\@ctrerr\fi}
+% \newcommand*\ogana[1]{\@ogana{\@nameuse{c@#1}}}
+% \newcommand*\@ogana[1]{\ifcase#1\or
+  % ㉮\or ㉯\or ㉰\or ㉱\or ㉲\or ㉳\or ㉴\or ㉵\or
+  % ㉶\or ㉷\or ㉸\or ㉹\or ㉺\or ㉻\else\@ctrerr\fi}
+% \newcommand*\pjaso[1]{\@pjaso{\@nameuse{c@#1}}}
+% \newcommand*\@pjaso[1]{\ifcase#1\or
+  % ㈀\or ㈁\or ㈂\or ㈃\or ㈄\or ㈅\or ㈆\or ㈇\or
+  % ㈈\or ㈉\or ㈊\or ㈋\or ㈌\or ㈍\else\@ctrerr\fi}
+% \newcommand*\pgana[1]{\@pgana{\@nameuse{c@#1}}}
+% \newcommand*\@pgana[1]{\ifcase#1\or
+  % ㈎\or ㈏\or ㈐\or ㈑\or ㈒\or ㈓\or ㈔\or ㈕\or
+  % ㈖\or ㈗\or ㈘\or ㈙\or ㈚\or ㈛\else\@ctrerr\fi}
+% \newcommand*\onum[1]{\@onum{\@nameuse{c@#1}}}
+% \newcommand*\@onum[1]{\ifcase#1\or
+  % ①\or ②\or ③\or ④\or ⑤\or ⑥\or ⑦\or ⑧\or
+  % ⑨\or ⑩\or ⑪\or ⑫\or ⑬\or ⑭\or ⑮\else\@ctrerr\fi}
+% \newcommand*\pnum[1]{\@pnum{\@nameuse{c@#1}}}
+% \newcommand*\@pnum[1]{\ifcase#1\or
+  % ⑴\or ⑵\or ⑶\or ⑷\or ⑸\or ⑹\or ⑺\or ⑻\or
+  % ⑼\or ⑽\or ⑾\or ⑿\or ⒀\or ⒁\or ⒂\else\@ctrerr\fi}
+% \newcommand*\oeng[1]{\@oeng{\@nameuse{c@#1}}}
+% \newcommand*\@oeng[1]{\ifcase#1\or
+  % ⓐ\or ⓑ\or ⓒ\or ⓓ\or ⓔ\or ⓕ\or ⓖ\or ⓗ\or ⓘ\or
+  % ⓙ\or ⓚ\or ⓛ\or ⓜ\or ⓝ\or ⓞ\or ⓟ\or ⓠ\or ⓡ\or
+  % ⓢ\or ⓣ\or ⓤ\or ⓥ\or ⓦ\or ⓧ\or ⓨ\or ⓩ\else\@ctrerr\fi}
+% \newcommand*\peng[1]{\@peng{\@nameuse{c@#1}}}
+% \newcommand*\@peng[1]{\ifcase#1\or
+  % ⒜\or ⒝\or ⒞\or ⒟\or ⒠\or ⒡\or ⒢\or ⒣\or ⒤\or
+  % ⒥\or ⒦\or ⒧\or ⒨\or ⒩\or ⒪\or ⒫\or ⒬\or ⒭\or
+  % ⒮\or ⒯\or ⒰\or ⒱\or ⒲\or ⒳\or ⒴\or ⒵\else\@ctrerr\fi}
+% \newcommand*\hnum[1]{\@hnum{\@nameuse{c@#1}}}
+% \newcommand*\@hnum[1]{\ifcase#1\or
+  % 하나\or 둘\or 셋\or 넷\or 다섯\or 여섯\or 일곱\or 여덟\or
+  % 아홉\or 열\or 열하나\or 열둘\or 열셋\or 열넷\or 열다섯\or
+  % 열여섯\or 열일곱\or 열여덟\or 열아홉\or 스물\or 스물하나\or
+  % 스물둘\or 스물셋\or 스물넷\else\@ctrerr\fi}
+% \newcommand*\Hnum[1]{\@Hnum{\@nameuse{c@#1}}}
+% \newcommand*\@Hnum[1]{\ifcase#1\or
+  % 첫\or 둘\or 셋\or 넷\or 다섯\or 여섯\or 일곱\or 여덟\or
+  % 아홉\or 열\or 열한\or 열두\or 열셋\or 열넷\or 열다섯\or
+  % 열여섯\or 열일곱\or 열여덟\or 열아홉\or 스무\or 스물한\or
+  % 스물두\or 스물셋\or 스물넷\else\@ctrerr\fi 째}
+% \newcommand*\hroman[1]{\@hroman{\@nameuse{c@#1}}}
+% \newcommand*\@hroman[1]{\ifcase#1\or
+  % ⅰ\or ⅱ\or ⅲ\or ⅳ\or ⅴ\or ⅵ\or ⅶ\or ⅷ\or
+  % ⅸ\or ⅹ\or ⅺ\or ⅻ\else\@ctrerr\fi}
+% \newcommand*\hRoman[1]{\@hRoman{\@nameuse{c@#1}}}
+% \newcommand*\@hRoman[1]{\ifcase#1\or
+  % Ⅰ\or Ⅱ\or Ⅲ\or Ⅳ\or Ⅴ\or Ⅵ\or Ⅶ\or Ⅷ\or
+  % Ⅸ\or Ⅹ\or Ⅺ\or Ⅻ\else\@ctrerr\fi}
+% \fi
+
+% %% from ucs-hangul.tex
+% \def\hNum#1{\@hNum{\@nameuse{c@#1}}}
+% \def\@hNum#1{\ifcase#1\or 일\or 이\or 삼\or 사\or 오\or 육\or 칠\or
+    % 팔\or 구\or 십\or 십일\or 십이\or 십삼\or 십사\or 십오\or 십육\or
+    % 십칠\or 십팔\or 십구\or 이십\or 이십일\or 이십이\or 이십삼\or
+    % 이십사\else\@ctrerr\fi}
+% \def\hanjanum#1{\@hanjanum{\@nameuse{c@#1}}}
+% \def\@hanjanum#1{\ifcase#1\or 一\or 二\or 三\or
+    % 四\or 五\or 六\or 七\or 八\or 九\or 十\or
+    % 十一\or 十二\or 十三\or 十四\or 十五\or
+    % 十六\or 十七\or 十八\or 十九\or 二十\or
+    % 二十一\or 二十二\or 二十三\or 二十四\else\@ctrerr\fi}
+% \def\HArabic#1{\@HArabic{\@nameuse{c@#1}}}
+% \def\@HArabic#1{\ifcase#1\or 1\rieul\or 2\jung\or 3\jong\or 4\jung\or 5\jung\or
+    % 6\jong\or 7\rieul\or 8\rieul\or 9\jung\or 10\jong\or 11\rieul\or 12\jung\or
+    % 13\jong\or 14\jung\or 15\jung\or 16\jong\or 17\rieul\or 18\rieul\or 19\jung\or
+    % 20\jong\or 21\rieul\or 22\jung\or 23\jong\or 24\jung\else\@ctrerr\fi}
+
+%%%% redefine shipout to avoid incompatibility with hyperref/pdftex.def
+%%%% (2009/04/02). This should be deleted later.
+%%
+%%\newif\if@HyperRefShipout\@HyperRefShipoutfalse
+%%\ifluatex
+%%  \expandafter\ifx\csname @currentHref\endcsname\undefined
+%%    \@HyperRefShipoutfalse\else\@HyperRefShipouttrue\fi
+%%  \if@HyperRefShipout
+%%    \renewcommand*\mem@shipii{%
+%%     \ifvoid\@cclv
+%%        \mem@oldshipout\box\@cclv
+%%     \else
+%%      \ifshowtrims
+%%        \mem@oldshipout\vbox{\trimmarks\box\@cclv}%
+%%      \else
+%%        \mem@oldshipout\box\@cclv
+%%      \fi
+%%     \fi}
+%%  \fi
+%%\fi
+
+%%% fix first pdf page layout error : XeTeX
+%%% based on v1.61803398
+%%% these codes are to be deleted later. (2009/09/25)
+\renewcommand*{\fixpdflayout}{%
+  \pdfpageheight=\the\stockheight
+  \pdfpagewidth=\the\stockwidth
+  \ifxetex
+    \AtBeginDvi{\special{pdf: pagesize width \the\stockwidth\ height \the\stockheight}}%
+  \else
+    \ifdim\pdfvorigin=0pt\pdfvorigin=1in\fi
+    \ifdim\pdfhorigin=0pt\pdfhorigin=1in\fi
+  \fi}
+
+%%% 호환을 위하여 dhucs 명령 몇 개를 무력화함.
+\ifx\SetAdhocFonts\undefined
+ \def\SetAdhocFonts#1#2{}
+\fi
+\ifx\regremph\undefined
+ \let\regremph\relax
+ \let\ungremph\relax
+\fi
+
+%%% fig, tab caption
+\def\obCaptionFont#1{\def\@figtabcaptfont@{#1}}
+\providecommand\@figtabcaptfont@{\normalfont}
+\if@figtabcapt@
+\precaption{{\@figtabcaptfont@\cnm@char@open}}
+\captiondelim{{\@figtabcaptfont@\cnm@char@close}\quad}
+\renewcommand\cfttablepresnum{\cnm@char@open\tablename\space}
+\renewcommand\cfttableaftersnum{\cnm@char@close}
+\renewcommand\cfttablenumwidth{3.8em}
+\renewcommand\cftfigurepresnum{\cnm@char@open\figurename\space}
+\renewcommand\cftfigureaftersnum{\cnm@char@close}
+\renewcommand\cftfigurenumwidth{4.5em}
+\fi
+
+\endinput
+
+% CHANGE LOG
+% 2013/10/26 : \kscntformat and [kosection] bug fix.
+% 2013/09/27 : \cntrdotss
+% 2013/09/15 : \leavevmode at \explpunc, \expldash
+% 2013/09/01 : [cjk], [dhucs] option introduced
+% 2012/12/02 : drop shipout hacking codes 
+% 2012/11/29 : \pdfstringdefDisableCommands
+% 2012/11/22 : [figtabcapt] opton introduced
+% 2012/11/01 : avoid error in \cnm, \ccnm etc.
+% 2012/07/12 : introduce luatexko-xobfont
+% 2011/09/15 : changes according to xoblivoir
+% 2010/09/16 : cntrdot, adjustmath
+% 2009/05/11 : protect bnm commands
+% 2009/04/02 : redefine memoir-shipout for pdflualatex and other...
+% 2009/02/11. memoir v1.6180339e compatibility mend 1.
+%             titleref, hangul page style.
+%%%
+% 오전 6:35 2008-09-18 : rename xkospace.sty to xkospace-var.sty
+%                        to avoid confusion
+% 오후 2:16 2008-09-18 : latinquote 옵션
+% 오전 4:32 2008-09-30 : hangul item titles
+%                        코드 정리.
+% 오전 8:24 2008-10-07 : revive interword hook
+% 오후 5:25 2008-10-07 : revive gremph/itemph
+% 오전 1:21 2008-10-13 : xetexko v0.1 반영 
+% 오후 2:37 2008-10-23 : bnmcmds, oblivoirdblquote
+% 오후 17:59 2008-12-03 : nowinname 옵션 추가
+% 오전 2:17 2009-09-26 : try to fix the first pdf page layout error on XeTeX (moved from fapapersize)
+%

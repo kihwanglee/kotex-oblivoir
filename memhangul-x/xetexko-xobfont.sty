@@ -1,0 +1,1059 @@
+%% xetexko-xobfont.sty
+%%
+%% Copyright (c) 2007-2013 Kangsoo Kim <karnes at ktug org>
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%  http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2006/05/20 or later.
+%%
+%% a variant of xetexko-font.sty
+%
+\ifdefined\ProvidesPackage
+  \ProvidesPackage{xetexko-xobfont}[2009/10/29 v0.76  Korean font definition in conjunction with xetexko-space, a variant]
+\fi 
+
+\@ifpackageloaded{xetexko-space}{}{%
+  \PackageError{xetexko-xob}{xetexko-space must be loaded before}{}%
+}
+
+\newif\if@latinquote\@latinquotefalse
+\DeclareOption{latinquote}{\@latinquotetrue}
+\newif\if@oldhangul\@oldhangulfalse
+\DeclareOption{oldhangul}{\@oldhangultrue}
+\newif\if@gremph\@gremphtrue
+\DeclareOption{gremph}{\@gremphtrue}
+\DeclareOption{itemph}{\@gremphfalse}
+\newif\if@nowin\@nowinfalse
+\DeclareOption{nowinname}{\@nowintrue}
+
+\newif\if@unfonts\@unfontsfalse
+\DeclareOption{unfonts}{\@unfontstrue}
+\DeclareOption{nounfonts}{\@unfontsfalse}
+\newif\if@nanumfonts\@nanumfontsfalse
+\DeclareOption{nanum}{\@nanumfontstrue}
+
+\ProcessOptions
+
+\RequirePackage{xetexko-font}
+
+\if@oldhangul
+ \def\XKOV@oldhangulscript{Script=Hangul}
+ \def\XKOV@oldhangullanguage{Language=Korean}
+ \def\XKOV@oldhangulfeatures{RawFeature=+ccmp;+ljmo;+vjmo;+tjmo}
+\else
+ \def\XKOV@oldhangulscript{}
+ \def\XKOV@oldhangullanguage{}
+ \def\XKOV@oldhangulfeatures{}
+\fi
+
+\if@gremph
+ \def\XKOV@italicfeatures{}
+ \def\XKOV@bolditalicfeatures{RawFeature={embolden=2}}
+ \def\XKOV@boldfeatures{RawFeature={embolden=2}}
+\else
+ \def\XKOV@italicfeatures{RawFeature={slant=0.17}}
+ \def\XKOV@bolditalicfeatures{RawFeature={embolden=2;slant=0.17}}
+ \def\XKOV@boldfeatures{RawFeature={embolden=2}}
+\fi
+
+\newcommand\setmonoscale[1]{%
+  \def\XKOV@monoscale{#1}%
+}
+\setmonoscale{1.05}
+
+%%% 괄호 재설정
+%\if@latinquote
+%  \XeTeXcharclass "2018 = 4 % ‘
+%  \XeTeXcharclass "201C = 4 % “
+%  \XeTeXcharclass "2019 = 5 % ’
+%  \XeTeXcharclass "201D = 5 % ”
+%\else
+%  \XeTeXcharclass "2018 = 2 % ‘
+%  \XeTeXcharclass "201C = 2 % “
+%  \XeTeXcharclass "2019 = 3 % ’
+%  \XeTeXcharclass "201D = 3 % ”
+%\fi
+
+%%% 한글 기호 문자 일부. xkospace에 정의되지 않은 것.
+%%% 추후 삭제할 수 있는 코드.
+%%% ※… = class 1 (한자)
+%\XeTeXcharclass "007D = 7 %… class 7 ("AC00)
+%%\count255 = "203B
+%%\loop \XeTeXcharclass\count255 = 1
+%%  \ifnum\count255 < "24EA
+%%    \advance\count255 1 \repeat
+%%\count255 = "3200
+%%\loop \XeTeXcharclass\count255 = 1
+%%  \ifnum\count255 < "33DE
+%%    \advance\count255 1 \repeat
+%%\count255 = "25A0
+%%\loop \XeTeXcharclass\count255 = 1
+%%  \ifnum\count255 < "266E
+%%    \advance\count255 1 \repeat
+
+\XeTeXcharclass "223C = 1 % ∼
+
+%% 한글폰트 지정하기 :
+\@ifpackageloaded{xltxtra}{}{\RequirePackage{xltxtra}}
+ \def\CallKorFont#1{%
+  \expandafter\newfontfamily\csname kor#1font\endcsname[\XKOV@externallocation,%
+      BoldFont=\csname XKOV@kor#1@bold\endcsname,%
+      ItalicFont=\csname XKOV@kor#1@italic\endcsname,%
+        ItalicFeatures={\XKOV@italicfeatures},%
+      BoldItalicFont=\csname XKOV@kor#1@bolditalic\endcsname,%
+        BoldItalicFeatures={\XKOV@italicfeatures},%
+%      Script=Hangul,%
+%      Language=Korean,%
+%      RawFeature=+ccmp;+ljmo;+vjmo;+tjmo
+      \XKOV@oldhangulscript,\XKOV@oldhangullanguage,%
+      \XKOV@oldhangulfeatures
+    ]%
+    {\csname XKOV@kor#1@regular\endcsname}%
+  }
+%%%%%%%%% mono 폰트는 특별하게 취급한다.
+ \def\CallKorFontmono{%
+  \newfontfamily\kormonofont[\XKOV@externallocation,%
+      BoldFont=\XKOV@kormono@bold,%
+        BoldFeatures={\XKOV@boldfeatures},%
+      ItalicFont=\XKOV@kormono@italic,%
+        ItalicFeatures={\XKOV@italicfeatures},%
+      BoldItalicFont=\XKOV@kormono@bolditalic,%
+        BoldItalicFeatures={\XKOV@bolditalicfeatures},%
+      Scale=\XKOV@monoscale]%
+    {\XKOV@kormono@regular}
+  }
+%  \newfontfamily\korvertfont[ExternalLocation,
+%      BoldFont=UnBatang,
+%        BoldFeatures={RawFeature={embolden=2}},
+%      ItalicFont=UnBatang,
+%        ItalicFeatures={RawFeature={slant=0.17}},
+%      BoldItalicFont=UnBatang,
+%        BoldItalicFeatures={RawFeature={embolden=2;slant=0.17}},
+%      Script=Hangul,
+%      Language=Korean,
+%      Vertical=RotatedGlyphs]
+%    {UnBatang}
+ \def\CallHnjFont#1{%
+  \expandafter\newfontfamily\csname hnj#1font\endcsname[\XKOV@externallocation,%
+      BoldFont=\csname XKOV@hnj#1@bold\endcsname,%
+      ItalicFont=\csname XKOV@hnj#1@italic\endcsname,%
+        ItalicFeatures={\XKOV@italicfeatures},%
+      BoldItalicFont=\csname XKOV@hnj#1@bolditalic\endcsname,%
+        BoldItalicFeatures={\XKOV@italicfeatures},%
+%      Script=Hangul,%
+%      Language=Korean,%
+%      RawFeature=+ccmp;+ljmo;+vjmo;+tjmo
+      \XKOV@oldhangulscript,\XKOV@oldhangullanguage,%
+      \XKOV@oldhangulfeatures
+      ]%
+    {\csname XKOV@hnj#1@regular\endcsname}%
+  }
+ \def\CallHnjFontmono{%
+  \newfontfamily\hnjmonofont[\XKOV@externallocation,%
+      BoldFont=\XKOV@hnjmono@bold,%
+        BoldFeatures={\XKOV@boldfeatures},%
+      ItalicFont=\XKOV@hnjmono@italic,%
+        ItalicFeatures={\XKOV@italicfeatures},%
+      BoldItalicFont=\XKOV@hnjmono@bolditalic,%
+        BoldItalicFeatures={\XKOV@bolditalicfeatures},%
+      Scale=\XKOV@monoscale
+    ]%
+    {\XKOV@hnjmono@regular}
+  }
+ \def\CallHnjDefault{%
+  \let\hnjmainfont\kormainfont
+  \let\hnjsansfont\korsansfont
+  \let\hnjmonofont\korsansfont
+ }
+
+%%% 사용자 명령
+%%% from here, Karnes writes:
+
+\RequirePackage{twoopt}
+\newif\if@korfnt@external\@korfnt@externaltrue
+\newif\if@XKOV@extendcommand\@XKOV@extendcommandfalse
+
+\let\XKOV@XP\expandafter
+
+%%%%%%%%%%%%%%%%%%%%%% main
+%%% 아무래도 잊어버릴 듯해서...
+%%% 다음 네 가지는 xetexko-font의 방식
+%%% \setkormainfont{FontName}
+%%% \setkormainfont[Options]{FontName}
+%%% \setkormainfont{FontName}[Hanja_Opt]{FontName}
+%%% \setkormainfont[Options]{FontName}[Hanja_Opt]{FontName}
+%%% xoblivoir 방식은
+%%% \setkormainfont*{FontName}
+%%% \setkormainfont(Bold)(Italic){FontName}
+%%% \setkormainfont*(Bold)(Italic){FontName}
+%%% \setkormainfont(Bold)(Italic){FontName}(Bold)(Italic){FontName}
+%%% \setkormainfont*(Bold)(Italic){FontName}(Bold)(Italic){FontName}
+%%% (Bold)(Italic)은 optional.
+%%%
+\def\setkormainfont{%
+  \@ifnextchar[\setkormainATYPE{%
+    \@ifnextchar(\setkormainBTYPE{%
+      \@ifnextchar*\setkormainCTYPE\setkormainDTYPE}}%
+}
+
+\def\setkormainATYPE[#1]#2{%
+  \gdef\@ATYPEopt@ne{#1}%
+  \gdef\@ATYPEarg@ne{#2}%
+  \@ifnextchar[\setkormainATYPEA\setkormainATYPEB
+}
+
+\def\setkormainATYPEA[#1]#2{%
+  \XKOV@XP\setmainhangulfont\XKOV@XP[\@ATYPEopt@ne]{\@ATYPEarg@ne}%
+  \setmainhanjafont[#1]{#2}%
+}
+
+\def\setkormainATYPEB{%
+  \XKOV@XP\setmainhangulfont\XKOV@XP[\@ATYPEopt@ne]{\@ATYPEarg@ne}%
+}
+
+\def\setkormainDTYPE#1{%
+  \gdef\@ATYPEarg@ne{#1}%
+  \@ifnextchar[\setkormainDTYPEA\setkormainDTYPEB
+}
+
+\def\setkormainDTYPEA[#1]#2{%
+  \setmainhangulfont{\@AgTYPEarg@ne}%
+  \setmainhanjafont[#1]{#2}%
+}
+
+\def\setkormainDTYPEB{%
+ \setmainhangulfont{\@ATYPEarg@ne}%
+}
+
+\def\setkormainBTYPE(#1){%
+  \long\gdef\@BTYPEopt@ne{#1}%
+  \@ifnextchar(\setkormainBTYPEA\setkormainBTYPEB
+}
+
+\def\setkormainBTYPEA(#1)#2{%
+  \long\gdef\@BTYPEopttw@{#1}%
+  \long\gdef\@BTYPEarg@ne{#2}%
+  \@ifnextchar(\setkormainBTYPEC\setkormainBTYPED
+}
+
+\def\setkormainBTYPEB#1{%
+  \gdef\@BTYPEarg@ne{#1}%
+  \@ifnextchar(\setkormainBTYPEBA\setkormainBTYPEBB
+}
+
+\def\setkormainBTYPEBB{%
+  \s@tk@rm@inf@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+}
+
+\def\setkormainBTYPEBA({%
+  \@ifnextchar)\setkormainBTYPEBNO\setkormainBTYPEBYES
+}
+
+\def\setkormainBTYPEBNO)#1{%
+  \s@tk@rm@inf@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkormainBTYPEBYES#1){%
+  \gdef\@BTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkormainBTYPEBE\setkormainBTYPEBF
+}
+
+\def\setkormainBTYPEBE(#1)#2{%
+  \gdef\@BTYPEoptf@ur{#1}%
+  \s@tk@rm@inf@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@][\@BTYPEoptf@ur]{#2}%
+}
+
+\def\setkormainBTYPEBF#1{%
+  \s@tk@rm@inf@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@]{#1}%
+}
+
+\def\setkormainBTYPEC({%
+  \@ifnextchar)\setkormainBTYPECNO\setkormainBTYPECYES
+}
+
+\def\setkormainBTYPED{%
+  \s@tk@rm@inf@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+}
+
+\def\setkormainBTYPECNO)#1{%
+  \s@tk@rm@inf@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkormainBTYPECYES#1){%
+  \gdef\@BTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkormainBTYPEE\setkormainBTYPEF
+}
+
+\def\setkormainBTYPEE(#1)#2{%
+  \gdef\@BTYPEoptf@ur{#1}%
+  \s@tk@rm@inf@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@][\@BTYPEoptf@ur]{#2}%
+}
+
+\def\setkormainBTYPEF#1{%
+  \s@tk@rm@inf@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@]{#1}%
+}
+
+\def\setkormainCTYPE*{
+  \@ifnextchar(\setkormainCTYPEALPHA\setkormainCTYPEBETA
+}
+
+\def\setkormainCTYPEBETA#1{%
+  \s@tk@rm@inf@nt*{#1}%
+}
+
+\def\setkormainCTYPEALPHA(#1){%
+  \gdef\@CTYPEopt@ne{#1}%
+  \@ifnextchar(\setkormainCTYPEA\setkormainCTYPEB
+}
+
+\def\setkormainCTYPEA(#1)#2{%
+  \gdef\@CTYPEopttw@{#1}%
+  \gdef\@CTYPEarg@ne{#2}%
+  \@ifnextchar(\setkormainCTYPEC\setkormainCTYPED
+}
+
+\def\setkormainCTYPEB#1{%
+  \gdef\@CTYPEarg@ne{#1}%
+  \@ifnextchar(\setkormainCTYPEBA\setkormainCTYPEBB
+}
+
+\def\setkormainCTYPEBB{%
+  \s@tk@rm@inf@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+}
+
+\def\setkormainCTYPEBA({%
+  \@ifnextchar)\setkormainCTYPEBNO\setkormainCTYPEBYES
+}
+
+\def\setkormainCTYPEBNO)#1{%
+  \s@tk@rm@inf@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkormainCTYPEBYES#1){%
+  \gdef\@CTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkormainCTYPEBE\setkormainCTYPEBF
+}
+
+\def\setkormainCTYPEBE(#1)#2{%
+  \gdef\@CTYPEoptf@ur{#1}%
+  \s@tk@rm@inf@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@][\@CTYPEoptf@ur]{#2}%
+}
+
+\def\setkormainCTYPEBF#1{%
+  \s@tk@rm@inf@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@]{#1}%
+}
+
+\def\setkormainCTYPEC({%
+  \@ifnextchar)\setkormainCTYPECNO\setkormainCTYPECYES
+}
+
+\def\setkormainCTYPED{%
+  \s@tk@rm@inf@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+}
+
+\def\setkormainCTYPECNO)#1{%
+  \s@tk@rm@inf@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkormainCTYPECYES#1){%
+  \gdef\@CTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkormainCTYPEE\setkormainCTYPEF
+}
+
+\def\setkormainCTYPEE(#1)#2{%
+  \gdef\@CTYPEoptf@ur{#1}%
+  \s@tk@rm@inf@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@][\@CTYPEoptf@ur]{#2}%
+}
+
+\def\setkormainCTYPEF#1{%
+  \s@tk@rm@inf@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@]{#1}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\setkorsansfont{%
+  \@ifnextchar[\setkorsansATYPE{%
+    \@ifnextchar(\setkorsansBTYPE{%
+      \@ifnextchar*\setkorsansCTYPE\setkorsansDTYPE}}%
+}
+
+\def\setkorsansATYPE[#1]#2{%
+  \gdef\@ATYPEopt@ne{#1}%
+  \gdef\@ATYPEarg@ne{#2}%
+  \@ifnextchar[\setkorsansATYPEA\setkorsansATYPEB
+}
+
+\def\setkorsansATYPEA[#1]#2{%
+  \XKOV@XP\setsanshangulfont\XKOV@XP[\@ATYPEopt@ne]{\@ATYPEarg@ne}%
+  \setsanshanjafont[#1]{#2}%
+}
+
+\def\setkorsansATYPEB{%
+  \XKOV@XP\setsanshangulfont\XKOV@XP[\@ATYPEopt@ne]{\@ATYPEarg@ne}%
+}
+
+\def\setkorsansDTYPE#1{%
+  \gdef\@ATYPEarg@ne{#1}%
+  \@ifnextchar[\setkorsansDTYPEA\setkorsansDTYPEB
+}
+
+\def\setkorsansDTYPEA[#1]#2{%
+  \setsanshangulfont{\@ATYPEarg@ne}%
+  \setsanshanjafont[#1]{#2}%
+}
+
+\def\setkorsansDTYPEB{%
+ \setsanshangulfont{\@ATYPEarg@ne}%
+}
+
+\def\setkorsansBTYPE(#1){%
+  \long\gdef\@BTYPEopt@ne{#1}%
+  \@ifnextchar(\setkorsansBTYPEA\setkorsansBTYPEB
+}
+
+\def\setkorsansBTYPEA(#1)#2{%
+  \long\gdef\@BTYPEopttw@{#1}%
+  \long\gdef\@BTYPEarg@ne{#2}%
+  \@ifnextchar(\setkorsansBTYPEC\setkorsansBTYPED
+}
+
+\def\setkorsansBTYPEB#1{%
+  \gdef\@BTYPEarg@ne{#1}%
+  \@ifnextchar(\setkorsansBTYPEBA\setkorsansBTYPEBB
+}
+
+\def\setkorsansBTYPEBB{%
+  \s@tk@rs@nsf@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+}
+
+\def\setkorsansBTYPEBA({%
+  \@ifnextchar)\setkorsansBTYPEBNO\setkorsansBTYPEBYES
+}
+
+\def\setkorsansBTYPEBNO)#1{%
+  \s@tk@rs@nsf@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkorsansBTYPEBYES#1){%
+  \gdef\@BTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkorsansBTYPEBE\setkorsansBTYPEBF
+}
+
+\def\setkorsansBTYPEBE(#1)#2{%
+  \gdef\@BTYPEoptf@ur{#1}%
+  \s@tk@rs@nsf@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@][\@BTYPEoptf@ur]{#2}%
+}
+
+\def\setkorsansBTYPEBF#1{%
+  \s@tk@rs@nsf@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@]{#1}%
+}
+
+\def\setkorsansBTYPEC({%
+  \@ifnextchar)\setkorsansBTYPECNO\setkorsansBTYPECYES
+}
+
+\def\setkorsansBTYPED{%
+  \s@tk@rs@nsf@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+}
+
+\def\setkorsansBTYPECNO)#1{%
+  \s@tk@rs@nsf@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkorsansBTYPECYES#1){%
+  \gdef\@BTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkorsansBTYPEE\setkorsansBTYPEF
+}
+
+\def\setkorsansBTYPEE(#1)#2{%
+  \gdef\@BTYPEoptf@ur{#1}%
+  \s@tk@rs@nsf@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@][\@BTYPEoptf@ur]{#2}%
+}
+
+\def\setkorsansBTYPEF#1{%
+  \s@tk@rs@nsf@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@]{#1}%
+}
+
+\def\setkorsansCTYPE*{
+  \@ifnextchar(\setkorsansCTYPEALPHA\setkorsansCTYPEBETA
+}
+
+\def\setkorsansCTYPEBETA#1{%
+  \s@tk@rs@nsf@nt*{#1}%
+}
+
+\def\setkorsansCTYPEALPHA(#1){%
+  \gdef\@CTYPEopt@ne{#1}%
+  \@ifnextchar(\setkorsansCTYPEA\setkorsansCTYPEB
+}
+
+\def\setkorsansCTYPEA(#1)#2{%
+  \gdef\@CTYPEopttw@{#1}%
+  \gdef\@CTYPEarg@ne{#2}%
+  \@ifnextchar(\setkorsansCTYPEC\setkorsansCTYPED
+}
+
+\def\setkorsansCTYPEB#1{%
+  \gdef\@CTYPEarg@ne{#1}%
+  \@ifnextchar(\setkorsansCTYPEBA\setkorsansCTYPEBB
+}
+
+\def\setkorsansCTYPEBB{%
+  \s@tk@rs@nsf@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+}
+
+\def\setkorsansCTYPEBA({%
+  \@ifnextchar)\setkorsansCTYPEBNO\setkorsansCTYPEBYES
+}
+
+\def\setkorsansCTYPEBNO)#1{%
+  \s@tk@rs@nsf@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkorsansCTYPEBYES#1){%
+  \gdef\@CTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkorsansCTYPEBE\setkorsansCTYPEBF
+}
+
+\def\setkorsansCTYPEBE(#1)#2{%
+  \gdef\@CTYPEoptf@ur{#1}%
+  \s@tk@rs@nsf@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@][\@CTYPEoptf@ur]{#2}%
+}
+
+\def\setkorsansCTYPEBF#1{%
+  \s@tk@rs@nsf@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@]{#1}%
+}
+
+\def\setkorsansCTYPEC({%
+  \@ifnextchar)\setkorsansCTYPECNO\setkorsansCTYPECYES
+}
+
+\def\setkorsansCTYPED{%
+  \s@tk@rs@nsf@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+}
+
+\def\setkorsansCTYPECNO)#1{%
+  \s@tk@rs@nsf@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkorsansCTYPECYES#1){%
+  \gdef\@CTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkorsansCTYPEE\setkorsansCTYPEF
+}
+
+\def\setkorsansCTYPEE(#1)#2{%
+  \gdef\@CTYPEoptf@ur{#1}%
+  \s@tk@rs@nsf@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@][\@CTYPEoptf@ur]{#2}%
+}
+
+\def\setkorsansCTYPEF#1{%
+  \s@tk@rs@nsf@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@]{#1}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\setkormonofont{%
+  \@ifnextchar[\setkormonoATYPE{%
+    \@ifnextchar(\setkormonoBTYPE{%
+      \@ifnextchar*\setkormonoCTYPE\setkormonoDTYPE}}%
+}
+
+\def\setkormonoATYPE[#1]#2{%
+  \gdef\@ATYPEopt@ne{#1}%
+  \gdef\@ATYPEarg@ne{#2}%
+  \@ifnextchar[\setkormonoATYPEA\setkormonoATYPEB
+}
+
+\def\setkormonoATYPEA[#1]#2{%
+  \XKOV@XP\setmonohangulfont\XKOV@XP[\@ATYPEopt@ne]{\@ATYPEarg@ne}%
+  \setmonohanjafont[#1]{#2}%
+}
+
+\def\setkormonoATYPEB{%
+  \XKOV@XP\setmonohangulfont\XKOV@XP[\@ATYPEopt@ne]{\@ATYPEarg@ne}%
+}
+
+\def\setkormonoDTYPE#1{%
+  \gdef\@ATYPEarg@ne{#1}%
+  \@ifnextchar[\setkormonoDTYPEA\setkormonoDTYPEB
+}
+
+\def\setkormonoDTYPEA[#1]#2{%
+  \setmonohangulfont{\@ATYPEarg@ne}%
+  \setmonohanjafont[#1]{#2}%
+}
+
+\def\setkormonoDTYPEB{%
+ \setmonohangulfont{\@ATYPEarg@ne}%
+}
+
+\def\setkormonoBTYPE(#1){%
+  \long\gdef\@BTYPEopt@ne{#1}%
+  \@ifnextchar(\setkormonoBTYPEA\setkormonoBTYPEB
+}
+
+\def\setkormonoBTYPEA(#1)#2{%
+  \long\gdef\@BTYPEopttw@{#1}%
+  \long\gdef\@BTYPEarg@ne{#2}%
+  \@ifnextchar(\setkormonoBTYPEC\setkormonoBTYPED
+}
+
+\def\setkormonoBTYPEB#1{%
+  \gdef\@BTYPEarg@ne{#1}%
+  \@ifnextchar(\setkormonoBTYPEBA\setkormonoBTYPEBB
+}
+
+\def\setkormonoBTYPEBB{%
+  \s@tk@rm@n@f@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+}
+
+\def\setkormonoBTYPEBA({%
+  \@ifnextchar)\setkormonoBTYPEBNO\setkormonoBTYPEBYES
+}
+
+\def\setkormonoBTYPEBNO)#1{%
+  \s@tk@rm@n@f@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkormonoBTYPEBYES#1){%
+  \gdef\@BTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkormonoBTYPEBE\setkormonoBTYPEBF
+}
+
+\def\setkormonoBTYPEBE(#1)#2{%
+  \gdef\@BTYPEoptf@ur{#1}%
+  \s@tk@rm@n@f@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@][\@BTYPEoptf@ur]{#2}%
+}
+
+\def\setkormonoBTYPEBF#1{%
+  \s@tk@rm@n@f@nt[\@BTYPEopt@ne]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@]{#1}%
+}
+
+\def\setkormonoBTYPEC({%
+  \@ifnextchar)\setkormonoBTYPECNO\setkormonoBTYPECYES
+}
+
+\def\setkormonoBTYPED{%
+  \s@tk@rm@n@f@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+}
+
+\def\setkormonoBTYPECNO)#1{%
+  \s@tk@rm@n@f@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkormonoBTYPECYES#1){%
+  \gdef\@BTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkormonoBTYPEE\setkormonoBTYPEF
+}
+
+\def\setkormonoBTYPEE(#1)#2{%
+  \gdef\@BTYPEoptf@ur{#1}%
+  \s@tk@rm@n@f@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@][\@BTYPEoptf@ur]{#2}%
+}
+
+\def\setkormonoBTYPEF#1{%
+  \s@tk@rm@n@f@nt[\@BTYPEopt@ne][\@BTYPEopttw@]{\@BTYPEarg@ne}%
+                 [\@BTYPEoptthr@@]{#1}%
+}
+
+\def\setkormonoCTYPE*{
+  \@ifnextchar(\setkormonoCTYPEALPHA\setkormonoCTYPEBETA
+}
+
+\def\setkormonoCTYPEBETA#1{%
+  \s@tk@rm@n@f@nt*{#1}%
+}
+
+\def\setkormonoCTYPEALPHA(#1){%
+  \gdef\@CTYPEopt@ne{#1}%
+  \@ifnextchar(\setkormonoCTYPEA\setkormonoCTYPEB
+}
+
+\def\setkormonoCTYPEA(#1)#2{%
+  \gdef\@CTYPEopttw@{#1}%
+  \gdef\@CTYPEarg@ne{#2}%
+  \@ifnextchar(\setkormonoCTYPEC\setkormonoCTYPED
+}
+
+\def\setkormonoCTYPEB#1{%
+  \gdef\@CTYPEarg@ne{#1}%
+  \@ifnextchar(\setkormonoCTYPEBA\setkormonoCTYPEBB
+}
+
+\def\setkormonoCTYPEBB{%
+  \s@tk@rm@n@f@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+}
+
+\def\setkormonoCTYPEBA({%
+  \@ifnextchar)\setkormonoCTYPEBNO\setkormonoCTYPEBYES
+}
+
+\def\setkormonoCTYPEBNO)#1{%
+  \s@tk@rm@n@f@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkormonoCTYPEBYES#1){%
+  \gdef\@CTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkormonoCTYPEBE\setkormonoCTYPEBF
+}
+
+\def\setkormonoCTYPEBE(#1)#2{%
+  \gdef\@CTYPEoptf@ur{#1}%
+  \s@tk@rm@n@f@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@][\@CTYPEoptf@ur]{#2}%
+}
+
+\def\setkormonoCTYPEBF#1{%
+  \s@tk@rm@n@f@nt*[\@CTYPEopt@ne]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@]{#1}%
+}
+
+\def\setkormonoCTYPEC({%
+  \@ifnextchar)\setkormonoCTYPECNO\setkormonoCTYPECYES
+}
+
+\def\setkormonoCTYPED{%
+  \s@tk@rm@n@f@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+}
+
+\def\setkormonoCTYPECNO)#1{%
+  \s@tk@rm@n@f@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+                 []{#1}%
+}
+
+\def\setkormonoCTYPECYES#1){%
+  \gdef\@CTYPEoptthr@@{#1}%
+  \@ifnextchar(\setkormonoCTYPEE\setkormonoCTYPEF
+}
+
+\def\setkormonoCTYPEE(#1)#2{%
+  \gdef\@CTYPEoptf@ur{#1}%
+  \s@tk@rm@n@f@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@][\@CTYPEoptf@ur]{#2}%
+}
+
+\def\setkormonoCTYPEF#1{%
+  \s@tk@rm@n@f@nt*[\@CTYPEopt@ne][\@CTYPEopttw@]{\@CTYPEarg@ne}%
+                 [\@CTYPEoptthr@@]{#1}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\if@unfonts
+ \def\UnBatang{UnBatang}
+ \def\UnBatangBold{UnBatang-Bold}
+ \def\UnDotum{UnDotum}
+ \def\UnDotumBold{UnDotum-Bold}
+ \def\UnTaza{UnTaza}
+\else
+\if@nanumfonts
+ \setmainhangulfont{NanumMyeongjo}
+ \setsanshangulfont{NanumGothic}
+ \setmonohangulfont{NanumGothic}
+\fi
+\fi
+
+\def\s@tk@rm@inf@nt{%
+  \@ifnextchar*\s@setk@rmainf@nt\l@setk@rmainf@nt
+}
+\def\s@setk@rmainf@nt*{\SETKORMAINFONTEL}
+\def\l@setk@rmainf@nt{\SETKORMAINFONT}
+
+\def\NOEXTSETKORMAINFONT{%
+      \let\hnjmainfont\kormainfont
+}
+
+\def\RESstar{*}
+
+\newcommandtwoopt{\SETKORMAINFONTEL}[3][][]{%
+  \def\XKOV@externallocation{ExternalLocation}%
+  \@korfnt@externaltrue
+  \def\XKOV@kormain@regular{#3}%
+  \def\XKOV@kormain@bold{#1}%
+  \ifx#2\RESstar
+   \def\XKOV@kormain@italic{#3}%
+  \else
+   \def\XKOV@kormain@italic{#2}%
+  \fi
+  \def\XKOV@kormain@bolditalic{#2}%
+  \CallKorFont{main}%
+  \@korfnt@externaltrue
+  \@ifnextchar[\EXTSETKORMAINFONTEL\NOEXTSETKORMAINFONT
+}
+
+\newcommandtwoopt{\EXTSETKORMAINFONTEL}[3][][]{%
+  \def\XKOV@externallocation{ExternalLocation}%
+  \@korfnt@externaltrue
+  \def\XKOV@hnjmain@regular{#3}%
+  \def\XKOV@hnjmain@bold{#1}%
+  \ifx#2\RESstar
+    \def\XKOV@hnjmain@italic{#3}%
+  \else
+    \def\XKOV@hnjmain@italic{#2}%
+  \fi
+  \def\XKOV@hnjmain@bolditalic{#2}%
+  \CallHnjFont{main}%
+  \@XKOV@extendcommandfalse
+}
+
+\newcommandtwoopt{\SETKORMAINFONT}[3][][]{%
+  \def\XKOV@externallocation{}%
+  \@korfnt@externalfalse
+  \def\XKOV@kormain@regular{#3}%
+  \def\XKOV@kormain@bold{#1}%
+  \ifx#2\RESstar
+   \def\XKOV@kormain@italic{#3}%
+  \else
+   \def\XKOV@kormain@italic{#2}%
+  \fi
+  \def\XKOV@kormain@bolditalic{#2}%
+  \CallKorFont{main}%
+  \@korfnt@externaltrue
+  \@ifnextchar[\EXTSETKORMAINFONT\NOEXTSETKORMAINFONT
+}
+
+\newcommandtwoopt{\EXTSETKORMAINFONT}[3][][]{%
+  \def\XKOV@externallocation{}%
+  \@korfnt@externalfalse
+  \def\XKOV@hnjmain@regular{#3}%
+  \def\XKOV@hnjmain@bold{#1}%
+  \ifx#2\RESstar
+   \def\XKOV@hnjmain@italic{#3}%
+  \else
+   \def\XKOV@hnjmain@italic{#2}%
+  \fi
+  \def\XKOV@hnjmain@bolditalic{#2}%
+  \CallHnjFont{main}%
+  \@XKOV@extendcommandfalse
+}
+
+%%%%%%%%%%%%%%%%%%%%%%% sans
+
+\def\s@tk@rs@nsf@nt{%
+  \@ifnextchar*\s@setk@rsansf@nt\l@setk@rsansf@nt
+}
+\def\s@setk@rsansf@nt*{\SETKORSANSFONTEL}
+\def\l@setk@rsansf@nt{\SETKORSANSFONT}
+
+\newcommandtwoopt{\SETKORSANSFONTEL}[3][][]{%
+  \def\XKOV@externallocation{ExternalLocation}%
+  \@korfnt@externaltrue
+  \def\XKOV@korsans@regular{#3}%
+  \def\XKOV@korsans@bold{#1}%
+  \ifx#2\RESstar
+   \def\XKOV@korsans@italic{#3}%
+  \else
+   \def\XKOV@korsans@italic{#2}%
+  \fi
+  \def\XKOV@korsans@bolditalic{#2}%
+  \CallKorFont{sans}%
+  \@korfnt@externaltrue
+  \@ifnextchar[\EXTSETKORSANSFONTEL\NOEXTSETKORSANSFONT
+}
+
+\newcommandtwoopt{\EXTSETKORSANSFONTEL}[3][][]{%
+  \def\XKOV@externallocation{ExternalLocation}%
+  \@korfnt@externaltrue
+  \def\XKOV@hnjsans@regular{#3}%
+  \def\XKOV@hnjsans@bold{#1}%
+  \ifx#2\RESstar
+   \def\XKOV@hnjsans@italic{#3}%
+  \else
+   \def\XKOV@hnjsans@italic{#2}%
+  \fi
+  \def\XKOV@hnjsans@bolditalic{#2}%
+  \CallHnjFont{sans}%
+  \@XKOV@extendcommandfalse
+}
+
+\newcommandtwoopt{\SETKORSANSFONT}[3][][]{%
+  \def\XKOV@externallocation{}%
+  \@korfnt@externalfalse
+  \def\XKOV@korsans@regular{#3}%
+  \def\XKOV@korsans@bold{#1}%
+  \ifx#2\RESstar
+   \def\XKOV@korsans@italic{#3}%
+  \else
+   \def\XKOV@korsans@italic{#2}%
+  \fi
+  \def\XKOV@korsans@bolditalic{#2}%
+  \CallKorFont{sans}%
+  \@korfnt@externaltrue
+  \@ifnextchar[\EXTSETKORSANSFONT\NOEXTSETKORSANSFONT
+}
+
+\newcommandtwoopt{\EXTSETKORSANSFONT}[3][][]{%
+  \def\XKOV@externallocation{}%
+  \@korfnt@externalfalse
+  \def\XKOV@hnjsans@regular{#3}%
+  \def\XKOV@hnjsans@bold{#1}%
+  \ifx#2\RESstar
+   \def\XKOV@hnjsans@italic{#3}%
+  \else
+   \def\XKOV@hnjsans@italic{#2}%
+  \fi
+  \def\XKOV@hnjsans@bolditalic{#2}%
+  \CallHnjFont{sans}%
+  \@XKOV@extendcommandfalse
+}
+
+\def\NOEXTSETKORSANSFONT{%
+      \let\hnjsansfont\korsansfont
+}
+
+%%%%%%%%%%%%%%%%%%%%%%% mono
+
+\def\s@tk@rm@n@f@nt{%
+  \@ifnextchar*\s@setk@rmonof@nt\l@setk@rmonof@nt
+}
+\def\s@setk@rmonof@nt*{\SETKORMONOFONTEL}
+\def\l@setk@rmonof@nt{\SETKORMONOFONT}
+
+\newcommandtwoopt{\SETKORMONOFONTEL}[3][][]{%
+  \def\XKOV@externallocation{ExternalLocation}%
+  \@korfnt@externaltrue
+  \def\XKOV@kormono@regular{#3}%
+  \def\XKOV@kormono@bold{#1}%
+  \def\XKOV@kormono@italic{#2}%
+  \def\XKOV@kormono@bolditalic{#2}%
+  \CallKorFontmono%
+  \@korfnt@externaltrue
+  \@ifnextchar[\EXTSETKORMONOFONTEL\NOEXTSETKORMONOFONT
+}
+
+\newcommandtwoopt{\EXTSETKORMONOFONTEL}[3][][]{%
+  \setmonoscale{1.0}%
+  \def\XKOV@externallocation{ExternalLocation}%
+  \@korfnt@externaltrue
+  \def\XKOV@hnjmono@regular{#3}%
+  \def\XKOV@hnjmono@bold{#1}%
+  \def\XKOV@hnjmono@italic{#2}%
+  \def\XKOV@hnjmono@bolditalic{#2}%
+  \CallHnjFontmono%
+  \@XKOV@extendcommandfalse
+}
+
+\newcommandtwoopt{\SETKORMONOFONT}[3][][]{%
+  \def\XKOV@externallocation{}%
+  \@korfnt@externalfalse
+  \def\XKOV@kormono@regular{#3}%
+  \def\XKOV@kormono@bold{#1}%
+  \def\XKOV@kormono@italic{#2}%
+  \def\XKOV@kormono@bolditalic{#2}%
+  \CallKorFontmono%
+  \@korfnt@externaltrue
+  \@ifnextchar[\EXTSETKORMONOFONT\NOEXTSETKORMONOFONT
+}
+
+\newcommandtwoopt{\EXTSETKORMONOFONT}[3][][]{%
+  \setmonoscale{1.0}%
+  \def\XKOV@externallocation{}%
+  \@korfnt@externalfalse
+  \def\XKOV@hnjmono@regular{#3}%
+  \def\XKOV@hnjmono@bold{#1}%
+  \def\XKOV@hnjmono@italic{#2}%
+  \def\XKOV@hnjmono@bolditalic{#2}%
+  \CallHnjFontmono%
+  \@XKOV@extendcommandfalse
+}
+
+\def\NOEXTSETKORMONOFONT{%
+      \let\hnjmonofont\korsansfont
+}
+
+%% dummy call
+\def\SetDefaultKorFonts{%
+\if@unfonts
+\if@korfnt@external
+  \ifx\XKOV@kormain@regular\undefined\def\XKOV@kormain@regular{UnBatang}\fi
+  \ifx\XKOV@kormain@bold\undefined\def\XKOV@kormain@bold{UnBatangBold}\fi
+  \ifx\XKOV@kormain@italic\undefined\def\XKOV@kormain@italic{UnBatang}\fi
+  \ifx\XKOV@kormain@bolditalic\undefined\def\XKOV@kormain@bolditalic{UnBatangBold}\fi
+  \ifx\XKOV@korsans@regular\undefined\def\XKOV@korsans@regular{UnDotum}\fi
+  \ifx\XKOV@korsans@bold\undefined\def\XKOV@korsans@bold{UnDotumBold}\fi
+  \ifx\XKOV@korsans@italic\undefined\def\XKOV@korsans@italic{UnDotum}\fi
+  \ifx\XKOV@korsans@bolditalic\undefined\def\XKOV@korsans@bolditalic{UnDotumBold}\fi
+  \ifx\XKOV@kormono@regular\undefined\def\XKOV@kormono@regular{UnTaza}\fi
+  \ifx\XKOV@kormono@bold\undefined\def\XKOV@kormono@bold{UnTaza}\fi
+  \ifx\XKOV@kormono@italic\undefined\def\XKOV@kormono@italic{UnTaza}\fi
+  \ifx\XKOV@kormono@bolditalic\undefined\def\XKOV@kormono@bolditalic{UnTaza}\fi
+\else
+  \ifx\XKOV@kormain@regular\undefined\def\XKOV@kormain@regular{\UnBatang}\fi
+  \ifx\XKOV@kormain@bold\undefined\def\XKOV@kormain@bold{\UnBatangBold}\fi
+  \ifx\XKOV@kormain@italic\undefined\def\XKOV@kormain@italic{\UnBatang}\fi
+  \ifx\XKOV@kormain@bolditalic\undefined\def\XKOV@kormain@bolditalic{\UnBatangBold}\fi
+  \ifx\XKOV@korsans@regular\undefined\def\XKOV@korsans@regular{\UnDotum}\fi
+  \ifx\XKOV@korsans@bold\undefined\def\XKOV@korsans@bold{\UnDotumBold}\fi
+  \ifx\XKOV@korsans@italic\undefined\def\XKOV@korsans@italic{\UnDotum}\fi
+  \ifx\XKOV@korsans@bolditalic\undefined\def\XKOV@korsans@bolditalic{\UnDotumBold}\fi
+  \ifx\XKOV@kormono@regular\undefined\def\XKOV@kormono@regular{\UnTaza}\fi
+  \ifx\XKOV@kormono@bold\undefined\def\XKOV@kormono@bold{\UnTaza}\fi
+  \ifx\XKOV@kormono@italic\undefined\def\XKOV@kormono@italic{\UnTaza}\fi
+  \ifx\XKOV@kormono@bolditalic\undefined\def\XKOV@kormono@bolditalic{\UnTaza}\fi
+\fi
+\else\fi
+}
+
+%%% dummy declaration, to avoid errors!
+\if@unfonts
+\s@tk@rm@inf@nt*{UnBatang}
+\s@tk@rs@nsf@nt*{UnDotum}
+\s@tk@rm@n@f@nt*{UnTaza}
+\CallHnjDefault
+\else
+%\input TnX-xob-default.tex
+\fi
+
+\AtBeginDocument{
+  \ifx\XKOV@externallocation\undefined\def\XKOV@externallocation{ExternalLocation}\@korfnt@externaltrue\fi
+%%  \SetDefaultKorFonts
+%%  \CallKorFont{main}%
+%%  \CallKorFont{sans}%
+%%  \CallKorFontmono
+}
+
+\endinput
+
+%%% 2013-09-27 : nounfonts set to default.
+%%% 2012-12-31 : [unfonts], [nounfonts]
+%%% 오전 1:21 2008-10-13 : xetexko-xobfont 작성
+%%% 오전 12:12 2008-11-09 : \setkor...font 명령 재작성
+%%% 오후 17:59 2008-12-02 : nowinname 옵션 추가
+%%% 오후 22:05 2008-12-02 : Italic 옵션에 (*) 추가
+%%% 오전 04:04 2008-12-08 : \XKOV@XP
+%%% 오전 1:18 2009-08-25  : sans/mono bug fixed (thanks to DH Kim and YW Kim)
+%%% 오전 12:22 2009-10-13 : 따옴표 설정을 xetexko에게.

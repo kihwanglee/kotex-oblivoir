@@ -1,0 +1,1113 @@
+% !TEX Encoding = UTF-8 Unicode
+%%%
+%%% \xobclass{} 2008/10/23
+%%%  --10/09 Windows에서 작성/테스트함.
+%%%  ---10/10 Ubuntu Hardy에서 테스트함. 나눔명조체 설치.
+%%%
+\documentclass[
+	12pt,
+	a4paper,
+	kosection,
+	footnote,
+	nobookmarks,
+	microtype,
+	hyperref=colorlinks,
+%	xcolor=x11names,
+%	fontspec=no-math,
+]{xoblivoir} %% ,latinquote
+
+%\documentclass[12pt,a4paper,footnote,xcolor={svgnames}{oblivoir}
+
+\usepackage{fapapersize}
+\usefapapersize{*,*,30mm,*,35mm,*}
+
+\usepackage{kotex-logo}
+
+\def\myREF#1#2{%
+	\ifPDFTeX \ref{#1}\else \ref{#2}\fi
+}
+\def\myLabel#1#2{%
+	\ifPDFTeX \label{#1}\else \label{#2}\fi
+}
+\def\myPageREF#1#2{%
+	\ifPDFTeX \pageref{#1}\else \pageref{#2}\fi
+}
+
+\ifx\oblivoirdblquote\undefined
+\def\oblivoirdblquote#1{``#1''}
+\fi
+
+\ifPDFTeX
+\ifx\XeTeX\undefined
+\def\Xe{\hologo{Xe}}
+\def\XeTeX{\hologo{XeTeX}}
+\def\XeLaTeX{\hologo{XeLaTeX}}
+\fi
+\ifx\LuaTeX\undefined
+\def\LuaTeX{\hologo{LuaTeX}}
+\def\LuaLaTeX{\hologo{LuaLaTeX}}
+\fi
+\else
+%%%%%% tested on Windows XP SP3
+\setkormonofont{은 필기}
+\setmonoscale{0.9}
+\defaultfontfeatures{Mapping=tex-text}
+%%%%%% tested on Linux/Ubuntu
+%\setmainfont[Mapping=tex-text]{Bradley Hand ITC}
+%\setmonofont[Scale=.85]{Comic Sans MS}
+%\setmainfont[Mapping=tex-text]{Monotype Corsiva}
+\setmonofont[Scale=.85]{Monaco}
+%\setkormainfont(문화 궁서 Std L){문화 궁서 흐림 Std L}(){네이버사전}
+\setkormainfont(* Bold)(*){HCR Batang LVT}
+%\setkorsansfont(문화 궁서 Std B)(문화 훈민 Std R){문화 고딕 Std R}(){한컴돋움}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\fi
+
+\newcommand\xobclass{x\-ob\-liv\-oir\oblivoirallowbreak}
+\newcommand\obclass{ob\-liv\-oir\oblivoirallowbreak}
+\def\xetexko{\XeTeX-\ko}
+
+\pagestyle{ruled}
+
+\usepackage{tabu}
+\usepackage[normalem]{ulem}
+
+\begin{document}
+
+\title{초간단 \obclass{} v2.0 사용법}
+
+\date{2013년 10월}
+
+\author{x-ob-liv-oir }
+
+\maketitle
+
+\begin{abstract}
+\obclass{} 클래스 2.0 버전은 그 동안 별도의 브랜치로 개발되어 오던
+\xobclass와 \obclass를 통합하여 완전히 동일한 클래스가 되었다.
+이 문서는 \obclass{} 즉 \xobclass를
+사용하는 방법을 간략히 기술한다.
+\end{abstract}
+
+\tableofcontents*
+
+\clearpage
+
+\section{\obclass와 \xobclass{}}
+
+%\xobclass{}는 \obclass{}에서 파생된 클래스이다.
+%\obclass{}가 \LaTeX, pdf\LaTeX 을 위한 것이라면, \xobclass{}는 Lua\LaTeX이나 \XeLaTeX 을 위한 것이다.
+%이 글은 \XeLaTeX\oblivoirallowbreak 으로 \xobclass{}를 쓰려 하는 경우에 대해서만 기술한다. Lua\LaTeX{}에
+%대해서는 별도로 특기할 만한 것이 없기도 하려니와 아직 준비가 미흡하여, 차후로 미룬다.\footnote{%
+%   준비가 미흡하다는 것은 \xobclass{}의 입장에서 하는 말이다. 현재도 \xobclass{}를 통한
+%   Lua\LaTeX 은 훌륭하게 사용할 수 있다, 고 생각하고 있다.}
+
+\koTeX\ 2.0 (2013/09/30)의 등장\footnote{%
+	\texttt{texdoc kotex} 명령을 내리면 kotexdoc 문서를 읽을 수 있다.}%
+으로 \koTeX\ 패키지군은 이전의 텍 엔진\footnote{%
+	이른바 ``레거시 텍''이라 하는 \hologo{TeX}, \hologo{eTeX}, \hologo{pdfTeX}을
+	가리킨다.}%
+과 새로운 엔진들, \hologo{pdfLaTeX}, \hologo{XeLaTeX},
+\hologo{LuaLaTeX}에 모두 일관성있게 대응하도록 변모하였다.
+이러한 변화에 발맞추어, 레거시 텍 엔진을 위한 \obclass와 새로운 텍 엔진(주로 \hologo{XeLaTeX})을 위한 \xobclass로
+나누어져 있던 oblivoir 클래스도 체계를 정비하여 그 구별을 없애고 동작하는 엔진에 따라 동작 방식을
+자동으로 대응하도록 고쳐졌다. 그러므로, 현재 \obclass로 작성하는 문서는 
+(사용자가 몇 가지 주의깊게 엔진별 동작을 지정하기만 하면) 모든 텍 엔진에서 에러 없이 컴파일되고
+유사한 결과를 얻을 수 있게 되었다.\footnote{%
+	폰트 사용 방식의 차이로 인해 ``완전히 동일한'' 결과를 보증하지는 않는다.}
+
+그 동안 \obclass는 비교적 복잡한 길을 거쳐왔다. 대강 정리하면,
+\begin{enumerate}[(1)]\tightlist
+\item H\LaTeX\ (나중의 kotex-euc) 한글을 memoir에서 쓰기 위하여 개발된 memhangul. 이 스타일은 더이상 사용할 수 없다.
+\item dhucs (현재의 kotex-utf) 유니코드 한글을 memoir에서 쓰기 위하여 개발된 memhangul-ucs
+\item memhangul-ucs를 바탕으로 memoir 클래스를 통하여 문서를 만드는 fake-article
+\item fake-article을 oblivoir로 개명
+\item \hologo{XeTeX}을 위한 xoblivoir
+\item xoblivoir에 \hologo{LuaTeX} 지원의 추가
+\item xoblivoir와 oblivoir를 통합
+\end{enumerate}
+이와 같이 발전하여 온 것이고, 이제 oblivoir와 xoblivoir는 완전히 동일한 클래스가 되었다.
+
+이 문서는 \obclass의 고유한 옵션과 폰트 설정 방식에 대해서만 설명한다. 실제로 \obclass를
+이용하여 문서를 작성할 때는 다음 세 층위의 명령이 모두 사용가능하다.
+\begin{enumerate}[(1)]\tightlist
+\item memoir 명령
+\item 한글 엔진(\koTeX, \XeTeX-\ko, \LuaTeX-\ko)의 명령
+\item oblivoir 명령
+\end{enumerate}
+
+이 각각의 명령에 대한 정보를 얻으려면, memoir 매뉴얼(\texttt{texdoc memman}), 
+한글 패키지 매뉴얼(예컨대, \texttt{texdoc kotex}, \texttt{texdoc xetexko})을
+읽어야 한다.
+이 문서에서는 위의 두 패키지 층위의 명령군에 대해 언급할 때, 여백에 \fbox{memoir}, \fbox{kotex}등을
+표시하겠다. 그리고 엔진별로 고유한 옵션과 명령에 대해서는 해당 사항을 본문에서 밝힌다.
+
+위의 두 층위의 문서에서 설명하지 않는 \obclass에 대한 정보를 이 문서에서 얻을 수 있다.
+
+%%\xobclass{}는 김도현 교수의 xkospace 및 xetexko-josa 패키지를 바탕으로 하고 있다.
+%\xobclass{}는 김도현 교수의 xetexko 패키지를 바탕으로 하고 있다. 이 패키지는
+%2008년 10월 12일에 처음 발표되었으며 그 이전에 시험되던 xkospace를 확장하고 다듬은 것이다.
+%xetexko-space, xetexko-josa, xetexko-dotemph 및 xetexko-font가 포함되어 있는데
+%\xobclass{}는 이를 바탕으로 하면서 사용자 인터페이스를 조금 확장하고 
+%\obclass{}와 호환되게 한 것이다.
+%\xobclass{}의 쉬운 인터페이스를 통하여 현재 \TeX 에서의 한글 구현이 어느 단계까지
+%와 있는지를 일반 사용자도 경험하는 기회가 되기를 바란다. 한편 2010년 학술대회를
+%전후하여 \xetexko 는 한글 조판과 식자에 있어 ``거의 완전한 단계''에 이르렀다.
+%\xobclass 에서 시도하던 많은 부분이 \xetexko\ 자체에 의해 구현되게 된 것도 많으며
+%실제로 출판 현장에서 이를 활용하는 데 부족함이 없을 정도가 되었다. 이제 \xobclass 는
+%memoir 클래스를 \xetexko 와 함께 쓰도록 하는 클래스라는 데 더 큰 의의가 있게 되었다.
+%한글 \TeX\ 개발에 고군분투하시는 김도현 교수께 감사의 말씀을 드린다.
+%
+%\xetexko 의 이해 없이 \xobclass 를 사용하기 어렵다. 그러므로 반드시 
+%\xetexko\ 매뉴얼을 읽어두는 것은 매우 중요하다. \xobclass 에서
+%\xetexko 명령은 원칙적으로 모두 사용할 수 있다. \xetexko\ 매뉴얼을
+%읽으려면,
+%\begin{verbatim}
+%$ texdoc xetexko
+%\end{verbatim}
+%를 실행한다.
+
+\section{oblivoir와 memhangul}
+
+memhangul은 memoir를 한글 문서 작성에 사용할 수 있게 하기 위하여 개발된 스타일 패키지이다.
+원래 독립된 스타일로서 개발되고 유지되어 왔지만, 현재는 더이상 독립적인 스타일로 사용되지 않으며
+oblivoir의 핵심 기능을 정의한 서브스타일로서만 유지된다.
+즉 oblivoir란 memhangul을 이용하는 한글 문서작성 클래스라고 할 수 있다.
+
+\section{한글 드라이버}
+
+\obclass는 현재 실행되는 텍 엔진의 종류에 따라 한글 식자를 위하여 다음과 같은 한글 패키지를
+부른다. 이 한글 패키지들을 (편의상) \obclass의 한글 드라이버라고 한다.
+
+\begin{center}
+\begin{tabu}to.75\columnwidth{X|X|X}
+\hline
+oblivoir 옵션 & 텍 엔진 & 한글 식자 패키지 \\ \hline
+no option & \hologo{pdfLaTeX} & \koTeX-utf \\
+no option & \hologo{XeLaTeX} & \XeTeX-\ko \\
+no option & \hologo{LuaLaTeX} & \LuaTeX-\ko \\ \hline
+\end{tabu}
+\end{center}
+
+\section{옵션들}
+
+\subsection{memoir 옵션}
+
+원칙적으로 oblivoir는 memoir의 모든 옵션을 동일한 의미로 다 받아들인다. 여기에 해당하는 것으로 
+다음과 같은 것이 있다. 
+\begin{description}
+\item[용지 크기] a6paper, a5paper, a4paper, a3paper, b6paper, b5paper, b4paper, b3paper, mcrownvopaper, mlargecrownvopaper, mdemyvopaper, msmallroyalvopaper, dbillpaper, statementpaper, executivepaper, letterpaper, oldpaper, legalpaper, ledgerpaper, broadsheetpaper, pottvopaper, foolscapvopaper, crownvopaper, postvopaper, largecrownvopaper, largepostvopaper, smalldemyvopaper, demyvopaper, mediumvopaper, smallroyalvopaper, royalvopaper, superroyalvopaper, imperialvopaper.
+\item[본문 기본 글자 크기] 9pt, 10pt, 11pt, 12pt, 14pt, 17pt, 20pt, 25pt, 30pt, 36pt, 48pt, 60pt, *pt, extrafontsizes
+\item[프린팅 옵션] twoside, oneside, onecolumn, twocolumn, openright, openleft, openany, final, draft,
+ms, showtrims
+\item[기타 옵션] leqno, fleqn, openbib, article, oldfontcommands
+\end{description}
+이상의 옵션의 의미와 효과에 대해서는 memoir 매뉴얼을 읽어보라.
+
+\subsection{한글 드라이버의 옵션}
+
+한글 식자를 위하여 로드되는 패키지에는 고유한 옵션들이 있다. \obclass는 다음과 같은 옵션을 해당
+한글 드라이버에 넘겨준다.
+
+\begin{description}
+\item [\koTeX-utf] hangul, \uline{hanja}, nojosa, \uline{nonfrench}, \uline{finemath}, \uline{strictcharcheck}
+\item [\XeTeX-\ko] hangul, hanja, unfonts.\footnote{unfonts 옵션은 \obclass에서 조금 다르게 동작하므로 아래 해당 부분을 참고할 것.}
+\item [\LuaTeX-\ko] hangul, hanja, unfonts
+\item [cjk-\ko] hangul, hanja, nojosa, \uline{usedotemph}, \uline{usecjkt1font}. usecjkt1font 옵션은 uset1font로 입력해도 받아들인다.
+\end{description}
+이 가운데 [hangul] 옵션은 사실상 지정할 필요가 없다. hangul 옵션이 주어져도 예들 들어 절 숫자의 형식 같은 것은 \obclass\ 방식이 유지되기 때문이다. 그러므로 밑줄 그은 옵션만이 \obclass에서 의미가 있다고 할 것이다.
+
+
+\subsection{\obclass의 옵션}
+
+\subsubsection{한글 드라이버를 지정하는 옵션}
+
+다음 두 옵션은 한글 드라이버를 강제로 지정하는 옵션이다. 이 옵션을 쓸 때는 오직 \hologo{pdfLaTeX}만을 
+실행한다는 의미임을 기억해두자.
+\begin{description}
+\item [cjk] cjk-\ko 패키지로 한글을 표시한다. 이 패키지는 memhangul의 일부 기능과 충돌할 가능성이
+있으며 memhangul은 원칙적으로 cjk-\ko를 지원하지 않는다. 그러나 한글 표현만을 위해서라면 이 옵션으로
+문서를 작성할 수 있다.
+\item [dhucs] \koTeX-utf로 한글을 표현한다. \hologo{pdfLaTeX}에서 디폴트이며 memhangul-ucs는
+이 패키지를 의도하고 작성된 것이다.
+\end{description}
+
+따라서, 다음 옵션들은 해당하는 드라이버에서만 의미를 갖는다.
+\begin{description}
+\item [strictcharcheck] \koTeX-utf. 엄격한 문자 검사.
+\item [finemath] \koTeX-utf. 한글 간격 미세 조정.
+\item [nofinemath] \koTeX-utf. finemath 기능을 끔.
+\item [usedotemph] cjk-\ko. \verb|\dotemph| 명령 사용 가능.
+\item [uset1font] cjk-\ko. 라틴문자도 nanumtype1으로 찍음.
+\item [interwordHWP] \koTeX-utf. 단어 간격을 조금 더 넓게 벌려준다.
+\item [interworddefault] \koTeX-utf. 단어 간격을 적당히 벌려준다.
+\end{description}
+
+\subsubsection{레거시 텍과 관련된 옵션}
+
+다음 옵션은 \hologo{pdfTeX} 엔진 또는 \hologo{eTeX} 엔진에서만 의미를 갖는다. 이 옵션이 주어지고
+새로운 텍 엔진이 운영될 때는 무시된다.
+\begin{description}
+\item [dvips] \obclass로 작성된 문서를 latex $\rightarrow$ dvips $\rightarrow$ ps2pdf 순으로
+컴파일하려 할 때, 즉 pstricks를 이용할 때 이 옵션을 주어야 한다. 이 옵션을 준 문서에 대하여 \hologo{pdfLaTeX}을 
+실행하면 안 된다.
+\item [romanfixed] 로마 글자의 크기와 위치를 미세조정하는 옵션으로서 untype1을 쓸 때 유용하다. 현재 상황에서는 의미가 크지 않음.
+\end{description}
+
+\subsubsection{여러 가지 옵션}
+
+다음은 \obclass 의 고유한 옵션들이다. 
+\begin{description}
+\item [chapter] \verb|\chapter| 명령을 제대로 쓸 수 있게 해준다. 이 옵션이 없으면 \obclass는 \verb|\section|부터 시작하는 문서라고 간주하고 식자하지만 \verb|\chapter|에서 에러를 내지는 않는다.
+\item [kosection] \verb|\section|에 대하여 ``제''와 ``절''을 찍어주도록 하는 옵션이다.
+\item [amsmath] amsmath.sty와 amssymb.sty를 미리 로드해주는 옵션이다.
+\item [adjustmath] 한글 문서의 행간격이 벌어짐으로 인해서 display 수식의 전후에 너무 많은 공백이 생기는 것을 막아준다.
+\item [arabicfront] \verb|\frontmatter| 부분의 페이지 숫자를 아라비아 숫자로 찍는다. 기본값은 로만 숫자.
+\item [footnote] 각주 번호와 숫자를 한국식으로 식자한다.
+\item [figtabcapt] 그림과 표에 <그림 1>과 같은 방식으로 캡션을 단다.
+\item [gremph] 글꼴 대체 강조 방식을 쓴다. 이것이 기본값이다.
+\item [itemph] 기울인 글꼴 강조 방식을 쓴다.
+\item [nonfrench] nonfrenchspacing.
+\item [hangulpagestyle] 본문의 페이지 스타일을 hangul 양식으로 한다.
+\item [nokorean] 사실상 memoir와 거의 같은 상태가 되게 한다. 즉 pdf bookmark도 만들지 않으며 한글도 찍히지 않는다.
+\item [pdfbookmark] nokorean 옵션을 주면서도 북마크는 만들도록 hyperref을 로드해주는 역할을 한다. nokorean 옵션이 주어지지 않을 때는 무의미함.
+\item [10.5pt] 본문 활자 크기를 10.5pt로 한다.
+\item [quotespacing] quote, quotation 환경의 줄간격을 `좁은 줄간격'으로 줄인다.
+\end{description}
+
+\bigskip
+
+다음 옵션들은 특별한 상황에서 의미를 가지는 것이다.
+\begin{description}
+\item [lyxhyper] LyX에서 문서를 작성할 때 LyX이 강제로 hyperref을 로드하는 기능과 \obclass의 hyperref 로드 기능이 충돌하는 것을 방지하기 위한 것이다.
+\item [tocentry] chapter 옵션과 같이 쓰여서 toc, lof의 엔트리를 조정해준다.
+\item [microtype] 이 옵션이 지정되면 \hologo{pdfTeX}과 \hologo{LuaTeX}에서 microtype 패키지를 불러온다. 다만 \hologo{XeTeX}에서는 문장부호 끌어내기를 위한 xetexko-hanging 스타일을 로드한다.
+\item [subfigure] subfig 패키지 대신 subfigure 패키지를 쓰기 위해서 충돌이 있는 코드 하나를 수정해준다.
+\item [manualfontspec] fontspec 패키지를 자동으로 로드하지 않고 사용자가 직접 설정하고자 할 때
+\item [fontspec] fontspec 패키지에 넘겨줄 옵션을 지정한다.
+\item [xcolor] xcolor 패키지에 넘겨줄 옵션을 지정한다.
+\item [hyperref] hyperref 패키지에 넘겨줄 옵션을 지정한다.
+\item [moreverb] moreverb 패키지를 사용하려 할 때. 약간의 충돌을 해결해준다.
+\item [preload] \verb|\documentclass|가 시작되기 전에 로드해야 할 패키지를 지정한다.
+\item [preloadoption] preload할 때 함께 넘겨줄 옵션을 쓴다.
+\item [faht, fawd] 특별히 pdf 사이즈를 조절할 필요가 있을 때 사용한다. 특히 flowfram 패키지를 위해서 필요하다.
+\item [noreserveinserts] \hologo{eTeX}의 reserveinserts 확장 코드를 억제한다. 일반적으로 사용할 필요 없다.
+\item [moreroom] \hologo{pdfTeX}에서 용량 부족으로 에러가 발생할 때 특별히 지정한다.
+\end{description}
+
+\bigskip
+
+다음 옵션들은 현재 큰 의미를 지니지 않는 것들이다. 대부분 \koTeX 의 발전과 더불어 \obclass에서 특별히 지정할 필요가 없어졌다.
+\begin{description}
+\item [unfonts] 은 글꼴을 사용하게 한다. 레거시 텍에서는 untype1이고 새로운 텍 엔진에서는 은글꼴 트루타입이 기본 글꼴이 된다. 
+\item [nounfonts] 은 글꼴을 사용하지 않게 한다. 이것이 디폴트이다.
+\item [latinquote] 따옴표를 라틴 글꼴에서 찍도록 강제하는 옵션이었다. 현재는 아무런 작용도 하지 않는다.
+\item [oldhangul] 옛한글 식자를 위한 옵션이었다. 현재는 이 옵션이 없어도 옛한글을 잘 처리한다.
+\item [nowinname] 은글꼴을 위해서 마련된 옵션이었으나 현재는 무의미하다.
+\end{description}
+
+
+%\section[\obclass{}와 비교]{\obclass{}\footnote{현재 documentclass 이름으로 oblivoir를 쓰든 xoblivoir를 쓰든 실행되는 엔진에 따라 기능이 설정된다. 그러나 여기서는 pdf\TeX\ 엔진에서 쓰던 legacy oblivoir를 가리키는 경우에 ``\obclass''라고 하였다.}와 비교}
+
+%%%다음 옵션은 disable되었다. 아무런 작용이 없는 것이므로 에러를
+%%%발생하지는 않지만 효과도 없다.
+%%%\begin{description}
+%%%\item [{[dvips]}] 당연히 더이상 쓸 일이 없으므로.
+%%%\item [{[romanfixed]}] 폰트 관련된 옵션은 대부분 비활성화된다.
+%%%\item [{[finemath]}, {[nofinemath]}] 이 옵션은 disable되었다. finemath에 관련된 사항은 \xetexko 에서 모두 구현하고 있다.
+%%%%그러나 완전한 호환은 아직 되지 않는다. 대표적인 예가 괄호 뒤의 간격이다.
+%%%\item [{[strictcharcheck]}] dhucs 특유의 옵션이었다.
+%%%\end{description}
+%%%
+%%%다음 옵션이 새로 생겨났다.\footnote{%
+%%%  [latinquote] 옵션은 더이상 아무런 작용을 하지 않는다.
+%%%}
+%%%\begin{description}
+%%%%\item [{[latinquote]}] 홑따옴표와 겹따옴표를 식자하는 폰트를 라틴 문자 폰트로 할 것인가 한글 폰트로 할 것인가를 결정하는
+%%%%것이다. 이 옵션이 주어지면 라틴 문자 폰트의 겹따옴표를 식자한다.
+%%%\item[{[manualfontspec]}, {[fontspec]}] 이 옵션의 동작에 대해서는 \myREF{sec:fontspec}{sec:폰트스펙}\를 보라. 2011/09/15 이전 버전에서는 옵션 명칭이 [fontspec]이었으나 이 옵션은 다른 기능으로 쓰이게 되었다.
+%%%\item[{[moreverb]}] 이 옵션의 동작에 대해서는 \myREF{sec:moreverb}{sec:모아버브}\를 보라.
+%%%%\item[{[oldhangul]}] 이 옵션의 동작에 대해서는 \ref{sec:올드한글}\를 보라.
+%%%\item[{[amsmath]}] 이 옵션의 동작에 대해서는 \myREF{sec:ams}{sec:에이엠에스}\를 보라.
+%%%\item[{[nowinname]}] 이 옵션의 동작에 대해서는 \myREF{sec:nowinname}{sec:노윈네임}\를 보라.
+%%%%\item[{[verthangul]}] 이 옵션의 동작에 대해서는 \ref{sec:세로쓰기}\를 보라. %%% not implemented
+%%%\item [{[microtype]}] 이 옵션의 동작에 대해서는 \myREF{sec:microtype}{sec:마이크로타입}\를 보라.
+%%%\end{description}
+%%%
+%%%다음 옵션은 그대로 있지만 동작이 달라졌다.
+%%%\begin{description}
+%%%\item [{[itemph]}] emph 또는 itshape에 한글을 기울여서 식자한다.
+%%%\item [{[gremph]}] emph 또는 itshape에 한글을 바로 선 폰트로 식자한다.
+%%%\end{description}
+%%%%gremph와 itemph의 차이는 이제 italic인가 아닌가의 차이뿐이다.
+%%%
+%%%다음 옵션은 특별한 예외 처리를 위한 것이다. 일반적인 경우에는 쓰이지 않는다.
+%%%\myREF{sec:flowfram}{sec:플로프렘}\를 보라.
+%%%\begin{description}
+%%%\item [{[faht]}, {[fawd]}] 문서 전체의 stockheight와 stockwidth를 미리 설정한다.
+%%%\item[{[preload]}, {[preloadoption]}] 이 옵션의 동작에 대해서는 \myREF{sec:preload}{sec:프리로드}\를 보라.
+%%%\end{description}
+%%%
+%%%레거시 ko.\TeX 의 폰트 설정 명령들은 전혀 동작하지 않고 에러를 토해낸다는 사실을 알아야 한다. 즉, \texttt{\textbackslash{}SetAdhocFonts}라든가
+%%%\texttt{\textbackslash{}SetHangulFonts} 같은 명령은 제거되어 있다. \XeLaTeX{}을
+%%%쓰는 목적이 주로 폰트 문제와 관련이 있으므로, 종래의 폰트 설정 방식은 모두 \XeLaTeX{} 방식으로 바꾸도록 해야 한다.
+%%%%다음은 제거된, 더이상 사용할 수 없는 명령들이다.
+%%%%\begin{verbatim}
+%%%%    \SetHangulFonts
+%%%%    \SetHanjaFonts
+%%%%    \SetAdhocFonts
+%%%%    \SetGremphFonts
+%%%%    \interhchar
+%%%%\end{verbatim}
+%%%
+%%%그밖의 모든 \obclass{}의 기능을 \xobclass{}에서 쓸 수 있다.
+%%%한글 문서 작성에 있어서 표준이 되고자 하는 \obclass{}를
+%%%\XeTeX 에서\explpunc.Lua\TeX 에서도.\ 편리하게 사용할 수 있게 되기를 바라 마지 않는다.
+
+\section{폰트 설정 방식에 대한 간단한 설명}\label{sec:font}
+
+\subsection{\koTeX-utf 엔진}
+
+글꼴 선택 명령 \verb|\SetHangulFonts|, \verb|\SetHanjaFonts|, \verb|\SetAdhocFonts|와 더불어,
+gremph 옵션이 주어졌을 때 \verb|\SetGremphFonts| 등을 사용한다.
+이 명령의 의미와 용법에 대해서는 \koTeX\ 사용설명서를 참고하라.
+
+아무런 지정도 없을 경우 nanumtype1으로 식자하고, 이것은 \koTeX-utf의 디폴트 상황과 동일하다.
+gremph는 \koTeX-utf에서 \verb|\usepackage{dhucs-gremph}|를 선언한 경우와 동일하게
+동작하므로 별도로 이 스타일을 얹을 필요는 없다.
+
+\subsection{\XeTeX-\ko, \LuaTeX-\ko}
+
+한글 드라이버들은 라틴 문자 폰트와 한글/한자 폰트를 분리하는 것을 기본으로 하고 있다.
+% \footnote{%
+   % 한글과 라틴 문자을 분리하지 않으려 할 경우, fontspec 패키지의
+   % \texttt{\textbackslash{}fontspec} 명령 등을 사용할 수 
+   % 있다. 그러나 폰트 테스트 등의 특별한 목적이 아니고 일반
+   % 문서 작성 상황에서 이렇게 써야 할 이유가 별로 없을 것이다.
+% %   예를 들어 라틴 문자자까지 바탕체를 쓰면: 
+% %  {\setkormainfont{바탕}\fontspec{바탕}%
+% % 한글 바탕체. The quick brown fox jumps over the lazy dog.}
+   % 또한, 한글 폰트와 한자 폰트를 분리할 수 있는데, 이에 대해서는
+   % \ref{sec:디폴트}\를 참조하라.
+   % }
+한글과 라틴 문자 글꼴을 분리하지 않으려 할 경우, 
+\xetexko\ 명령인
+\verb|\disablekoreanfonts|를 선언한다.
+%\footnote{%
+% \XeTeX{}ko 2008/11/10 이후 버전.}
+%%\xetexko 를 따라서 \verb|\hangulmarks|와 같은 명령군이나 \verb|\xetexkofontregime|
+%%명령을 활용하면 된다. 이에 대해서는 \xetexko\ 매뉴얼을 (반드시) 참조하라.
+이렇게 하면 한글 글꼴은
+라틴 문자 글꼴을 따라가게 된다. 즉, \texttt{\textbackslash setmainfont}
+등으로 선언된 글꼴이 한글과 라틴 문자에 동시에 식자된다.\footnote{%
+ 이외에도 한글-라틴 문자 글꼴의 분리에 따르는 여러 가지 옵션 정의에 관련된
+ \xetexko{} 매크로가 있으므로 이에 대해서는 \xetexko{} 매뉴얼을
+ 참고하라.
+}
+
+\paragraph{라틴 문자}
+라틴 문자 폰트는 fontspec 패키지의 방식을 따른다.
+설정과 사용에 대해서는 fontspec 패키지 문서를 참고하라.
+매우 방대하고 훌륭한 문서이다.
+\begin{boxedverbatim}
+\setmainfont{<Font Name>}
+\setsansfont{...}
+\setmonofont{...}
+\end{boxedverbatim}
+
+이 명령의 옵션으로 \verb|[Ligatures=TeX]|을 주면 \verb|``|, \verb|---|와 같은 
+입력이 ``, ---와 같이 나타난다. 대부분의 텍 소스에는 이런 이른바 텍 리거쳐를 사용하는 것이
+일반적이므로 이 옵션을 지정하는 것이 좋다. \XeTeX 에서 \verb|[Mapping=tex-text]| 옵션을
+써도 좋은데 이 옵션은 \LuaTeX 에서는 무의미하므로 양쪽에 통용되는 \verb|[Ligatures=TeX]|을
+쓰도록 하자. 따라서 만약 TeX Gyre Termes를 라틴 문자 세리프 글꼴로 쓰려 한다면,
+\begin{boxedverbatim}
+\setmainfont[Ligatures=TeX]{TeX Gyre Termes}
+\end{boxedverbatim}
+와 같이 지정하면 된다.
+
+\paragraph{한글과 한자}
+한글 폰트는 다음과 같이 설정한다. 자세한 사항은
+매뉴얼을 참고하라.
+\begin{boxedverbatim}
+\setmainhangulfont[Options]{FontName}
+\setsanshangulfont[Options]{FontName}
+\setmonohangulfont[Options]{FontName}
+\setmainhanjafont[Options]{FontName}
+\setsanshanjafont[Options]{FontName}
+\setmonohanjafont[Options]{FontName}
+\end{boxedverbatim}
+\xobclass 에서도 이 방식의 폰트 정의를 할 수 있다. %이 문법은
+%fontspec 패키지를 따르는 것이다.
+
+한글 폰트만을 이용해서 한글/라틴 문자에 모두 식자할 필요가 있을
+수 있다. 이 경우 다음과 같이 하는 것이 한 가지 방법이다.
+\begin{boxedverbatim}
+\disablekoreanfonts
+\setmainfont{NanumMyeongjo}
+\end{boxedverbatim}
+또는,
+\begin{boxedverbatim}
+\setmainhangulfont{NanumMyeongjo}
+\hangulmarks
+\end{boxedverbatim}
+이렇게 하면 라틴 문자와 문장부호, 숫자를 나눔명조로 식자한다.
+
+더 세세한 지정을 위하여
+그리고 alphas, nums, parens, quotes, colons, hyphens, puncts, cjksymbols가 식자될 폰트의 영역(latin, hangul, hanja, prevfont)을 정의하는 \verb|\xetexkofontregime| 명령도 쓸 수 있다.
+이에 대해서는 \xetexko\ 매뉴얼을 반드시 참조하라.
+
+\paragraph{임시 폰트 교체}
+문장을 작성 중에 일시적으로 폰트를 교체하기 위한 명령으로 
+\begin{boxedverbatim}
+\adhochangulfont
+\adhochanjafont
+\end{boxedverbatim}
+이 정의되어 있다. 이 명령들은 \verb|\setmainhangulfont| 명령과 같은 방법으로 사용한다. 또한, 
+\begin{boxedverbatim}
+\hangulfontspec
+\hanjafontspec
+\end{boxedverbatim}
+명령도 정의되어 있으며, \verb|\fontspec| 명령이 적용되지 않는 한글과 한자 영역에 효력을 발휘하므로 필요한 대로 쓸 수 있다.
+
+\subsection{\obclass의 폰트 설정 명령}
+
+\subsubsection{간단한 폰트 지정}
+
+한편, 한글 글꼴을 선언하는 데 있어서
+\xobclass 에서는 약간 다른 방법(더 편리한?)의 폰트 정의가
+가능하다. 이것은 다음 세 명령으로 이루어져 있다.
+\begin{boxedverbatim}
+\setkormainfont(<Bold>)(<Italic>){<Regular>}
+\setkorsansfont(<Bold>)(<Italic>){<Regular>}
+\setkormonofont{<Mono>}
+\end{boxedverbatim}
+
+이러한 폰트 정의 방식은 xoblivoir 클래스의 원래 의도인 `되도록 간단하게
+필요한 것만' 사용하자는 데서 나온 것이다. 그러므로 옛한글 설정이나
+자간, 장평 등 복잡한 폰트 속성을 적용하려 한다면 당연히 \xetexko 의 (즉 fontspec의)
+설정 방식을 이용하는 것이 좋다.
+
+이후의 설명은 \verb|\setkormainfont|에 대해서만 한다. 다른 두
+명령의 사용법은 동일하다.
+
+\begin{boxedverbatim}
+\setkormainfont{Font_Family_Name}
+\end{boxedverbatim}
+한글 글꼴 가운데 어떤 것은\explpunc.모든 한글 글꼴이 그렇지는 않다는
+데 주의하라.\ 글꼴 가족을 이루고 있는 것이 있다. 예를 들면
+\oblivoirdblquote{맑은 고딕}은 맥락에 따라 \oblivoirdblquote{맑은 고딕 Bold}를
+글꼴 가족으로 인식한다. 이런 경우 예를 들어
+\begin{verbatim}
+\setsansfont{Malgun Gothic}
+\end{verbatim}
+이렇게만 지정해도 굵은 글꼴이 요구되는 곳에서는 \oblivoirdblquote{맑은 고딕 Bold}를
+식자해준다.
+이렇게 잘 만들어진 글꼴을 이용하는 경우, 간단히 하나의 옵션으로
+글꼴을 지정해주는 것만으로 굵은 글꼴을 사용하게 할 수 있다. 
+
+\begin{boxedverbatim}
+\setkormainfont[Options]{Font_Name}
+\end{boxedverbatim}
+만약 각괄호(\verb|[|)가 첫 인자로 나오면 이 명령의 사용법은
+\verb|\setmainhangulfont|와 동일하다. 즉 fontspec 명령을 그대로
+쓸 수 있다.
+\begin{boxedverbatim}
+\setkormainfont[Options]{Font_Name}[hnj_Options]{hnj_Font_Name}
+\end{boxedverbatim}
+다른 점은 위와 같이 한자 글꼴을 잇대어 정의할 수 있다는 것이다.
+이 때 반드시 한자 글꼴 추가 정의가 시작된다는 듯으로 각괄호 []를
+써주어야 한다. 아무런 옵션을 지정하지 않더라도 이 부호는 있어야
+한다.
+
+\subsubsection{폰트 가족의 지정}
+
+한글 폰트의 폰트 가족(font family)은 인위적으로 지정해주어야 할 때가 있다.
+여러 한글 폰트를 임의로 묶어서 하나의 폰트 가족처럼 다루는 경우이다.
+
+한글의 폰트 가족은 Regular/Bold/Italic
+으로 이루어진다고 가정하고 있다.%
+\footnote{원한다면 BoldItalic까지 포함할 수 있으나, \xobclass{}는 
+	BoldItalic을 별도로 설정하는 것을 기본으로
+	삼지 않았다. 지나치게 번거로울 뿐 아니라 BoldItalic에 
+	특별한 의미를 부여하기 힘들었기 때문이다. 반면, \xetexko 는
+	BoldItalic을 별도로 설정할 수 있게 하고 있으므로 혹시라도 
+	원한다면 이것은 사용자에게 맡겨져 있다.
+} 
+폰트 가족을 지정하여 글꼴 설정을 할 때는 다음과 같이 한다.
+\begin{boxedverbatim}
+\setkormainfont(<hgBd>)(<hgIt>){<Hangul>}
+\setkorsansfont(<hgBd>)(<hgIt>){<Hangul>}
+\end{boxedverbatim}
+첫 두 인자를 둘러싼 괄호가 각괄호 []가 아니라 괄호 ()임에 주의하라.\footnote{%
+  이것은 2008/11/09 버전의 변경사항이다. 하위호환성을 제공하지
+  않으므로 이전의 모든 소스를 수정해야 한다.}
+아무튼 괄호 ()로 둘러싸인 부분은 생략가능하다. 첫 괄호 인자만 있고
+이탤릭 글꼴을 지정하지 않으면 기본 글꼴로 치환된다.
+
+한글 폰트와 별도의 한자 폰트를 설정할 필요가 있을 때는 다음과 같이 한다.
+\begin{boxedverbatim}
+\setkormainfont(<hgBd>)(<hgIt>){<Hangul>}(<hjBd>)(<hjIt>){<Hanja>}
+\setkorsansfont(<hgBd>)(<hgIt>){<Hangul>}(<hjBd>)(<hjIt>){<Hanja>}
+\end{boxedverbatim}
+한자를 한글과 별도의 폰트로 식자하도록 하는 것은 그 번거로움을 피할 수 없지만,
+한글 폰트 가운데 한자 영역이 거의 없거나 있더라도 부실한 것이 너무 많기 때문에
+현재의 한글 폰트의 사정을 돌아볼 때 부득이하고 불가피하다.
+
+두 번째 선택 인자는 이탤릭체를 나타낸다. 이 인자를 지정하지 않으면 
+기본 글꼴로 치환된다. Regular 폰트를 이 자리에 쓰고 싶을 때가 있다. 이럴 경우 간단히
+\begin{boxedverbatim}
+\setkormainfont(BOLD)(*){REGULAR}
+\end{boxedverbatim}
+와 같이 (*)로 줄여 쓸 수 있다. 즉, 아예 두번째 인자가 없으면 REGULAR 폰트로 치환되고, (*)로 지시되면 REGULAR 글꼴을 이탤릭으로 식자한다.
+만약 itemph 옵션이 지시되어 있다면 REGULAR의 FakeSlanted 글자가
+식자되고, gremph 옵션이 지시되어 있다면 이 자리에 선언된 글꼴이 곧은 모양으로 찍힐 것이다.
+이 줄인 옵션은 두 번째 선택 인자, 즉 이탤릭 선언에만 동작하며,
+\verb|\setkormainfont|와 \verb|\setkorsansfont|에서 쓸 수 있다.
+
+\subsection{디폴트 치환}\myLabel{sec:default}{sec:디폴트}
+
+필요한 정보가 충분히 주어지지 않으면 폰트 설정은 기본값으로
+치환된다. 아래 몇 가지 사용례를 보기로 하자.
+
+\begin{boxedverbatim}
+\setkormainfont{HCR Batang LVT}
+\end{boxedverbatim}
+위의 명령을 실행하면 Regular와 Bold, Italic이 지정한 폰트로 바뀐다.
+%여기 예시한 글꼴은 font family를 이루고 있지 않은 개별 글꼴이므로
+%굵은 글꼴에도 같은 폰트가 식자된다.
+예시한 글꼴은 Bold 서체가 font family를 이루고 있으므로 굵은 글꼴을 자동으로
+HCR Batang LVT Bold로 식자한다. 그러나 그렇지 않은 글꼴을 예를 들면,
+\begin{boxedverbatim}
+\setmainfont{YJ BELLA Medium}
+\end{boxedverbatim}
+과 같이 하는 경우 양재벨라체가 굵은 글꼴 자리에도 똑같은 글꼴로 식자하게 된다.
+
+
+\begin{boxedverbatim}
+\setkormainfont[BoldFont={NanumMyeongjo ExtraBold},%
+       ItalicFont={NanumBarunGothic},%
+       ItalicFeatures={FakeSlant={.17}}]{NanumMyeongjo}
+\end{boxedverbatim}
+위와 같이 fontspec 문법의 옵션을 지정할 수 있다.
+
+\begin{boxedverbatim}
+\setkormainfont(NanumMyeongjo ExtraBold){NanumMyeongjo}
+\end{boxedverbatim}
+이 명령은 Regular와 Bold만 지정된다.
+
+\begin{boxedverbatim}
+\setkormainfont(NanumMyeongjo ExtraBold)(*){NanumMyeongjo}
+\end{boxedverbatim}
+이 명령은 Italic에 NanumMyeonjo를 식자하게 한다. gremph에서는
+upshape와 itshape가 똑같이 찍히게 되지만 itemph에서는 같은
+글꼴이 기울어져 식자될 것이다.
+
+\begin{boxedverbatim}
+\setkormainfont(* ExtraBold)(Malgun Gothic){NanumMyeongjo}
+\end{boxedverbatim}
+이것은 Regular, Bold, Italic을 한 가족으로 묶는다. BoldItalic이 만약 필요해지면 Bold체와
+동일하게 설정된다.\footnote{%
+	BoldItalic은 위에서 설명한 (*) 줄인 옵션의 영향을 받지 않는다.}
+한편 (* ExtraBold)라는 표기는 NanumMyeongjo와 같은 이름이기 때문에 줄여 쓴 것이다.
+
+한자 글꼴을 별도로 설정해야 할 때가 있다.
+% \footnote{%
+   % 이 기능은 2008/10/09 이후의 xkospace에 바탕을 둔 \xobclass{} 이후 버전에서 가능하다.
+% }
+한자 글꼴을 설정하기 위해서는 위의 명령을 확장하여 다음과 같이 지정한다.
+
+\begin{boxedverbatim}
+\setkormainfont(한글볼드)(한글이탤릭){한글레귤러}%
+               (한자볼드)(한자이탤릭){한자레귤러}
+\end{boxedverbatim}
+
+\texttt{()}로 둘러싸인 부분은 모두 생략가능하지만, 이것이 한자 폰트를 설정하는 것이라는
+점을 알리기 위해 한자 시작 부분에 ( 문자를 지정해야 한다. 즉,
+\begin{boxedverbatim}
+\setkormainfont(){NanumMyeongjo}(){HCR Batang LVT}
+\end{boxedverbatim}
+위와 같이 하면 한글 영역에 나눔명조, 한자 영역에 함초롬 LVT 바탕을 식자할 수 있다.
+이 때 볼드를 지정하지 않지만 최소한 \texttt{()}를 써주어야 한다는 점에 주의한다.
+한글 폰트 정의에서 괄호 ()를 사용했다면 한자 정의 확장에도 같은 괄호 ()를 
+써야 한다. 한글 폰트 정의에서 각괄호 []를 사용했다면 한자 정의 확장에도
+같은 괄호 []를 써야 한다.
+%참고로, 일부 한글 기호문자는 한자 폰트로 식자된다.
+
+\begin{boxedverbatim}
+\setmonoscale{<scale>}
+\end{boxedverbatim}
+
+한글 mono 폰트를 기본값(은 타자)이 아닌 글꼴로 지정할 경우 scaling이 필요할 때가 있다.
+이를 위하여 위의 명령이 정의되어 있다. 이것은 한글 및 한자 mono 글꼴에만
+영향을 미친다. 라틴 문자자는 fontspec 옵션으로 지정하면 될 것이다.
+% 이 문서의 경우 mono 한글 폰트를 맑은 고딕으로
+% 하면서 scale 값을 0.9로 지정했다.
+
+문장 중간에서 한글 및 한자 폰트를 일부 바꾸어 써야 할 때가 있다. 이 경우에는 \xetexko 의
+\verb|\hangulfontspec| 명령을 이용하면 매우 간편하게 이를 실현할 수 있다.
+
+\subsection{ExternalLocation}
+
+ExternalLocation으로 폰트를 찾도록 하는 설정은 특히 폰트 정보가 이상한 한글 폰트를 사용할 때를 위해서도
+매우 중요하다. 굳이 폰트 캐싱을 할 필요가 줄어들기도 하므로, 이 방식을 선호하는 경우도 있다. \xobclass{}에서는
+\textquotedblleft 별표붙인 명령\textquotedblright 으로 지정한다.
+참고로 별표붙인 명령을 쓸 때는 fontspec 옵션을 지정하는 명령형식을
+쓸 수 없다. 그 이유는 fontspec 명령 형식에서는 ExternalLocation
+옵션을 줄 수 있기 때문이다.
+
+\begin{boxedverbatim}
+\setkormainfont*(BOLD)(ITALIC){REGULAR}
+\end{boxedverbatim}
+
+\TeX\,Live를 포함하여 대부분의 \TeX{} 임플리멘테이션에서 시스템의 폰트 폴더를 kpathsearch로
+찾을 수 있으므로 예컨대 Windows 폰트 폴더의 폰트들도 이 방식으로 호출할 수 있다. 한편, 한겨레결체의 경우 폰트
+이름을 라틴 문자으로 바꾸어두고 ExternalLocation으로 찾아야만 사용할 수 있다.%
+\footnote{즉, 폰트 이름 정보가 잘못되어 있는 글꼴이다.%
+}
+휴먼명조와 같은 글꼴도 마찬가지여서 이 글꼴은 ExternalLocation 옵션으로 \verb|HMKMM.TTF|를 
+직접 지시하는 것이 가장 안전하다.
+
+한글 폰트 이름은 폰트 자체의 특성에 따라서 매우 복잡한 양상을 보인다.
+이 글에서는 Windows에서 확인할 수 있는 이름을 기준으로 하고 있으나,
+플랫폼에 따라서는 이름으로 폰트를 호출하기 위해서 다른 방법을 사용해야
+할 수도 있다.
+가장 안전한 방법은 ExternalLocation으로 폰트 파일의 이름을 부르는 것이다.
+이 때 몇 가지 이슈가 있다.
+\begin{enumerate}[(가)]\tightlist
+\item Windows에서는 한글 폰트 파일 이름을 부를 수 없다. 모든 폰트 파일 이름은
+라틴 문자이어야만 한다. 그 이유는 한글 폰트 파일 이름이 윈도우즈 시스템 인코딩인
+CP949로 불려져야 하는데 우리가 작성하는 tex 원본 파일은 UTF-8 인코딩이므로
+한글 파일 이름을 호출하는 것이 윈도우즈에서 원천적으로 불가능하기 때문이다.
+
+\item 반면, 시스템 로케일이 utf-8인 매킨토시나 리눅스에서는 한글 폰트 파일 이름도
+ExternalLocation으로 호출할 수 있을 것이다. 리눅스에서는 모르겠으나 매킨토시에서는
+이것이 가능했다.
+
+\item texmf.cnf의 OSFONTDIR 변수를 수작업으로 수정해야 하는 경우가 있다. Windows의
+KC2008이나 TeXLive 자체가 이것을 잘 설정하여 주므로 사용자가 신경쓸 것이 없으나
+경우에 따라 이 변수를 설정해야 할 필요가 있을 수 있다. 맥의 경우,
+/usr/local/texlive/2013/texmf.cnf 파일을 열어서\footnote{/usr/local/texlive/2013/texmf/web2c/texmf.cnf를
+수정해서는 안된다.} 다음 내용을 자신의 환경에 맞게 써넣으면 될 것이다.
+\begin{verbatim}
+OSFONTDIR = {/Library/Fonts;~/Library/Fonts;/System/Library/Fonts;}
+\end{verbatim}
+
+\item ExternalLocation으로 폰트를 호출한다는 것은 kpathsearch를 이용한다는
+것이다. 그러므로 texmf 트리 아래에 해당 폰트를 가져다두고 mktexlsr해도 그
+폰트에 접근할 수 있다.
+
+\end{enumerate}
+
+폰트를 이름으로 호출하는 것은 폰트 자체에 정의된 이름과 파일이름이 다른 것이 너무 많아서
+손쉽게 말하기가 어렵다. 대부분의 시스템에서(맥 제외) \verb|fc-list| 명령은 \XeTeX 으로
+부를 수 있는 폰트 이름을 확인하게 해준다. 한편 \LuaTeX의 경우는 좀더 복잡하여
+\XeTeX 에서 호출할 수 있는 것과 같을 때도 있고 다를 때도 있다.
+파일 이름으로 호출(즉 ExternalLocation)하는 것이 가장 편리할 때도 있다.
+
+%\subsection{파일 이름 문제: 조금 더}\myLabel{sec:nowinname}{sec:노윈네임}
+
+%폰트를 이름으로 호출하는 데 있어 결정적으로 중요한 것은 시스템 로케일이다.
+%즉, 한글 로케일이면 한글 폰트 이름을 호출할 수 있지만 그렇지 않으면
+%폰트 이름을 한글로 부를 수 없다.
+%\xobclass는 한글 로케일의 시스템\explpunc.한글 Windows, Mac OS X 한글 상위 등.\ 일 것을 기본값으로 하고 있다.
+%또한 각 운영체제가 인식하는 파일 이름들이 조금씩 다르다.
+%이것은 폰트 자체의 특성에 따르는 경우가 많으므로
+%폰트의 이름이나 특성을 사용자가 잘 이해하고 사용하는 도리밖에 없다.
+%
+%한글이 아닌 로케일의 시스템에서는 [nowinname] 옵션을 지정하고
+%폰트를 라틴 문자 이름으로 호출하면 대부분의 문제가 해결된다.
+%\begin{boxedverbatim}
+%\documentclass[nowinname]{xoblivoir}
+%\setkormainfont(UnBatangBold){UnBatang}
+%\end{boxedverbatim}
+%
+%예컨대 라틴 문자 상위의 매킨토시에서 다음과 같이 한글 폰트를 정의한 경우,
+%\begin{verbatim}
+%\setkormainfont(NanumMyeongjoOTF-Bold){NanumMyeongjoOTF-Regular}
+%\end{verbatim}
+%두 번째 선택인자가 없기 때문에 이탤릭 글꼴은 기본 글꼴인 은 바탕으로
+%치환된다. 
+%이 때, 운영체제가 한글 글꼴 이름 \oblivoirdblquote{은 바탕}을
+%인식하지 못할 수가 있다.\footnote{%
+%	김영욱 교수께서 이 문제를 알려주셨다.}
+%
+%해결책은 앞서 설명한 ExternalLocation으로 폰트를 호출하든가, 아니면
+%이탤릭 옵션까지 모두 채워서 선언하든가 하면 물론 된다. 그러나 좀
+%번거로울 수도 있는 것이다.
+%이런 경우에 대비하여 [nowinname] 옵션을 마련해 두었다. 은 글꼴의
+%호출명을 라틴 문자으로 하게 함으로써 한글 글꼴 이름을 인식 못하는 운영체제의
+%문제를 피해가게 하였다.\footnote{%
+%	다행히, 은 글꼴은 한글 윈도우즈에서도 라틴 문자 이름으로 호출할 수도
+%	있다. 즉, 한글 윈도우즈에서는 라틴 문자 이름과 한글 이름을 모두 사용할
+%	수 있는 것이다. 그러나 모든 글꼴이 그렇지는 않다.}
+%라틴 문자 상위의 매킨토시, 그리고 한글 로케일을 사용하지 않는 리눅스
+%등에서 이 옵션이 활용될 수 있을 것이다.
+%
+%이 옵션은 xetexko-xobfont, xetexko-var, memhangul-x 등에 부여할 수도
+%있으므로 Beamer 문서를 작성하기 위해 xetexko-var를 쓰는 경우에는
+%xetexko-var의 옵션으로 지시하면 된다.
+
+\subsection{이탤릭, 기울임}
+
+한글 글꼴에 이탤릭은 없다. 그러므로 강조를 위해 기울임으로 이탤릭을 대용하는 것은 그다지 권장하지 않는다. 예를 들어 
+\begin{boxedverbatim}
+\setkormainfont(* Bold)(Gungsuh){Malgun Gothic}
+\end{boxedverbatim}
+으로 지정했을 때, 궁서체가 이탤릭에 해당하는 폰트로 설정된다. gremph가 디폴트이므로 궁서체는 곧은 모양으로 찍힌다.
+
+그러나 디자인 상의 효과를 위해서나 다른 이유에서 
+이 서체를 기울이고 싶은 경우가 있을 것이다.
+이 경우 \texttt{[itemph]} 클래스 옵션을 지정한다.
+그 반대의 경우는 \texttt{[gremph]}이고 이것이 디폴트이다. 부분부분 기울이려 한다면 fontspec
+명령을 써서 조작할 수 있으므로 별도로 명령을 만들어두거나 하지 않았다.
+
+%\subsection{따옴표}
+%
+%2010년 초, \xetexko 의 급격한 발전과 더불어 \xobclass 가 시도하던 문장부호에 관한 사항은 사실상
+%\xetexko 를 따르는 것으로 충분해졌다. 문장부호를 식자할 때 라틴 문자 폰트의 것, 한글 폰트의 것을
+%자유롭게 선택할 수 있으며 간격 문제도 글꼴 선택의 옵션으로 가능하여졌다.
+%\xetexko\ 매뉴얼을 잘 읽어보기 바란다.
+%
+%이 절은 더이상 의미가 없게 되어 내용을 삭제한다.
+
+% 따옴표는 한글 폰트의 것을 쓴다. 그러므로 큰따옴표를 입력할 때 \texttt{``}이 아니라 “으로 입력하는 것이 좋다.\footnote{%
+  % 윈도우즈 한글 입력기에서, ‘ㄴ’과 한자 키를 누르면
+  % 이 부호를 입력할 수 있다.}
+% 한글 폰트의 따옴표가 신통찮은 것이 너무 많아서, 라틴 문자 폰트의 것을 식자할 수 있도록 해두었다. 
+% 입력에서 한글 따옴표를 사용하였으나 식자는 라틴 문자 폰트의 것으로 하려 할 때 이 옵션을 쓰면 된다.
+% 클래스 옵션 \texttt{{[}latinquote]}로
+% 지정한다. 아마 \texttt{\textbackslash{}textquotedblleft} 등도 되지 않으려나 한다. 
+
+% 한편, \texttt{``}로 입력된 텍스트를 큰따옴표로 식자되게 하는 등, 전통적인
+% \TeX\ 입력 방식이 유지되게 하려면 라틴 문자 글꼴 지정 시에
+% \texttt{[Mapping=tex-text]} 옵션을 주면 된다. ``큰따옴표로 둘러싸인 텍스트''.
+% 이 방식을 이용하면 (당연히) latinquote 옵션 여부와 상관없이 모든 따옴표가 라틴 문자 글꼴로 식자될 것이다.
+
+% \xobclass{}에는 \texttt{\textbackslash{}oblivoirquote}와 \texttt{\textbackslash{}oblivoirdblquote}라는 명령이
+% 정의되어 있다. \oblivoirdblquote{주어진 인자를 따옴표 안에 넣어주는
+% 명령}이다. 입력이 불편하여 일반적으로 이 명령을 쓸 일이 많으리라고 생각하지는 않지만
+% 한글 폰트 따옴표를 쓸 때, 폰트에 따라 따옴표의 간격이 맞지 않는 경우에
+% 이 명령에 별표를 붙이면 앞뒤의 간격을 조금 커닝해준다. 다만 latinquote 옵션이
+% 주어진 경우에는 아무런 효력이 없을 것이다.
+
+% 참고로, bnm, cnm 등의 \obclass{} \oblivoirquote{괄호 명령}에도 별표(*)를 붙여 앞뒤 간격을
+% 줄여줄 수 있다. |\ccnm{테스트}|, |\ccnm*{테스트}|.
+
+\section{그밖의 사항들}
+
+\subsection{enumerate}
+
+enumerate 패키지의 enumerate 아이템 항목 머리 설정은
+다음과 같이 한다. 엔진과 무관하게 동작한다.
+\begin{boxedverbatim}
+\begin{enumerate}[(㉠)] \tightlist
+\item 첫째 항목
+\item 둘째 항목
+\end{enumerate}
+\end{boxedverbatim}
+\begin{enumerate}[(㉠)] \tightlist
+\item 첫째 항목
+\item 둘째 항목
+\end{enumerate}
+paralist에서 위와 같은 방식으로 항목 머리를 설정하려면 
+레거시 텍을 위해서는 dhucs-paralist를, \XeTeX과 \LuaTeX을 위해서는 
+xob-paralist를 로드한다.\footnote{%
+	물론 paralist 자체는 그 이전에 부르거나
+	xob-paralist(dhucs-paralist)가 스스로 부르도록 할 것이고 xob-paralist(dhucs-paralist) 뒤에
+	paralist만 별도로 다시 부르면 안 된다.
+}
+
+\subsection{graphicx, xcolor}
+
+\hologo{pdfLaTeX} 문서는 dvi 드라이버로 어떤 것이 실행될지 모르기 때문에 graphicx 패키지의
+로딩에 주의를 기울여야 한다. 즉
+\marginpar{\fbox{pdftex}}
+\begin{boxedverbatim}
+\usepackage[<driver>]{graphicx}
+\end{boxedverbatim}
+과 같이 하는 것이 안전하다. 그러나 대부분의 경우 \verb|<driver>|를 지정하지 않아도 된다.
+
+\marginpar{\fbox{xe(lua)tex}}
+\XeTeX과 \LuaTeX 의 경우는 graphicx 패키지에 대한 명시적인 호출이 없어도 
+png, jpg, pdf 그림을 잘 불러온다. 즉 \obclass가 알맞게 이 패키지를 호출하여준다.
+ % 이 패키지들을 명시적으로
+% 호출하고자 한다면 옵션 없이 로드하든가 \texttt{[xetex]} 옵션을 준다.
+% default가 \texttt{[xetex]}이 되도록 설정되어 있어야 하는데,
+% KC2008/\TeX{}Live에는 이것이 잘 되어 있다.
+%pdf 그림을 불러오거나 색상 관련 명령을 쓰기 위해
+%color 또는 xcolor를 로드하려면, 옵션 설정을 graphicx와 똑같이 하면 된다. 
+%\begin{boxedverbatim}
+%\usepackage{graphicx}
+%\usepackage{xcolor}
+%\end{boxedverbatim}
+
+\subsection{참조 인용, 자동 조사}
+
+자동 조사는 ko.\TeX 에서와 동일하다.
+한글 label은 \XeTeX, \LuaTeX 에서 사용할 수 있다.
+레거시 텍에서 label 자리에는 한글을 쓸 수 없다. \marginpar{\fbox{pdftex}}
+
+\medskip
+
+\noindent\hologo{pdfTeX}:\\
+\noindent\begin{minipage}{.45\textwidth}
+\begin{verbatim}
+ “소절 \ref{sec:font}\를 보라.”
+\end{verbatim}
+\end{minipage}\hfill
+\begin{minipage}{.45\textwidth}
+\hfill “소절 \ref{sec:font}\를 보라.”
+\end{minipage}
+
+\noindent\hologo{XeTeX}, \hologo{LuaTeX}:\\
+\noindent\begin{minipage}{.45\textwidth}
+\begin{verbatim}
+ “소절 \ref{sec:폰트}\를 보라.”
+\end{verbatim}
+\end{minipage}
+
+
+\subsection{방점}
+
+\koTeX 에서는 \texttt{\textbackslash dotemph} 명령의 방점\footnote{%
+	가로쓰기에서는 \dotemph{점을 글자 위에 찍으므로} \circemph{傍점}이 아니라
+	\circemph{上점}이 맞겠지만 관행적으로 방점이라 불러왔다.
+	이 문장부호의 정확한 명칭은 “드러냄표”이다.}%
+을 지원했다. \xetexko{}에서도 이 명령을 사용할 수 있게 되었고,
+xoblivoir에서 조금 확장했다. 기본인
+\texttt{\textbackslash dotemph}
+외에
+\texttt{\textbackslash circemph}
+\texttt{\textbackslash useremph}
+두 개의 명령을 더 쓸 수 있다.
+
+\marginpar{\fbox{xe(lua)tex}}
+\xobclass에서 기원한 새로운 텍 엔진을 위한 \obclass 에서
+마지막의 \texttt{\textbackslash useremph} 명령은
+\useremph{˚}{하나의 선택 인자와 두 개의 인자}를 요구한다. 즉,
+\begin{verbatim}
+\useremph[<height>]{<dotchar>}{text}
+\end{verbatim}
+height는 방점으로 사용할 문자가 올라갈 길이이고 dotchar는
+방점 문자이다. text는 방점을 찍을 텍스트.
+단, 이 \verb|\useremph| 명령은 \xetexko 에서 제공되는 같은 이름의
+명령과도 그 사용법이 다르고 레거시 텍을 위한 \obclass에서의 사용법과도 다르므로 주의를 요한다.
+ 
+\section{샘플 문서}
+
+이 작은 안내서에 더하여 간단한 \obclass\ 샘플 문서를 하나 제공한다.
+이 문서에서 여러 가지 memoir와 \obclass 의 기능을 살펴볼 수 있을 것이다.
+oblivoir-test.tex을 컴파일해보고 소스를 검토해보시기 바란다.
+
+%\subsection{fontspec 옵션과 수학 글꼴}\myLabel{sec:fontspec}{sec:폰트스펙}
+%
+%fontspec 패키지와 이를 확장한 mathspec 패키지를 이용하여
+%수학 글꼴 일부를 바꾸고자 하거나 mathpazo와 같은 수학 글꼴 세트를
+%적용하고자 할 경우가 있다. 이 때는 다음 두 가지 조치를 해야 한다.
+%
+%\begin{enumerate}[(1)]
+%\item 클래스 옵션으로 [manualfontspec]을 선언한다.\footnote{%
+%	2011/09/15 이전 버전에서는 [fontspec]이라는 이름이었다.}
+%이 선언으로
+%사용자는 fontspec을 자신의 책임 하에 로드할 수 있다. 심지어
+%xltxtra나 mathspec과 같이 fontspec을 부르는 패키지를 별도로
+%로드할 수 있다.
+%\item 윗항의 fontspec 패키지 로드 후에 xetexko-xobfont 패키지를
+%부른다. 이 설정 이후에야 \textbackslash setkormainfont 와 같은
+%명령을 쓸 수 있게 될 것이다.
+%\end{enumerate}
+%이것은 mathfont를 조절하려면 fontspec의 옵션을 별도로 정의하여
+%상세한 설정을 해야 할 경우가 있기 때문이다. 예컨대 mathpazo를 
+%수학 기본 글꼴로 쓰려 한다면 다음과 같이 하는 것이 가능하다.
+%\begin{boxedverbatim}
+%\documentclass[manualfontspec]{xoblivoir}
+%\usepackage{mathpazo}
+%\usepackage[math,quiet]{fontspec}
+%\usepackage[math,quiet,MnSymbol]{mathspec}
+%\setmathsfont{Asana-Math}
+%\setmainfont[Ligatures=Common]{Palatino Linotype}
+%\usepackage{xetexko-xobfont}
+%\end{boxedverbatim}
+%이 예보다 간단하게 할 수 있는 것도 많다. 이 예는 설명을 위하여
+%보인 것일 따름이다.
+%위의 mathspec 대신 fontspec 패키지 문서에 나와 있듯이 \textbackslash setmathrm
+%등의 명령으로 수학 폰트를 조절할 수 있다.
+%
+%2011/09/15 버전에서 이와 관련한 몇 가지 사항이 추가되었다.
+%\begin{enumerate}[(a)]
+%\item {[manualfontspec]} 옵션을 주었을 때는 위와 같은 방법으로 fontspec
+%패키지를 수동 로드할 수 있다.
+%\item {[fontspec=\{no-math\}]}와 같이 fontspec 패키지에 옵션을 미리 설정해줄
+%수 있다. no-math 옵션을 주면 fontspec 명령들이 수식에는 영향을 끼치지 않으므로
+%익숙한 CM-math 글꼴로 수식이 식자된다.
+%\item {[preload=mathspec,preloadoption=\{math\}]}와 같이 preload할 패키지에
+%넘겨줄 옵션을 preloadoption으로 지정할 수 있다.
+%\end{enumerate}
+
+%\subsection{옛한글과 세로쓰기}\myLabel{sec:oldhangul}{sec:올드한글}
+% 옛한글 글꼴을 사용하려면 [oldhangul] 옵션을 주고 글꼴을 지정해야 한다.
+% 세로쓰기는 사용가능하나, 아직 xoblivoir에서 조작하도록 하지는 않았다.
+% \xetexko{} 매뉴얼에 옛한글 쓰기에 관한 간략한 소개가 있다.
+%2010년 2월, \xetexko 의 옛한글 조판은 거의 완전한 수준에 이르렀다. 
+%입력을 표준에 맞는 소위 `첫가끝' 코드로 하면서도 사용자 영역(PUA)에 옛한글이
+%들어 있는 글꼴의 옛한글로 mapping이 가능해졌으며, GSUB 옛한글 글꼴(현재
+%알려진 것으로는 은 바탕과 Microsoft Office 2002 Plus Pack의 옛한글 글꼴밖에 없다)을
+%그대로 이용하여 옛한글 식자가 가능하다.
+%
+%이 역시 \xetexko 의 기능으로서 \xobclass는 더이상 할 일이 없어 이 절의 내용을 삭제한다.
+
+%\subsection{amssymb}\myLabel{sec:ams}{sec:에이엠에스}
+%amssymb 패키지를 로드하려 시도하면 몇 가지 명령이 이미 정의되어
+%있다는 메시지가 나온다. 이 메시지를 줄이려면 amssymb 대신
+%xob-amssymb를 usepackage하도록 한다.
+%
+%한편, LyX에는 amsmath와 amssymb 패키지를 자동으로 로드하는 기능이 있다.
+%이 때문에 사용자가 xob-amssymb를 로드하려 해도 그보다 이전에 amssymb가
+%LyX에 의해 로드되어 의도하는 결과를 얻지 못하는 경우가 있다. 이 때를 위하여
+%[amsmath] 옵션을 마련해두었다. 이 옵션이 활성화되면 amsmath와 xob-amssymb를
+%xoblivoir가 로드해준다. 
+%
+%\subsection{flowfram}\myLabel{sec:flowfram}{sec:플로프렘}
+%fapapersize 및 flowfram 패키지와 함께 쓸 때, 첫 페이지의 pdf 사이즈만이 
+%fapapersize로 지정한 것을 따라가지 않는 문제점이 있다.\footnote{%
+%  이주호 님이 알려주셨음.}
+%
+%\xobclass 는 memoir의 페이지 출력 루틴을 조금 수정하여 대부분의 경우
+%pdf 사이즈 충돌 문제가 해결되도록 해두었다.
+%그러나 어떤 경우 pdf 파일의 첫 페이지와 이후 페이지의 사이즈가 불일치하는
+%문제가 여전히 발생할 가능성이 있어 다음 옵션을 없애지 않았다.
+%  
+%[a4paper] 등 미리 정의된 페이지의 경우는 아무런 문제가 생기지 않는다.
+%그러나 memoir 옵션으로 지정할 수 없는 사이즈,
+%예컨대 190mm$\times$260mm pdf를 만들고 싶을 때는 어떻게 하는가?
+%\xobclass 에게 페이지 사이즈를 강제로 알려주는 방법이 있다.
+%\begin{boxedverbatim}
+%\documentclass[<other options>,fawd=190mm,faht=260mm]{xoblivoir}
+%\usepackage{fapapersize}
+%\usefapapersize{190mm,260mm,30mm,*,40mm,*}
+%\usepackage{flowfram}
+%\end{boxedverbatim}
+%이제 첫 페이지의 사이즈도 두번째 이후의 것과 같아졌을 것이다.
+%
+%\subsection{preload}\myLabel{sec:preload}{sec:프리로드}
+%일부 패키지 중에는 이따금 memoir 클래스 자체보다 미리 로드되어야 하는 것이 있다.
+%대표적인 예가 아랍어를 식자할 때 빼놓을 수 없는 bidi 패키지이다.
+%이와 같이 memoir보다 먼저 로드해야 하는 패키지를 쓸 때 다음과 같이 한다.
+%\begin{boxedverbatim}
+%\documentclass[preload={bidi}]{xoblivoir}
+%\end{boxedverbatim}
+%
+%preload할 패키지에 전해줄 옵션은 다음과 같이 설정한다.
+%\begin{boxedverbatim}
+%\documentclass[preload={mathspec},preloadoption={math}]{xoblivoir}
+%\end{boxedverbatim}
+%
+%moreverb의 경우도 이렇게 하면 되므로 이제 의미가 없어진 옵션이 되었지만 종래
+%작성된 문서와의 호환을 위해서 없애지는 않았다.
+%
+%\subsection{moreverb}\myLabel{sec:moreverb}{sec:모아버브}
+%이 옵션은 pstricks를 사용하기 위하여 pdfm\-tricks를 이용하려 할 때
+%필요하다. pdfm\-tricks는 moreverb, graphicx, (x)color 패키지가 미리
+%로드되어야 동작하는데, 이 중 graphicx와 xcolor는 문제가 없지만
+%oblivoir(memoir)에서 moreverb는 \textbackslash usepackage 로
+%로드하면 memoir의 일부 명령과 충돌한다.
+%이 충돌을 해결해주는 옵션이며, 이 옵션을 준 후에 moreverb를 별도로
+%로드할 필요 없다. moreverb는 \myPageREF{sec:preload}{sec:프리로드}에서 설명하는
+%preload로 미리 로드하는 방법이 있으므로 사실상 obsolete인 옵션이다.
+%
+%\subsection{microtype}\myLabel{sec:microtype}{sec:마이크로타입}
+%현재까지 \XeTeX 은 pdf\TeX과 Lua\TeX 의 microtype 기능을 엔진 수준에서 지원하지 않는다.
+%그러나 \xetexko 는 xetexko-hanging이라는 기법을 이용하여 온점과 반점을 판면 밖으로 밀어냄으로써
+%margin kerning과 비슷한 효과를 줄 수 있게 하는 재미있는 기능을 제공한다.
+%이 옵션은 이름은 microtype이지만 실은 xetexko-hanging을 활성화하는 역할을 한다.
+%이 문서가 이 기능을 활성화하여 작성되었다.
+%
+%\subsection{hyperref, xcolor}\label{sec:hyperrefxcolor}
+%LyX 을 쓴다거나 할 때 \XeTeX 을 위해서 hyperref의 [unicode] 옵션을 
+%꺼주어야 할 때가 있다. 이를 위해서 hyperref 패키지에 미리 넘길 옵션을 지정할 수 있게 
+%하였다.
+%\begin{boxedverbatim}
+%\documentclass[hyperref={unicode=false}]{xoblivoir}
+%\end{boxedverbatim}
+%
+%필요에 의해 xcolor 패키지에 대해서도 비슷하게 할 수 있도록 해두었다.
+
+\section{첨언}
+\xobclass{} 사용이 어느 정도로 쉬운가 하면, 나는 맨처음 이 문서를
+LyX에서 작성하여 export한 다음, 두 줄 정도를 지우고 폰트
+설정명령만을 써넣었다. 그래도 훌륭한 \XeLaTeX\ 문서가 만들어졌던
+것이다.
+
+이 글을 쓰기 시작할 때만 해도 \xetexko{}와 \xobclass{}는
+완성되어 있지 않았다. 그러나 지금은 일반적인 문서를 작성함에 있어서
+불편이 없을 정도가 되었다.
+
+\bigskip
+
+돌이켜보면, 한글을 \TeX\ 문서에 사용할 수 있다는 사실 자체가
+신기했던 그 때로부터 20여년이 흘렀다. 본격적인 한글\LaTeX\ 시스템들이
+나오기 시작했던 1990년대 중반으로부터 헤아려도 십수 년,
+이 기간 동안 한글이라는 문자 체계를 식자하기 위해 지불해야 했던
+엄청난 노력과 자원을 생각하면 금석지감이 없지 않다.
+
+Lua\TeX 과 \XeTeX 이라는 유니코드 텍 엔진의 등장은, 이러한 모든
+노력들을 일시에 해결해버렸다. 이제 한글 문자의 식자는 더이상
+문제가 되지 않는다.
+그러나 한글 문서다운 한글 문서, 한글 문서의 타이포그래피의 완성을
+위한 길은 아직도 요원하다. 단순히 “글자를 찍는” 문제가 해결되었다고
+해서 모든 일이 끝난 것은 아닌 것이다. 단지 더 생산적인 문제를
+더 잘 구현할 수 있는 바탕이 갖추어진 것일 뿐이라고 생각한다.
+
+
+% \section{알려진 문제점}
+
+% 아래 문제점과 버그들은 다음 버전에서 해결하도록 노력할 것이다.
+
+% \begin{enumerate}[(가)] \tightlist
+% % \item ExternalLocation 옵션을 활성화하는 설정과 그렇지 않은 설정을 함께 쓸 때
+% % ExternalLocation 명령이 순서상 먼저 나와야 한다. 
+
+% \item 윈도우즈 폰트 네임과 다른 리눅스 및 매킨토시의 폰트 이름 호출이
+% 실패하는 경우가 있다. 다행히 은 글꼴의 경우는 문제없으나, 은 글꼴은 반드시
+% 최신 버전이어야 한다. 우분투 등의 리눅스에서 패키지로 설치해주는 기본 설치
+% 글꼴은 때로 문제를 일으킨다. 이것은 저자가 어찌해볼 수 있는 문제가 아니다.
+% \end{enumerate}
+
+% 한글 기호 문자 일부는 한자 영역에 배정하였다. 한자가 없는 한글 글꼴을
+% 본문 기본 서체로 지정하는 경우를 위한 것이다. 그러나 이 문제는 아직
+% 확정된 것이 아니며 좀더 테스트를 거쳐서 결정할 일로 보인다.
+
+%%\section{이 문서의 폰트 사용 설정}
+%%
+%%이 문서의 폰트 사용 설정은 다음과 같다.
+%%\begin{boxedverbatim}
+%%\setmainfont[Mapping=tex-text]{Bradley Hand ITC}
+%%\setmonofont[Scale=.85]{Consolas}
+%%\setkormainfont(문화 궁서 Std L){문화 궁서 흐림 Std L}(){네이버사전}
+%%\setkormonofont{은 필기}
+%%\setmonoscale{0.9}
+%%\end{boxedverbatim}
+
+%%%\section{버전 인포}\myLabel{sec:versioninfo}{sec:버전인포}
+%%%
+%%%\begin{enumerate}\tightlist
+%%%\item 이 초간단 매뉴얼은 xoblivoir 2011/09/15 버전에 일치한다.
+%%%\item 이 초간단 매뉴얼은 xoblivoir 2010/02/10 버전에 일치한다.
+%%%\item 이 초간단 매뉴얼은 xoblivoir 2008/12/03 버전에 일치한다.
+%%%\item 이 초간단 매뉴얼은 xoblivoir 2008/11/24 버전에 일치한다.
+%%%\item 이 초간단 매뉴얼은 xoblivoir 2008/11/09 버전에 일치한다.
+%%%\item 이 초간단 매뉴얼은 xoblivoir 2008/10/23 버전에 일치한다.
+%%%\item 이 초간단 매뉴얼은 xoblivoir 2008/10/22 버전에 일치한다.
+%%%\item 이 초간단 매뉴얼은 xoblivoir 2008/10/12 버전에 일치한다.
+%%%\item 이 초간단 매뉴얼은 xoblivoir 2008/10/11 버전에 일치한다.
+%%%\end{enumerate}
+%%%
+%%%%%% 한자 테스트
+%%%이 매뉴얼은 Notepad++로 編輯하였다. 다 좋은데 Notepad++의
+%%%KCmenu plug\-in에 xelatex 實行 命令 短縮키가 없어서 不便했다.
+%%%그러던 것이 최근 새로운 단축키가 생김으로써 훨씬 편하게 작업할
+%%%수 있게 되었다.
+%%%
+%%%%이 글을 더 줄인 \bnm*{極超簡單 매뉴얼}을 究想中이다.
+
+\end{document}

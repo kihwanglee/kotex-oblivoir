@@ -1,0 +1,608 @@
+%% luatexko-xobfont.sty
+%%
+%% Copyright (c) 2012-2013 Kangsoo Kim <karnes at ktug org>
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%  http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2006/05/20 or later.
+%%
+%% oblivoir style font commands for luatex
+%% part of oblivoir package
+%%
+%% Version 0.1: oldhangul option is not implemented
+%%         0.1.1: bug fix (2012/07/28)
+%%		  0.1.2: [unfonts], [nounfonts] (2012/10/29)
+%%
+\ProvidesPackage{luatexko-xobfont}[2012/07/12]
+
+%% options: latinquote,oldhangul,gremph,itemph,nowinname,manualfontspec
+\newif\if@latinquote\@latinquotefalse
+\DeclareOption{latinquote}{\@latinquotetrue}
+\newif\if@oldhangul\@oldhangulfalse
+\DeclareOption{oldhangul}{\@oldhangultrue}
+\newif\if@gremph\@gremphtrue
+\DeclareOption{gremph}{\@gremphtrue}
+\DeclareOption{itemph}{\@gremphfalse}
+\newif\if@nowin\@nowinfalse
+\DeclareOption{nowinname}{\@nowintrue}
+\newif\if@manualfontspec\@manualfontspecfalse
+\DeclareOption{manualfontspec}{\@manualfontspectrue}
+\newif\if@unfonts\@unfontstrue
+\DeclareOption{unfonts}{\@unfontstrue}
+\DeclareOption{nounfonts}{\@unfontsfalse}
+\newif\if@nanumfonts\@nanumfontsfalse
+\DeclareOption{nanum}{\@nanumfontstrue}
+\ProcessOptions
+
+%%% 
+\if@manualfontspec \endinput \fi
+
+%%% fixed options
+\if@oldhangul
+	\edef\LKOV@oldhangulscript{Script=Hangul}
+	\edef\LKOV@oldhangullanguage{Language=Korean}
+	\edef\LKOV@oldhangulfeatures{RawFeature=+ccmp;+ljmo;+vjmo;+tjmo}
+\else
+	\edef\LKOV@oldhangulscript{}
+	\edef\LKOV@oldhangullanguage{}
+	\edef\LKOV@oldhangulfeatures{}
+\fi
+
+%%% note: FakeBold is disabled under LuaTeX
+\if@gremph 
+	\edef\LKOV@italicfeatures{}
+\else
+	\edef\LKOV@italicfeatures{slant=0.17}
+\fi
+
+\def\LKOV@externallocation{}
+
+\newcommand*\setmonoscale[1]{%
+    \edef\LKOV@monoscale{#1}
+}
+\setmonoscale{1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%% main 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% top level command
+\def\setkormainfont{%
+   \@ifstar {\setk@rm@inf@nt}{%
+	\@ifnextchar[{\m@inf@ntbracket}{%
+		\@ifnextchar(\m@inf@ntparen\m@inf@ntnoparen}%
+   }
+}
+
+\def\m@inf@ntbracket[#1]#2{%
+   \@ifnextchar[{\m@inf@ntbrackettrail[#1]{#2}}{\m@inf@ntbracketnotrail[#1]{#2}}
+}
+
+%%% \setkormainfont[foo]{bar}
+\def\m@inf@ntbracketnotrail[#1]#2{%
+   \setmainhangulfont[#1]{#2}
+}
+
+%%% \setkormainfont[foo1]{bar1}[foo2]{bar2}
+\def\m@inf@ntbrackettrail[#1]#2[#3]#4{%
+   \setmainhangulfont[#1]{#2}
+   \setmainhanjafont[#3]{#4}
+}
+
+%%% \setkormainfont{foo}
+\def\m@inf@ntnoparen#1{\setmainhangulfont{#1}}
+
+\def\m@inf@ntparen(#1){%
+	\@ifnextchar({\m@inf@ntdoubleparen(#1)}{\m@inf@ntsingleparen(#1)}
+}
+
+\def\m@inf@ntsingleparen(#1)#2{%
+	\@ifnextchar({\m@inf@ntsingleparentrail(#1){#2}}{\m@inf@ntsingleparennotrail(#1){#2}}
+}
+
+\def\m@inf@ntsingleparentrail(#1)#2(#3){%
+	\@ifnextchar({\m@inf@ntsingleparentraildouble(#1){#2}(#3)}{\m@inf@ntsingleparentrailsingle(#1){#2}(#3)}
+}
+
+\def\m@inf@ntdoubleparen(#1)(#2)#3{%
+	\@ifnextchar({\m@inf@ntdoubleparentrail(#1)(#2){#3}}{\m@inf@ntdoubleparennotrail(#1)(#2){#3}}
+}
+
+\def\m@inf@ntdoubleparentrail(#1)(#2)#3(#4){%
+	\@ifnextchar({\m@inf@ntdoubleparentraildouble(#1)(#2){#3}(#4)}{\m@inf@ntdoubleparentrailsingle(#1)(#2){#3}(#4)}
+}
+
+%%% \setkormainfont(foo){bar}
+\def\m@inf@ntsingleparennotrail(#1)#2{%
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#2}
+}
+
+%%% \setkormainfont(foo1){bar1}(foo2){bar2}
+\def\m@inf@ntsingleparentrailsingle(#1)#2(#3)#4{%
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#2}
+	\setmainhanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#4,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#4}
+}
+
+%%% \setkormainfont(foo1){bar1}(foo2)(foo3){bar2}
+\def\m@inf@ntsingleparentraildouble(#1)#2(#3)(#4)#5{%
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#2}
+	\if#4* \def\LKOV@temp{#5}\else \def\LKOV@temp{#4}\fi
+	\setmainhanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#5}
+}
+
+%%% \setkormainfont(foo1)(foo2){bar}
+\def\m@inf@ntdoubleparennotrail(#1)(#2)#3{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#3}
+}
+
+%%% \setkormainfont(foo1)(foo2){bar1}(foo3){bar2}
+\def\m@inf@ntdoubleparentrailsingle(#1)(#2)#3(#4)#5{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#3}
+	\setmainhanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#5,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#5}
+}
+
+%%% \setkormainfont(foo1)(foo2){bar1}(foo3)(foo4){bar2}
+\def\m@inf@ntdoubleparentraildouble(#1)(#2)#3(#4)(#5)#6{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#3}
+	\if#5* \def\LKOV@temp{#6}\else\def\LKOV@temp{#5}\fi
+	\setmainhanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#5}
+}
+
+%%%%%%%%%%%%%%%%%%%%%% main: ExternalLocation %%%%%%%%%%%%%%%%%%%%
+%%% top level command
+\def\setk@rst@rm@inf@nt*{%
+	\@ifnextchar[{\st@rm@inf@ntbracket*}{%
+		\@ifnextchar({\st@rm@inf@ntparen*}{\st@rm@inf@ntnoparen*}}%
+}
+
+\def\st@rm@inf@ntbracket*[#1]#2{%
+   \@ifnextchar[{\st@rm@inf@ntbrackettrail*[#1]{#2}}{\st@rm@inf@ntbracketnotrail*[#1]{#2}}
+}
+
+%%% \setkormainfont*{bar}
+\def\setk@rm@inf@nt#1{%
+	\setmainhangulfont[ExternalLocation]{#1}
+}
+
+%%% \setkormainfont*[foo]{bar}
+\def\st@rm@inf@ntbracketnotrail*[#1]#2{%
+   \setmainhangulfont[#1,ExternalLocation]{#2}
+}
+
+%%% \setkormainfont*[foo1]{bar1}[foo2]{bar2}
+\def\st@rm@inf@ntbrackettrail*[#1]#2[#3]#4{%
+   \setmainhangulfont[#1,ExternalLocation]{#2}
+   \setmainhanjafont[#3,ExternalLocation]{#4}
+}
+
+%%% \setk@rst@rm@inf@nt*{foo}
+\def\st@rm@inf@ntnoparen*#1{\setmainhangulfont[ExternalLocation]{#1}}
+
+\def\st@rm@inf@ntparen*(#1){%
+	\@ifnextchar({\st@rm@inf@ntdoubleparen*(#1)}{\st@rm@inf@ntsingleparen*(#1)}
+}
+
+\def\st@rm@inf@ntsingleparen*(#1)#2{%
+	\@ifnextchar({\st@rm@inf@ntsingleparentrail*(#1){#2}}{\st@rm@inf@ntsingleparennotrail*(#1){#2}}
+}
+
+\def\st@rm@inf@ntsingleparentrail*(#1)#2(#3){%
+	\@ifnextchar({\st@rm@inf@ntsingleparentraildouble*(#1){#2}(#3)}{\st@rm@inf@ntsingleparentrailsingle*(#1){#2}(#3)}
+}
+
+\def\st@rm@inf@ntdoubleparen*(#1)(#2)#3{%
+	\@ifnextchar({\st@rm@inf@ntdoubleparentrail*(#1)(#2){#3}}{\st@rm@inf@ntdoubleparennotrail*(#1)(#2){#3}}
+}
+
+\def\st@rm@inf@ntdoubleparentrail*(#1)(#2)#3(#4){%
+	\@ifnextchar({\st@rm@inf@ntdoubleparentraildouble*(#1)(#2){#3}(#4)}{\st@rm@inf@ntdoubleparentrailsingle*(#1)(#2){#3}(#4)}
+}
+
+%%% \setk@rst@rm@inf@nt*(foo){bar}
+\def\st@rm@inf@ntsingleparennotrail*(#1)#2{%
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#2}
+}
+
+%%% \setk@rst@rm@inf@nt*(foo1){bar1}(foo2){bar2}
+\def\st@rm@inf@ntsingleparentrailsingle*(#1)#2(#3)#4{%
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#2}
+	\setmainhanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#4,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#4}
+}
+
+%%% \setk@rst@rm@inf@nt*(foo1){bar1}(foo2)(foo3){bar2}
+\def\st@rm@inf@ntsingleparentraildouble*(#1)#2(#3)(#4)#5{%
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#2}
+	\if#4* \def\LKOV@temp{#5}\else \def\LKOV@temp{#4}\fi
+	\setmainhanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#5}
+}
+
+%%% \setk@rst@rm@inf@nt*(foo1)(foo2){bar}
+\def\st@rm@inf@ntdoubleparennotrail(#1)(#2)#3{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#3}
+}
+
+%%% \setk@rst@rm@inf@nt*(foo1)(foo2){bar1}(foo3){bar2}
+\def\st@rm@inf@ntdoubleparentrailsingle(#1)(#2)#3(#4)#5{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#3}
+	\setmainhanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#5,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#5}
+}
+
+%%% \setk@rst@rm@inf@nt*(foo1)(foo2){bar1}(foo3)(foo4){bar2}
+\def\st@rm@inf@ntdoubleparentraildouble*(#1)(#2)#3(#4)(#5)#6{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmainhangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#3}
+	\if#5* \def\LKOV@temp{#6}\else\def\LKOV@temp{#5}\fi
+	\setmainhanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#5}
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%% sans 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% top level command
+\def\setkorsansfont{%
+   \@ifstar {\setk@rs@nsf@nt}{%
+	\@ifnextchar[{\s@nsf@ntbracket}{%
+		\@ifnextchar(\s@nsf@ntparen\s@nsf@ntnoparen}%
+   }
+}
+
+\def\s@nsf@ntbracket[#1]#2{%
+   \@ifnextchar[{\s@nsf@ntbrackettrail[#1]{#2}}{\s@nsf@ntbracketnotrail[#1]{#2}}
+}
+
+%%% \setkorsansfont[foo]{bar}
+\def\s@nsf@ntbracketnotrail[#1]#2{%
+   \setsanshangulfont[#1]{#2}
+}
+
+%%% \setkorsansfont[foo1]{bar1}[foo2]{bar2}
+\def\s@nsf@ntbrackettrail[#1]#2[#3]#4{%
+   \setsanshangulfont[#1]{#2}
+   \setsanshanjafont[#3]{#4}
+}
+
+%%% \setkorsansfont{foo}
+\def\s@nsf@ntnoparen#1{\setsanshangulfont{#1}}
+
+\def\s@nsf@ntparen(#1){%
+	\@ifnextchar({\s@nsf@ntdoubleparen(#1)}{\s@nsf@ntsingleparen(#1)}
+}
+
+\def\s@nsf@ntsingleparen(#1)#2{%
+	\@ifnextchar({\s@nsf@ntsingleparentrail(#1){#2}}{\s@nsf@ntsingleparennotrail(#1){#2}}
+}
+
+\def\s@nsf@ntsingleparentrail(#1)#2(#3){%
+	\@ifnextchar({\s@nsf@ntsingleparentraildouble(#1){#2}(#3)}{\s@nsf@ntsingleparentrailsingle(#1){#2}(#3)}
+}
+
+\def\s@nsf@ntdoubleparen(#1)(#2)#3{%
+	\@ifnextchar({\s@nsf@ntdoubleparentrail(#1)(#2){#3}}{\s@nsf@ntdoubleparennotrail(#1)(#2){#3}}
+}
+
+\def\s@nsf@ntdoubleparentrail(#1)(#2)#3(#4){%
+	\@ifnextchar({\s@nsf@ntdoubleparentraildouble(#1)(#2){#3}(#4)}{\s@nsf@ntdoubleparentrailsingle(#1)(#2){#3}(#4)}
+}
+
+%%% \setkorsansfont(foo){bar}
+\def\s@nsf@ntsingleparennotrail(#1)#2{%
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#2}
+}
+
+%%% \setkorsansfont(foo1){bar1}(foo2){bar2}
+\def\s@nsf@ntsingleparentrailsingle(#1)#2(#3)#4{%
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#2}
+	\setsanshanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#4,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#4}
+}
+
+%%% \setkorsansfont(foo1){bar1}(foo2)(foo3){bar2}
+\def\s@nsf@ntsingleparentraildouble(#1)#2(#3)(#4)#5{%
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#2}
+	\if#4* \def\LKOV@temp{#5}\else \def\LKOV@temp{#4}\fi
+	\setsanshanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#5}
+}
+
+%%% \setkorsansfont(foo1)(foo2){bar}
+\def\s@nsf@ntdoubleparennotrail(#1)(#2)#3{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#3}
+}
+
+%%% \setkorsansfont(foo1)(foo2){bar1}(foo3){bar2}
+\def\s@nsf@ntdoubleparentrailsingle(#1)(#2)#3(#4)#5{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#3}
+	\setsanshanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#5,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#5}
+}
+
+%%% \setkorsansfont(foo1)(foo2){bar1}(foo3)(foo4){bar2}
+\def\s@nsf@ntdoubleparentraildouble(#1)(#2)#3(#4)(#5)#6{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#3}
+	\if#5* \def\LKOV@temp{#6}\else\def\LKOV@temp{#5}\fi
+	\setsanshanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}}]{#5}
+}
+
+%%%%%%%%%%%%%%%%%%%%%% sans: ExternalLocation %%%%%%%%%%%%%%%%%%%%
+%%% top level command
+\def\setk@rst@rs@nsf@nt*{%
+	\@ifnextchar[{\st@rs@nsf@ntbracket*}{%
+		\@ifnextchar({\st@rs@nsf@ntparen*}{\st@rs@nsf@ntnoparen*}}%
+}
+
+\def\st@rs@nsf@ntbracket*[#1]#2{%
+   \@ifnextchar[{\st@rs@nsf@ntbrackettrail*[#1]{#2}}{\st@rs@nsf@ntbracketnotrail*[#1]{#2}}
+}
+
+%%% \setkorsansfont*{bar}
+\def\setk@rs@nsf@nt#1{%
+	\setsanshangulfont[ExternalLocation]{#1}
+}
+
+%%% \setkorsansfont*[foo]{bar}
+\def\st@rs@nsf@ntbracketnotrail*[#1]#2{%
+   \setsanshangulfont[#1,ExternalLocation]{#2}
+}
+
+%%% \setkorsansfont*[foo1]{bar1}[foo2]{bar2}
+\def\st@rs@nsf@ntbrackettrail*[#1]#2[#3]#4{%
+   \setsanshangulfont[#1,ExternalLocation]{#2}
+   \setsanshanjafont[#3,ExternalLocation]{#4}
+}
+
+%%% \setk@rst@rs@nsf@nt*{foo}
+\def\st@rs@nsf@ntnoparen*#1{\setsanshangulfont[ExternalLocation]{#1}}
+
+\def\st@rs@nsf@ntparen*(#1){%
+	\@ifnextchar({\st@rs@nsf@ntdoubleparen*(#1)}{\st@rs@nsf@ntsingleparen*(#1)}
+}
+
+\def\st@rs@nsf@ntsingleparen*(#1)#2{%
+	\@ifnextchar({\st@rs@nsf@ntsingleparentrail*(#1){#2}}{\st@rs@nsf@ntsingleparennotrail*(#1){#2}}
+}
+
+\def\st@rs@nsf@ntsingleparentrail*(#1)#2(#3){%
+	\@ifnextchar({\st@rs@nsf@ntsingleparentraildouble*(#1){#2}(#3)}{\st@rs@nsf@ntsingleparentrailsingle*(#1){#2}(#3)}
+}
+
+\def\st@rs@nsf@ntdoubleparen*(#1)(#2)#3{%
+	\@ifnextchar({\st@rs@nsf@ntdoubleparentrail*(#1)(#2){#3}}{\st@rs@nsf@ntdoubleparennotrail*(#1)(#2){#3}}
+}
+
+\def\st@rs@nsf@ntdoubleparentrail*(#1)(#2)#3(#4){%
+	\@ifnextchar({\st@rs@nsf@ntdoubleparentraildouble*(#1)(#2){#3}(#4)}{\st@rs@nsf@ntdoubleparentrailsingle*(#1)(#2){#3}(#4)}
+}
+
+%%% \setk@rst@rs@nsf@nt*(foo){bar}
+\def\st@rs@nsf@ntsingleparennotrail*(#1)#2{%
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#2}
+}
+
+%%% \setk@rst@rs@nsf@nt*(foo1){bar1}(foo2){bar2}
+\def\st@rs@nsf@ntsingleparentrailsingle*(#1)#2(#3)#4{%
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#2}
+	\setsanshanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#4,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#4}
+}
+
+%%% \setk@rst@rs@nsf@nt*(foo1){bar1}(foo2)(foo3){bar2}
+\def\st@rs@nsf@ntsingleparentraildouble*(#1)#2(#3)(#4)#5{%
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#2}
+	\if#4* \def\LKOV@temp{#5}\else \def\LKOV@temp{#4}\fi
+	\setsanshanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#5}
+}
+
+%%% \setk@rst@rs@nsf@nt*(foo1)(foo2){bar}
+\def\st@rs@nsf@ntdoubleparennotrail(#1)(#2)#3{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#3}
+}
+
+%%% \setk@rst@rs@nsf@nt*(foo1)(foo2){bar1}(foo3){bar2}
+\def\st@rs@nsf@ntdoubleparentrailsingle(#1)(#2)#3(#4)#5{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#3}
+	\setsanshanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#5,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#5}
+}
+
+%%% \setk@rst@rs@nsf@nt*(foo1)(foo2){bar1}(foo3)(foo4){bar2}
+\def\st@rs@nsf@ntdoubleparentraildouble*(#1)(#2)#3(#4)(#5)#6{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setsanshangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#3}
+	\if#5* \def\LKOV@temp{#6}\else\def\LKOV@temp{#5}\fi
+	\setsanshanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation]{#5}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%% mono 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% top level command
+\def\setkormonofont{%
+   \@ifstar {\setk@rm@n@f@nt}{%
+	\@ifnextchar[{\m@n@f@ntbracket}{%
+		\@ifnextchar(\m@n@f@ntparen\m@n@f@ntnoparen}%
+   }
+}
+
+\def\m@n@f@ntbracket[#1]#2{%
+   \@ifnextchar[{\m@n@f@ntbrackettrail[#1]{#2}}{\m@n@f@ntbracketnotrail[#1]{#2}}
+}
+
+%%% \setkormonofont[foo]{bar}
+\def\m@n@f@ntbracketnotrail[#1]#2{%
+   \setmonohangulfont[#1,Scale=\LKOV@monoscale]{#2}
+}
+
+%%% \setkormonofont[foo1]{bar1}[foo2]{bar2}
+\def\m@n@f@ntbrackettrail[#1]#2[#3]#4{%
+   \setmonohangulfont[#1,Scale=\LKOV@monoscale]{#2}
+   \setmonohanjafont[#3,Scale=\LKOV@monoscale]{#4}
+}
+
+%%% \setkormonofont{foo}
+\def\m@n@f@ntnoparen#1{\setmonohangulfont{#1}}
+
+\def\m@n@f@ntparen(#1){%
+	\@ifnextchar({\m@n@f@ntdoubleparen(#1)}{\m@n@f@ntsingleparen(#1)}
+}
+
+\def\m@n@f@ntsingleparen(#1)#2{%
+	\@ifnextchar({\m@n@f@ntsingleparentrail(#1){#2}}{\m@n@f@ntsingleparennotrail(#1){#2}}
+}
+
+\def\m@n@f@ntsingleparentrail(#1)#2(#3){%
+	\@ifnextchar({\m@n@f@ntsingleparentraildouble(#1){#2}(#3)}{\m@n@f@ntsingleparentrailsingle(#1){#2}(#3)}
+}
+
+\def\m@n@f@ntdoubleparen(#1)(#2)#3{%
+	\@ifnextchar({\m@n@f@ntdoubleparentrail(#1)(#2){#3}}{\m@n@f@ntdoubleparennotrail(#1)(#2){#3}}
+}
+
+\def\m@n@f@ntdoubleparentrail(#1)(#2)#3(#4){%
+	\@ifnextchar({\m@n@f@ntdoubleparentraildouble(#1)(#2){#3}(#4)}{\m@n@f@ntdoubleparentrailsingle(#1)(#2){#3}(#4)}
+}
+
+%%% \setkormonofont(foo){bar}
+\def\m@n@f@ntsingleparennotrail(#1)#2{%
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},Scale=\LKOV@monoscale]{#2}
+}
+
+%%% \setkormonofont(foo1){bar1}(foo2){bar2}
+\def\m@n@f@ntsingleparentrailsingle(#1)#2(#3)#4{%
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},Scale=\LKOV@monoscale]{#2}
+	\setmonohanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#4,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},Scale=\LKOV@monoscale]{#4}
+}
+
+%%% \setkormonofont(foo1){bar1}(foo2)(foo3){bar2}
+\def\m@n@f@ntsingleparentraildouble(#1)#2(#3)(#4)#5{%
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},Scale=\LKOV@monoscale]{#2}
+	\if#4* \def\LKOV@temp{#5}\else \def\LKOV@temp{#4}\fi
+	\setmonohanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},Scale=\LKOV@monoscale]{#5}
+}
+
+%%% \setkormonofont(foo1)(foo2){bar}
+\def\m@n@f@ntdoubleparennotrail(#1)(#2)#3{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},Scale=\LKOV@monoscale]{#3}
+}
+
+%%% \setkormonofont(foo1)(foo2){bar1}(foo3){bar2}
+\def\m@n@f@ntdoubleparentrailsingle(#1)(#2)#3(#4)#5{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},Scale=\LKOV@monoscale]{#3}
+	\setmonohanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#5,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},Scale=\LKOV@monoscale]{#5}
+}
+
+%%% \setkormonofont(foo1)(foo2){bar1}(foo3)(foo4){bar2}
+\def\m@n@f@ntdoubleparentraildouble(#1)(#2)#3(#4)(#5)#6{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},Scale=\LKOV@monoscale]{#3}
+	\if#5* \def\LKOV@temp{#6}\else\def\LKOV@temp{#5}\fi
+	\setmonohanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},Scale=\LKOV@monoscale]{#5}
+}
+
+%%%%%%%%%%%%%%%%%%%%%% mono: ExternalLocation %%%%%%%%%%%%%%%%%%%%
+%%% top level command
+\def\setk@rst@rm@n@f@nt*{%
+	\@ifnextchar[{\st@rm@n@f@ntbracket*}{%
+		\@ifnextchar({\st@rm@n@f@ntparen*}{\st@rm@n@f@ntnoparen*}}%
+}
+
+\def\st@rm@n@f@ntbracket*[#1]#2{%
+   \@ifnextchar[{\st@rm@n@f@ntbrackettrail*[#1]{#2}}{\st@rm@n@f@ntbracketnotrail*[#1]{#2}}
+}
+
+%%% \setkormonofont*{bar}
+\def\setk@rm@n@f@nt#1{%
+	\setmonohangulfont[ExternalLocation]{#1}
+}
+
+
+%%% \setkormonofont*[foo]{bar}
+\def\st@rm@n@f@ntbracketnotrail*[#1]#2{%
+   \setmonohangulfont[#1,ExternalLocation,Scale=\LKOV@monoscale]{#2}
+}
+
+%%% \setkormonofont*[foo1]{bar1}[foo2]{bar2}
+\def\st@rm@n@f@ntbrackettrail*[#1]#2[#3]#4{%
+   \setmonohangulfont[#1,ExternalLocation,Scale=\LKOV@monoscale]{#2}
+   \setmonohanjafont[#3,ExternalLocation,Scale=\LKOV@monoscale]{#4}
+}
+
+%%% \setk@rst@rm@n@f@nt*{foo}
+\def\st@rm@n@f@ntnoparen*#1{\setmonohangulfont[ExternalLocation]{#1}}
+
+\def\st@rm@n@f@ntparen*(#1){%
+	\@ifnextchar({\st@rm@n@f@ntdoubleparen*(#1)}{\st@rm@n@f@ntsingleparen*(#1)}
+}
+
+\def\st@rm@n@f@ntsingleparen*(#1)#2{%
+	\@ifnextchar({\st@rm@n@f@ntsingleparentrail*(#1){#2}}{\st@rm@n@f@ntsingleparennotrail*(#1){#2}}
+}
+
+\def\st@rm@n@f@ntsingleparentrail*(#1)#2(#3){%
+	\@ifnextchar({\st@rm@n@f@ntsingleparentraildouble*(#1){#2}(#3)}{\st@rm@n@f@ntsingleparentrailsingle*(#1){#2}(#3)}
+}
+
+\def\st@rm@n@f@ntdoubleparen*(#1)(#2)#3{%
+	\@ifnextchar({\st@rm@n@f@ntdoubleparentrail*(#1)(#2){#3}}{\st@rm@n@f@ntdoubleparennotrail*(#1)(#2){#3}}
+}
+
+\def\st@rm@n@f@ntdoubleparentrail*(#1)(#2)#3(#4){%
+	\@ifnextchar({\st@rm@n@f@ntdoubleparentraildouble*(#1)(#2){#3}(#4)}{\st@rm@n@f@ntdoubleparentrailsingle*(#1)(#2){#3}(#4)}
+}
+
+%%% \setk@rst@rm@n@f@nt*(foo){bar}
+\def\st@rm@n@f@ntsingleparennotrail*(#1)#2{%
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation,Scale=\LKOV@monoscale]{#2}
+}
+
+%%% \setk@rst@rm@n@f@nt*(foo1){bar1}(foo2){bar2}
+\def\st@rm@n@f@ntsingleparentrailsingle*(#1)#2(#3)#4{%
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation,Scale=\LKOV@monoscale]{#2}
+	\setmonohanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#4,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation,Scale=\LKOV@monoscale]{#4}
+}
+
+%%% \setk@rst@rm@n@f@nt*(foo1){bar1}(foo2)(foo3){bar2}
+\def\st@rm@n@f@ntsingleparentraildouble*(#1)#2(#3)(#4)#5{%
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#2,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation,Scale=\LKOV@monoscale]{#2}
+	\if#4* \def\LKOV@temp{#5}\else \def\LKOV@temp{#4}\fi
+	\setmonohanjafont[BoldFont=#3,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation,Scale=\LKOV@monoscale]{#5}
+}
+
+%%% \setk@rst@rm@n@f@nt*(foo1)(foo2){bar}
+\def\st@rm@n@f@ntdoubleparennotrail(#1)(#2)#3{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation,Scale=\LKOV@monoscale]{#3}
+}
+
+%%% \setk@rst@rm@n@f@nt*(foo1)(foo2){bar1}(foo3){bar2}
+\def\st@rm@n@f@ntdoubleparentrailsingle(#1)(#2)#3(#4)#5{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation,Scale=\LKOV@monoscale]{#3}
+	\setmonohanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=#5,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation,Scale=\LKOV@monoscale]{#5}
+}
+
+%%% \setk@rst@rm@n@f@nt*(foo1)(foo2){bar1}(foo3)(foo4){bar2}
+\def\st@rm@n@f@ntdoubleparentraildouble*(#1)(#2)#3(#4)(#5)#6{%
+	\if#2* \def\LKOV@temp{#3}\else\def\LKOV@temp{#2}\fi
+	\setmonohangulfont[BoldFont=#1,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation,Scale=\LKOV@monoscale]{#3}
+	\if#5* \def\LKOV@temp{#6}\else\def\LKOV@temp{#5}\fi
+	\setmonohanjafont[BoldFont=#4,BoldFeatures={RawFeature={embolden=2}},ItalicFont=\LKOV@temp,ItalicFeatures={RawFeature={\LKOV@italicfeatures}},ExternalLocation,Scale=\LKOV@monoscale]{#5}
+}
+
+\if@nanumfonts
+\setmainhangulfont{NanumMyeongjo}
+\setsanshangulfont{NanumGothic}
+\setmonohangulfont{NanumGothic}
+\fi
+
+\endinput

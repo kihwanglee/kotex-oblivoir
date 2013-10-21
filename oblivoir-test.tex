@@ -1,0 +1,1357 @@
+% -*- UTF-8 : LaTeX -*-
+%%
+%% 2013/09/28. xoblivoir ver2 버전으로 포팅.
+%% 2010/03/17. xoblivoir 버전으로 포팅
+%%
+%% memhangul-ucs v1.44 테스트 파일
+%% Written by 도은이아빠.
+%%
+
+\documentclass[demo,chapter,openany,amsmath,gremph,adjustmath]{xoblivoir}
+%%% amsmath 옵션은 amsmath, amssymb 패키지를 로드해준다..
+
+%\usepackage[logonly]{trace} %% for debugging.
+\let\traceon\relax\let\traceoff\relax
+
+%%% display overfullrule
+%\setlength\overfullrule{5pt}
+
+%% 페이지 레이아웃. fapapersize를 이용한다..
+\usepackage{fapapersize}
+\usefapapersize{220mm,276mm,20mm,80mm,30mm,35mm}
+
+%% 폰트 설정
+\def\DefaultFont{HCR Batang LVT}
+\ifPDFTeX
+	\usepackage{mathpazo}
+\else\ifLuaOrXeTeX
+	\defaultfontfeatures{Mapping=tex-text,Ligatures=TeX}
+	\setmainfont{TeX Gyre Pagella}
+	\usepackage{unicode-math}
+	\setmathfont{Asana-Math.otf}
+ 	\setsansfont[Scale=.95]{TeX Gyre Heros}
+ 	\setkormainfont[ItalicFont=\DefaultFont,ItalicFeatures={FakeSlant=.167}]{\DefaultFont}[]{\DefaultFont}
+ 	\setkorsansfont[]{NanumGothic}[]{HCR Dotum LVT}
+\fi\fi
+
+\ifLuaTeX
+\def\interHANGUL{InterHangul}
+\let\circemph=\dotemph
+\else\ifXeTeX
+\def\interHANGUL{interhchar}
+\fi\fi
+
+%% logos
+\usepackage{hologo}
+
+%%% marginfix
+%\usepackage{marginfix}
+
+%% 좌우 마진의 marginpar 위치가 혼선을 보인다면
+%% 다음을 선언한다.
+\strictpagecheck
+
+\usepackage{cite}
+
+\ifPDFTeX
+\usepackage{graphicx}
+\fi
+\usepackage[dvipsnames]{xcolor}
+%% pdf 정보
+\hypersetup{%
+    bookmarks=true,%
+    plainpages=false,%
+    colorlinks=true,%
+    pdfauthor={Karnes Kim},%
+    pdfcreator={Karnes Kim}
+}
+
+\nonfrenchspacing
+%% nonfrench를 설정하는 경우에는 \xspaceskip도 정해주자.
+%% 여기서는 눈에 띄도록 이 길이를 넉넉하게 잡았음.
+%% 일반적으로 .6 내지 .7 정도를 권장함.
+\xspaceskip=.8em plus .1em minus .1em
+
+%% 이 아래 명령들은 본문에서 바꿀 수 있다.
+%% 행간설정. 두번째 인자는 fn/float에 적용되는 행간.
+\SetHangulspace{1.5}{1.1}
+%% quotespacing을 설정함. \noadjustqutespacing이 default. \adjustquotespacing
+%\adjustquotespacing
+%% float/fn의 좁은 행간 설정을 disable. \adjustfloatfnspacing
+\noadjustfloatfnspacing
+
+%% shaded 환경에 칠할 배경색.
+\definecolor{shadecolor}{gray}{0.85}
+
+%%% from memman.tex. modified.
+%% 본문에서 한 번 사용하기 위해 설정한 chapter
+%% style 예제. 이 예제는 memman에 있다.
+%% 한글판을 위하여 조금 수정함.
+\makeatletter
+\newlength{\numberheight}
+\newlength{\barlength}
+\makechapterstyle{veelo}{%
+   \setlength{\beforechapskip}{40pt}
+   \setlength{\midchapskip}{25pt}
+   \setlength{\afterchapskip}{40pt}
+   \renewcommand{\chapnamefont}{\normalfont\LARGE\flushright}
+   \renewcommand{\chapnumfont}{\normalfont\HUGE}
+   \renewcommand{\chaptitlefont}{\normalfont\HUGE\bfseries\flushright}
+   \renewcommand{\printchaptername}{}%
+   \renewcommand{\prechapternum}{% <= 이 명령을 정의. 
+            \chapnamefont\MakeUppercase{chapter}}
+   \renewcommand{\postchapternum}{}% <= 이 명령을 정의. 여기서는 비움.
+   \renewcommand{\chapternamenum}{}
+   \setlength{\numberheight}{18mm}
+   \setlength{\barlength}{\paperwidth}
+   \addtolength{\barlength}{-\textwidth}
+   \addtolength{\barlength}{-\spinemargin}
+   \renewcommand{\printchapternum}{%
+      \makebox[0pt][l]{% 
+      \hspace{.8em}%
+      \resizebox{!}{\numberheight}{\chapnumfont \thechapter}% 
+      \hspace{.8em}%
+      \rule{\barlength}{\numberheight}
+     }
+   }
+   \makeoddfoot{plain}{}{}{\thepage}
+}
+\makeatother 
+
+%%% User's commands
+%% 사용자 명령들. 인덱스 관련 명령.
+\newcommand\dispcmd[1]{%
+    \texttt{\textbackslash #1}%
+    \index{명령!\textbackslash #1}%
+    \index{#1@\textbackslash #1}%
+}
+
+\newcommand\cls[1]{%
+    \texttt{#1}\ 클래스%
+    \index{클래스!#1}%
+    \index{#1~클래스}%
+}
+
+\newcommand\pkg[1]{%
+    \texttt{#1}\ 패키지%
+    \index{패키지!#1}%
+    \index{#1~패키지}%
+}
+
+\newcommand\thisclass{%
+    \texttt{memoir}\ 클래스%
+    \index{클래스!memoir}%
+    \index{memoir~클래스}%
+}
+
+\newcommand\env[1]{%
+    \textsf{#1} 환경%
+    \index{환경!#1}%
+    \index{#1~환경}%
+}
+
+\newcommand\wi[2][\empty]{%
+    \ifx#1\empty
+        \index{#2}#2%
+    \else
+        \index{#1!#2}#2%
+    \fi
+}
+
+%% showcommand/showenv 명령.
+%% 만약 command/env 보여주기를 끄려면
+%% \showcommandfalse를 선언한다.
+\makeatletter
+\newif\if@showcommand\@showcommandtrue
+\newcommand\showcommandtrue{\@showcommandtrue}
+\newcommand\showcommandfalse{\@showcommandfalse}
+
+\strictpagechecktrue
+
+\newcommand\showcommand[1]{%
+	\if@showcommand
+	 \checkoddpage\ifoddpage
+      \marginpar{\small\texttt{\textbackslash #1}}%
+   \else
+      \marginpar{\hfill\small\texttt{\textbackslash #1}}%
+   \fi
+	\fi
+}
+
+\newcommand\showenv[1]{%
+	\if@showcommand
+	 \checkoddpage\ifoddpage
+    \marginpar{\small\textit{#1}(env.)}%
+   \else
+    \marginpar{\hfill\small\textit{#1}(env.)}%
+   \fi
+	\fi
+}
+\makeatother
+
+%% MakeShortVerb
+\MakeShortVerb{\|} 
+% \DeleteShortVerb{\|}
+
+%% 인덱스의 hyperpage 처리를 위해서
+\newcommand\bfhypidx[1]{%
+	\textbf{\hyperpage{#1}}%
+}
+
+%% replace \bigskip
+\newcommand\alineskip{%
+	\vspace{\onelineskip}%
+}
+
+%% showindexmark
+%% 여백을 충분히 확보하고 다음 행을
+%% 활성화해볼 것.
+%\showindexmarktrue
+
+%% 문장 부호 관련 명령은 스타일에 포함시켰음.
+%% \bnm, \snm, \cnm, \ccnm.
+
+%% index를 만든다. 
+%% makeindex를 실행할 때는 makeindex-dhucs.pl을 이용할 것.
+%% #> perl makeindex-dhucs.pl -s dhhangulucs.ist <filename>
+%%
+\makeindex
+
+%% newlist
+%% 새로운 리스트를 만드는 것이 정말 너무나 간단하다.
+\newcommand\queryfont{\raggedleft\sffamily\small}
+\newcommand\listofqueriesname{Queries~목록}
+\newlistof{listofqueries}{loq}{\listofqueriesname}
+\newlistentry{query}{loq}{0}
+\newcommand{\query}[2][\empty]{%
+	\refstepcounter{query}
+	\par\noindent\fbox{Q?}~\begingroup\queryfont #2\endgroup%
+	\addcontentsline{loq}{query}{\protect\numberline{\thequery}#2}\par
+	\ifx#1\empty\else\index{Query!#1}\fi
+}
+
+%% title page
+\newcommand\MakeTitle{%
+ \begin{titlingpage}
+ \setcounter{page}{-1}%
+ \begin{adjustwidth*}{0mm}{-55mm}
+ \newlength\tmplen\setlength\tmplen{\textwidth}\addtolength\tmplen{60mm}
+ \fbox{%
+   \begin{minipage}{\tmplen}
+   \vspace*{90mm}
+   \begin{center}
+     \LARGE\bfseries\thetitle \\ \vskip\onelineskip
+     \normalfont\normalsize\theauthor
+   \end{center}
+   \vspace*{100mm}
+ \end{minipage}}
+ \end{adjustwidth*}
+ \end{titlingpage}
+}
+
+%% 각주. footmisc는 memoir와 함께 쓸 수 있다.
+%\usepackage[bottom]{footmisc}
+%% 그러나, 위의 예와 같이 [bottom] footnote를 위해서라면 
+%% 다음과 같이 할 것을 권장함. raggedbottom에서 동작함.
+\renewcommand*{\footnoterule}{\kern-3pt\vfill
+    \hrule width 0.4\columnwidth \kern 2.6pt}
+%% 각주를 floats 아래.
+\feetbelowfloat
+
+%% 밑줄.
+\ifLuaTeX\else
+\usepackage[normalem]{ulem}
+\fi
+
+%% 사소한 설정
+\def\util#1{\texttt{#1}\index{Utility!#1}}
+
+%% \useremph compatibility
+\ifPDFTeX
+  \let\ORIGuseremph=\useremph
+  \def\useremphchar{\tiny★}
+  \setlength\useremphraisedim{10pt}
+  \def\useremph#1{\ORIGuseremph{#1}}
+\else\ifXeTeX
+  \let\ORIGuseremph=\useremph
+  \def\useremph#1{\ORIGuseremph[10pt]{\tiny★}{#1}}
+\else\ifLuaTeX
+  \let\ORIGdotemph=\dotemph
+  \def\dotemph#1{%
+	\def\dotemphraise{0.4em}
+	\def\dotemphchar{˙}
+	\ORIGdotemph{#1}}	
+  \def\circemph#1{%
+	\def\dotemphraise{0.4em}
+	\def\dotemphchar{˚}
+	\ORIGdotemph{#1}}
+  \def\useremph#1{%
+	\def\dotemphraise{10pt}
+	\def\dotemphchar{\tiny★}
+	\ORIGdotemph{#1}}
+\fi\fi\fi
+
+%%%
+%\headnamereftrue
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%% 이제 문서를 시작.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\title{memoir에서 한글을 쓰자!}
+\author{도은이아빠}
+\date{\today}
+
+%% 아래 \MakeTitle 명령은 이 문서의 preamble에
+%% 정의되어 있다. 표지 디자인은 이 정의를 참고하여
+%% 수정하여 볼 것.
+\MakeTitle
+\cleardoublepage
+
+\frontmatter
+% ToC, etc
+%% 차례 페이지들. 여기서는 demo chapter style과
+%% Ruled 페이지 스타일을 적용한다.
+\chapterstyle{demo}
+
+\tableofcontents
+%\clearpage
+\listoffigures
+%\clearpage
+\listoftables
+%% listofqueries는 \newlistof로 만든
+%% local \listofx임.
+%\clearpage
+\listofqueries
+
+\mainmatter
+
+%% hangul 페이지 스타일을 테스트하기
+%% 위하여 제1편 앞에 한 챕터를 둠. 다만 chapter의 첫 면은
+%% chapter 페이지 스타일을 따른다.
+\pagestyle{hangul}
+
+\chapterstyle{default}
+
+\chapter{xoblivoir}
+
+이 문서는 xoblivoir의 몇 가지 기능을 시험하기 위한 목적으로 
+작성되었다. 이 문서의 원본은 memhangul을 개발하던 당시
+테스트용으로 사용된 바, 가장 먼저 만들어진 oblivoir 문서이다.
+
+해당 문단의 여백에 사용되고 있는 명령이 나와 있으므로 참고할 수 있을
+것이다. 실제로 xoblivoir 사용설명서를 작성하기 어려운 것이
+기본적인 것은 모두 memoir에 바탕을 두고 있는 데다가
+한글화하면서 변화한 점도 많아서 이것을 모두 모으면 너무나 방대한
+내용이 된다는 점이다.
+
+이 문서의 원본을 잘 연구하면 그럭저럭 oblivoir가 어떻게 동작하는지
+짐작할 수 있게 되기를 희망한다.
+
+이 문서는 다음 순서로 컴파일할 수 있다. |$ENGINE|은 \util{pdflatex}, \util{xelatex}, \util{lualatex} 가운데 하나이고
+|$JOBNAME|은 파일 이름(\texttt{xobtesttest})이다.
+한편, 색인을 만드는 유틸리티 |$MAKEINDEXENGINE|은 \util{pdflatex} 상황에서는
+\util{komkindex}이고 그밖의 경우에는 \util{kotexindy}이다.
+
+\begin{verbatim}
+ #  $ENGINE $JOBNAME
+ #  $ENGINE $JOBNAME
+ #  $MAKEINDEXENGINE $JOBNAME.idx
+ #  $ENGINE $JOBNAME
+\end{verbatim}
+
+
+
+\chapter{default 페이지 스타일}
+
+\section{맹동야를 보내는 글}
+\epigraph{한유 글, \cnm{送孟東野序}}{김학주 옮김}
+
+대개 만물은 평정을 얻지 못하면 소리를 내게 된다.
+초목은 소리가 없으나 바람이 흔들면 소리를 내게 되며, 물은 소리가 없으나 바람이
+움직이면 소리를 내게 된다. 물이 뛰어오르는 것은 바위같은 곳에 부칮쳤기
+때문이다. 물이 세차게 끓어오르는 것은 한 곳에서 물결을 막기 때문이다.
+물이 펄펄 끓어오르는 것은 불로 태우기 때문이다. 쇠나 돌은 소리가 없으나
+치면 소리를 낸다. 사람이 말하는 데 있어서도 이와 같으니,
+부득이한 일이 있은 후에야 말을 하게 된다. 노래를 하는 것은 생각이
+있기 때문이며, 우는 것은 회포가 있기 때문이다.
+
+음악이라는 것은 가슴속이 막혀 답답할 때 밖으로 새어나오는 것이며
+소리를 잘 내는 것을 선택하여 이것을 빌려서 소리를 내게 된다.
+쇠\cntrdot 돌\cntrdot 실\cntrdot 대\cntrdot 박\cntrdot 흙\cntrdot 
+가죽\cntrdot 나무 등 여덟 가지 악기를 만드는 데 쓰이는 자료들은 만물
+가운데 소리를 잘 내는 것들이다.
+
+자연의 계절에 있어서도 역시 그러하니 소리를 잘 내는 것을 선택하여 그것을
+빌려서 소리를 내게 된다. 그러므로 새를 빌려 봄의 소리를 내고, 우뢰를
+빌려 여름의 소리를 내고, 벌레를 빌어 가을의 소리를 내며,
+바람을 빌어 겨울의 소리를 낸다. 사계절이 서로 바뀌어 나타나는 현상은
+반드시 그 평정을 얻지 못했기 때문일 것이다.
+
+이는 사람에게 있어서도 마찬가지이다. 사람의 소리 가운데 정묘한 것이 언어이며
+문장의 표현은 언어 가운데서도 더욱 정묘한 것이다. 그 중에서도 더욱 소리를
+잘 내는 것을 선택하여 이것을 빌려서 소리를 내게 된다.
+
+당요\cntrdot 우순 시대에는 고요와 우가 소리를 잘 내는 사람들이어서
+그들을 빌려 소리를 냈다. 기는 문사로써 소리를 내지는 못했으나
+스스로 소를 빌려서 소리를 냈다. 하나라 때에는 오자가 노래를 불러 소리를
+냈다. 이윤은 은나라에서 소리를 냈고 주공은 주나라에서 소리를 냈다.
+
+무릇 \snm{시}\cntrdot \snm{서} 등 육예에 실린 것들은 모두 소리를
+잘 낸 것들이다. 주나라가 쇠퇴해지자 공자의 무리들이 소리를 냈는데
+그 소리를 크게 멀리 들렸다. 옛 서적에 ``하늘이 장차 선생을 목탁으로
+삼으려 하는구나!''\,라고 하였는데도 믿지 못하겠는가!
+
+주나라 말엽에 이르러서는 장주가 황당한 문사로써 초나라에서
+소리를 냈다. 초나라를 큰나라였는데 망할 무렵이 되어 굴원이 소리를 냈다.
+장손진\cntrdot 맹가\cntrdot 순경은 도로써 소리를 낸 자들이고,
+양주\cntrdot 묵적\cntrdot 관이오\cntrdot 안영\cntrdot 노담\cntrdot 신불해\cntrdot 
+한비\cntrdot 신도\cntrdot 전연\cntrdot 추연\cntrdot 시교\cntrdot 손무\cntrdot 
+장의\cntrdot 소진의 무리들은 모두 술법으로써 소리를 냈다.
+
+진나라가 융성하자 이사가 소리를 냈으며 한나라 때에는 사마천\cntrdot 사마상여\cntrdot 
+양응이 가장 소리를 잘 낸 자들이다.
+
+그 후 위\cntrdot 진 시대에는 소리를 내는 자들이 옛날 사람들에 미치지 못했지만
+또한 아직 끊이지는 않았었다. 그 가운데 괜찮은 것들도 그 소리는 맑지만
+경박하고 그 음절은 빠르고 급하며 그 문사는 음란하고 슬프며
+그 뜻은 느슨하고도 방자하며 그 표현은 난잡하고 문채가 없었으니
+하늘이 그 덕을 추하게 여겨 돌보지 않은 때문이었는가? 무엇 때문에
+소리를 잘 내는 자들로 하여금 소리를 내게 하지 않았는가!
+
+당(唐)나라가 천하를 장악하고나서는 진자앙\cntrdot 소원명\cntrdot 원결\cntrdot 
+이백\cntrdot 두보\cntrdot 이관 등이 모두 자신의 잘하는 것으로써 소리를 내었다.
+
+현재 살아 있으면서 아랫자리에 있는 사람으로 동야 맹교가 비로소 시로써
+소리를 내었다. 그는 위\cntrdot 진 시대 사람들보다 훨씬 뛰어나며
+게을리하지 않으면 옛사람들의 수준에 미칠 수 있겠고
+그밖의 작품들은 한나라의 문풍에 젖어 있다. 나에게서 배운 자들로서
+이고와 장적이 가장 뛰어나다. 이 세 사람의 소리는 진실로 훌륭하다.
+
+그런데 하늘이 장차 그들의 소리를 온화하게 하여 국가의 성대함을 소리내게
+할 것인지 아니면 장차 그들 자신을 가난하고 굶주리게 하고
+그들의 마음을 근심스럽게 하여 그 불행을 스스로 소리내게 할 것인지 모르겠다.
+이 세 사람의 운명은 하늘에 달려 있는 것이니 윗자리에 있다고 해서 어찌
+기뻐하겠으며 아랫자리에 있다고 해서 어찌 슬퍼하겠는가.
+
+동야가 강남에 근무하러 떠나면서 즐거워하지 않는 것 같아서 내가 그의
+운명이 하늘에 달려 있다고 말하며 이를 풀어주려고 하는 것이다.
+
+%% 본문시작.
+%% 본문은 companion chapter style로 식자할 것인데,
+%% default를 한 번 부른 이유는 앞서 사용한 demo의
+%% 글꼴 설정에 영향을 받기 때문이다.
+%\chapterstyle{default}
+\chapterstyle{companion}
+
+\part{xoblivoir 테스트}
+
+\pagestyle{companion}
+
+%% 제목은 두 줄로 식자하되, heading과 toc에는 개행 없이.
+% \chapter[memoir 클래스에서 한글을 쓰자][memoir 클래스에서...]{memoir
+%   클래스에서\\ 한글을 쓰자} % -> [toc][heading]{title}
+% \chapter[memoir 클래스에서 한글을 쓰자]{memoir 클래스에서\\ 한글을
+%   쓰자} % -> [toc,heading]{title} %% 이 부분이 memoir와 다르다.
+% \chapter{memoir 클래스에서 한글을 쓰자} % {toc,heading,title}
+% \chapter[memoir 클래스에서 한글을 쓰자][memoir 클래스에서
+% 한글...]{memoir 클래스에서\\ 한글을 쓰자}
+% \chapter[memoir 클래스에서 한글...]{memoir 클래스에서\\ 한글을 쓰자}
+% 주의: titleref에 \\ 문자가 들어가면 안된다. titleref에서 사용하는
+% 것은 두번째 옵션인자이므로, 다음과 같이 두번째 옵션 인자를 밝혀줄
+% 것.
+\chapter[memoir 클래스에서 한글...][memoir 클래스에서 한글을 쓰자]{%
+	memoir 클래스에서\\ 한글을 쓰자}
+\traceon\label{sec:firstchap}\traceoff
+
+\chapterprecis{\noindent 이 장에서는 memoir 클래스에 대해 간략히
+	소개하고 한글화에 대하여 개관한다.}
+
+\showcommand{chapterprecis}\showcommand{chapterstyle}\showcommand{pagestyle}
+\thisclass\는 Peter Wilson 씨가 작성한 \LaTeX\ 클래스이다. \LaTeX 이 제공하는
+표준 클래스\index{표준~클래스|bfhypidx}는 \cls{book}, \cls{report}, \cls{article}, \cls{letter}
+등이 있지만, 어딘가 모르게 세세한 부분에서 부족한 점이 있어서 수많은 추가 패키지를
+사용해야 원하는 문서 모양을 구현할 수 있는 경우가 많았다. \thisclass\는 그 동안 개발된
+문서 조판의 세세한 부분을 하나의 클래스로 통합한 것으로, 사용자 입장에서는
+정말 획기적인 환상적인 클래스가 아닐 수 없다. 매우 많은 패키지들을 이
+클래스는 통합\cntrdot 내장하거나 그와 유사한 기능을 제공한다.
+이 패키지의 결점은, 한번 사용하기 시작하면 다시는 book과 같은
+표준 클래스로 돌아가기 어렵다는 점이다.
+
+EUC-KR\index{한글!EUC-KR|bfhypidx} 한글을 \thisclass 에서 사용하도록 만들었던 것이 
+\pkg{memhangul}였다.
+이제 여기서 제공하는 클래스는 본질적으로 \pkg{memhangul}\과 동일하지만
+한글을 UTF-8 유니코드로 입력할 수 있게 만든 것이다. \wi[유니코드]{유니코드 한글}을
+처리하기 위해서 \pkg{dhucs}\를 채택하였다.
+\query[유니코드]{유니코드 한글 처리}
+
+\alineskip
+
+\hangfrom{한글 }사용을 위해서 H\LaTeX 을 채택한 결과는 어느 정도
+괜찮은 결과를 가져왔다. 그러나 \pkg{dhucs}\를 이용하여 구현한 \pkg{memhangul-ucs}\는
+괜찮은 정도가 아니라 아주 훌륭한 결과를 얻게 되었다.
+
+\showcommand{hangpara}\showcommand{hangfrom}%
+\hangpara{2.6em}{2}%
+{\SetAdhocFonts{unpg}{ungt}\showcommand{SetAdhocFonts}%
+유니코드 한글 입력이 가능하도록 하는 것은 \pkg{dhucs}에서였다. 이것은
+\LaTeX-ucs 패키지와 한글 자동조사 및 한글 문서서식을 합친 것인데,
+핵심적인 한글 식자와 자동조사의 구현은 김도현 교수가 작성하였다.
+필자는 사용자 인터페이스를 조금 추가하고 한글 문서서식을 보충하는
+정도로 미미한 기여를 하였다.}
+
+이 패키지의 장점은 대강 다음과 같다.
+\tightlists\showcommand{tightlists}
+\begin{itemize}
+
+\item 유니코드를 쓴다는 것 자체가 장점이다. EUC-KR 한글의 범위를
+넘어서서 맞춤법에는 어긋나지만 꼭 써야할 경우가 없지 않은 ``띡''과 같은
+완성형 밖 글자를 식자할 수 있다.\footnote{%
+    중세 한글 문제는 코드와 폰트의 문제가 얽혀 있어서 
+    여기에서는 다루지 않는다.}
+
+\item 절에 \wi{한글식 절카운터 모양}(section counter format), \dispcmd{pgana} 등을
+사용하는 것이 쉽다.
+
+\item \wi{자동조사} 기능이 구현되어 있다.
+
+\item 주요 pagestyle과 chapterstyle이 \wi{한글}과 호환되게 하였다. 이호재 님의
+말씀에 의하면, \thisclass 는 여러 가지 면에서 매우 편리하다고 한다.
+
+\item 인덱스 만들기가 구현되었다.
+
+\item \thisclass 의 여러 기능을 그대로 쓸 수 있다.
+
+\end{itemize}
+
+\section{이 문서의 컴파일 방법}
+
+다음과 같은 순서로 컴파일한다.
+
+\bvtopandtail\showcommand{bvtopandtail}\showenv{boxedverbatim}
+\begin{boxedverbatim}
+#> latex memucstest
+#> latex memucstest
+#> makeindex-dhucs -s dhucs memucstest
+#> latex memucstest
+\end{boxedverbatim}
+
+|makeindex(-dhucs)|에 앞서서 |latex|을 두 번 실행하는 이유는,
+memoir 패키지의 인덱스 만들기의 특징 때문이다. 처음 한 번만 실행해서는
+|.idx| 파일이 만들어지지 않는다.
+
+\section{chapter 스타일}
+
+\showcommand{prechapternum}\showcommand{postchapternum}
+사용자가 자신의 |chapterstyle|을 정의(定義)할 때는 반드시
+\dispcmd{prechapternum}과 \dispcmd{postchapternum}을 함께 정의해주도록 한다.
+그림~\ref{fig:examchapstyle}\은 |hangnum| chapter style을
+정의하는 방법을 보여준다.
+\begin{figure}
+%% 웬만한 환경은 memoir에 다 있다.!!!
+\begin{boxedverbatim}
+\makechapterstyle{hangnum}{%
+  \renewcommand{\chapnumfont}{\chaptitlefont}
+  \settowidth{\chapindent}{\chapnumfont 999}
+%  \renewcommand{\printchaptername}{} % <= 쓰지 않음.
+  \renewcommand{\prechapternum}{} % <= 이 행을 정의
+  \renewcommand{\chapternamenum}{}
+  \renewcommand{\postchapternum}{}%  <= 이 행을 정의
+  \renewcommand{\printchapternum}{%
+    \noindent\llap{\makebox[\chapindent][l]{\chapnumfont 
+            \thechapter}}}
+  \renewcommand{\afterchapternum}{}
+}
+\end{boxedverbatim}
+\caption{chapterstyle 정의 예제}\label{fig:examchapstyle}
+\end{figure}
+
+장 스타일을 수정하는 구체적인 예는 |memman.tex|\cite{memman}에서
+가져온 |veelo| chapter style의 정의를 참조하라. 이 문서의
+소스 Preamble에 있다. 예제는 \Cref{sec:math} \titleref{sec:math}\을 보라.
+%% disable \nameref
+\textbf{\nameref{sec:appchap}}\를 보라.
+
+\textbf{\titleref{sec:appchap}}\를 보라. \pref{sec:appchap}\을, 
+\ref{sec:appchap}\을, \Cref{sec:appchap}\을
+\Sref{sec:appsec}\가, \ref{sec:appsec}\가, \titleref{sec:appsec}\가.
+\titleref{sec:appsec}\을.
+\showcommand{Cref}\showcommand{ref}\showcommand{pageref}\showcommand{titleref}
+%% \Cref 명령으로 식자되는 결과를 주의깊게 보라.
+
+\section{시집}\label{sec:poembook}
+
+\wi{어머님}이 \wi{수술} 후에 거동이 불편해지신 후, 집에만
+계시는 것이 무척 \wi{무료}하신 듯하다. 예전에 내가 보던
+\wi{시집}을 꺼내 보고 계시다. \showcommand{titleref}\showcommand{Sref}%
+\Sref{sec:poembook} \textit{\titleref{sec:poembook}}\는
+텍스트 입력의 예제이다.
+
+%% memoir는 poem 스타일을 자체 내장하고 있다.
+%% plain poem title을 선언함.
+\PlainPoemTitle\showcommand{PoemTitle}\showcommand{PlainPoemTitle}
+\showenv{shaded}\showcommand{poemtitle}\showenv{verse}
+\begin{shaded}
+\renewcommand\poemtoc{subsection}
+\settocdepth{subsection}
+\poemtitle{신안리에서}
+\settowidth{\versewidth}{\hbox{사람들은 굳이 한 마디 말 하려 하지 않는다.}}
+\ifpdf\begin{verse}\else\begin{verse}[\versewidth]\fi
+
+실개천 너머 나 있는 샛길로\\
+택시가 들어오고 나가며 \\
+겨르로운 달빛에 감출 부끄러움도 없는\\
+사람들은 굳이 한 마디 말 하려 하지 않는다.\\!
+
+나는 톱밥 같은 달빛을 한 웅큼\\
+멀리 철길 쪽으로 뿌렸다.\\
+매달린 불빛보다\\
+아침이 먼저 깨어나는 광경을 보며.\\
+삶은 새의 낮은 날음새 같은 것,\\
+이대로 누워 잠들기\\
+두렵지 않은 작은 마을에\\
+더 작은 풀꽃 인사한다.\\
+잊혀짐 너머 안부 묻는다.\\
+\end{verse}
+\end{shaded}
+
+이 스타일은 \pkg{memucs-setspace}\를 이용한다. 이 패키지는\footnote{
+    이 스타일은 \pkg{setspace}\를 수정한 것이다.
+    \env{verse}, \env{quote}\와 같은 환경을 조금 바꾸어서 행간을 약간 줄여주는
+    기능이 있다.}
+verse, quote와 같은 환경을 조금 바꾸어서 행간을 약간 줄여주는
+기능이 있다. 이 부분에서 \dispcmd{adjustfloatfnspacing}을 불러보겠다.
+\showcommand{adjustfloatfnspacing}
+다음번 각주는 행간이 조금 달라져야 한다.
+\adjustfloatfnspacing
+float 안에 놓인 것과 같아지도록.\footnote{%
+이 스타일은 \pkg{setspace}\를 수정한 것이다.
+verse, quote와 같은 환경을 조금 바꾸어서 행간을 약간 줄여주는
+기능이 있다.}
+
+\showcommand{memucsfninterwordhook}\showcommand{xspaceskip}
+만약 각주의 자간을 조절하고 싶으면 어떻게 할 것인가?
+이 때는 \dispcmd{memucsfninterwordhook}이라는 명령을 재정의해준다.
+이것을 간편하게 재정의하는 명령을 따로 제공하지 않는 이유는,
+이것을 재정의하는 것이 그다지 바람직하지 않기 때문이다.
+게다가 만약 이 명령에서 \dispcmd{xspaceskip} 등을 수정하면
+본문에도 영향을 미치기 때문에, 본문 중에서는 
+되도록 사용하지 않는 것이 좋다. 여기서는 오직 예시만을
+위하여 간단한 예를 들어두겠다.
+\let\ORIGmemucsfninterwordhook\memucsfninterwordhook
+\renewcommand\memucsfninterwordhook{%
+    \ifLuaOrXeTeX
+    \hangulfontspec[\interHANGUL=.5em]{\DefaultFont}
+    \fi
+    \spaceskip=.8em plus .133em minus .111em
+%   \xspaceskip=1em plus .05em minus .05em 
+}%
+이제 각주를 붙여보자.\footnote{%
+각주의 자간을 수정하려면
+위와 같이 한다. 잘 되는가?}
+
+%\DefaultInterHchar
+
+\showcommand{noadjustquotespacing}\showcommand{adjustquotespacing}
+이 아래는 본문 중에서 \dispcmd{noadjustquotespacing}과 \dispcmd{adjustquotespacing}을
+불렀을 때 \env{quote} 안에서 행간이 어떻게 변하는지 보여준다.
+기본값은 \dispcmd{noadjustquotespacing}이다.
+
+\begin{quote}
+이 스타일은 \pkg{setspace}\를 수정한 것이다.
+verse, quote와 같은 환경을 조금 바꾸어서 행간을 약간 줄여주는
+기능이 있다. 마치 float 안에 놓인 것과 같이.
+\end{quote}
+
+여기서 \dispcmd{adjustquotespacing}을 호출함.
+
+\adjustquotespacing
+\begin{quote}
+이 스타일은 \pkg{setspace}\를 이용한다. 이 패키지는
+verse, quote와 같은 환경을 조금 바꾸어서 행간을 약간 줄여주는
+기능이 있다. 마치 float 안에 놓인 것과 같이.
+\end{quote}
+
+verse류 환경의 행간은 quote를 따른다. 앞서 보인 시를 여기에서
+다시 식자해보자.
+\begin{shaded}
+\renewcommand\poemtoc{subsection}
+\settocdepth{subsection}
+\PoemTitle{신안리에서}
+\settowidth\versewidth{사람들은 굳이 한 마디 말 하려 하지 않는다.}
+\ifpdf\begin{verse}\else\begin{verse}[\versewidth]\fi
+
+실개천 너머 나 있는 샛길로\\
+택시가 들어오고 나가며 \\
+겨르로운 달빛에 감출 부끄러움도 없는\\
+사람들은 굳이 한 마디 말 하려 하지 않는다.\\!
+
+나는 톱밥 같은 달빛을 한 웅큼\\
+멀리 철길 쪽으로 뿌렸다.\\
+매달린 불빛보다\\
+아침이 먼저 깨어나는 광경을 보며.\\
+삶은 새의 낮은 날음새 같은 것,\\
+이대로 누워 잠들기\\
+두렵지 않은 작은 마을에\\
+더 작은 풀꽃 인사한다.\\
+잊혀짐 너머 안부 묻는다.\\
+\end{verse}
+\end{shaded}
+
+여기서 다시 \dispcmd{noadjustquotespacing}을 선언함.
+
+\noadjustquotespacing
+\begin{quote}
+이 스타일은 \pkg{setspace}\를 이용한다. 이 패키지는
+verse, quote와 같은 환경을 조금 바꾸어서 행간을 약간 줄여주는
+기능이 있다. 마치 float 안에 놓인 것과 같이.
+\end{quote}
+
+\section{강조}
+
+강조를 구현하는 데는 여러 가지 방법이 있다. 서구 문헌의
+경우 이탤릭체를 사용하는 것이 일반적이고, 예전의 독일 문헌에서는
+자간을 띄우는 강조 방법을 사용한 적도 있다고 한다.
+
+우리말 문헌은 일관되어 있지 않다. 
+
+\subsection{방점 강조}
+
+예를 들면 \circemph{방점 강조} 방법을 사용하는 것이 가능하다.
+\wi[강조]{방점 강조}는 \dotemph{한글 맞춤법}의 문장부호 조항에서 규정하고 있는 방법이기도
+하다.\showcommand{circemph}\showcommand{dotemph}
+맨처음에 이 명령은 H\LaTeX\ 1.01에서 구현된 것이었는데,
+그 후 
+\useremph{발전을 거듭하여}
+현재에 이르렀다.
+\showcommand{useremph}
+
+\subsection{기울인 글꼴 또는 글꼴 대체}
+
+\ifPDFTeX \ungremph \fi
+H\LaTeX{}에서는 {\itshape\wi[강조]{기울인 글꼴}}을 쓰는 방법을 오랫동안 사용해왔다.
+그러나 실제로 출판되는 서적에서는 \wi[강조]{글꼴 대체} 방법을 사용하는
+경우가 많다.
+
+\ifPDFTeX \begingroup
+	\regremph
+	|gremph| 옵션은 다음과 같은 효과를 낸다. \emph{gremph 옵션}.
+	\ungremph
+	이번에는 이것을 disable한다. \emph{gremph 옵션}. 
+	
+	|\bfemtrue|와 |\bfemfalse|는 그래픽 글꼴 대신
+	은바탕 굵은 글꼴로 식자하게 한다. 또, |\SetGremphFonts|
+	명령으로 직접 폰트를 지정할 수 있다.\showcommand{regremph}		\showcommand{ungremph}
+	\showcommand{SetGremphFonts}\showcommand{bfemtrue, \textbackslash bfemfalse}
+	다만 |\SetGremphFonts| 명령은 preamble에서만 쓸 수 있다.
+\endgroup \else\ifLuaOrXeTeX \begingroup
+	\hologo{LuaLaTeX}이나 \hologo{XeLaTeX}을 쓰는 경우,
+	강조 글꼴의 선택은 폰트 속성과 연계된다. 즉, \textit{Italic Font}로
+	지정된 글꼴이 강조 글꼴로 사용된다. 
+	|[itemph]| 옵션은 이 부분의 글꼴을 기울어지게 만든다.
+\endgroup \fi\fi
+
+\showcommand{MakeShortVerb}
+
+%% 한글 섹션 카운터 포맷을 가능하게 함.
+\renewcommand\thesection{\pgana{section}}
+\section{두번째 절}
+
+\epigraphtextposition{flushleftright}
+\epigraph{%
+나는 십대에 \wi{철학책}을 읽기 시작한 무렵부터
+거기에 언제나 이 `나(私)'가 빠져 있다고 느껴왔다.}
+{\emph{탐구}\\ \textsf{\wi[인명]{카라타니 코진(柄谷行人)}}}
+
+\showcommand{pgana}\showcommand{epigraph}
+\showcommand{epigraphtextposition}
+
+\wi{수학}에서는 어떤 공리계가 하나의 해석 모델에서는 참이지만
+다른 해석 모델에서는 거짓인 일이 있을 수 있다.
+이것은 \wi{공리계}가 불충분한 경우이다.
+
+\renewcommand\thesection{\onum{section}}
+\section{표}
+
+\showcommand{legend}\showcommand{onum}
+\thisclass\는 다양한 표작성 환경을 제공한다.
+\tref{tab:test}\과 \tref{tab:test2}\를 보라.
+\showcommand{tref}
+
+%% tabular에는 legend를 붙일 수 있다.
+\begin{table}
+\caption{test table}\label{tab:test}
+\centering
+\begin{tabular}{cc}
+\hline
+두 줄 짜리 & 3 \\
+하단 제목 붙은 & 4 \\
+\hline
+\end{tabular}
+\legend{caption 아닌 소제목}
+\end{table}
+
+\begin{table}
+\caption{test table 2}\label{tab:test2}
+\centering
+\begin{tabular}{cc}
+\hline \hline
+두 줄 짜리 & 6 \\ \hline
+하단 제목 안 붙은 & 5 \\
+\hline \hline
+\end{tabular}
+\end{table}
+
+(여기서 페이지를 나눈다. 페이지 나누기 명령으로는
+\dispcmd{cleartoverso}를 사용하겠다. 이것은 이 뒤에 새로
+시작하는 페이지가 짝수쪽(verso)이 되게 한다. \dispcmd{cleartorecto} 
+명령도 있다.)
+\showcommand{cleartoverso}\cleartoverso
+
+\namesubappendixtrue
+\begin{subappendices}
+\addappheadtotoc
+\section{자동조사 테스트}
+\showcommand{namesubappendixtrue}
+\showcommand{addappheadtotoc}
+\showenv{subsppendices}
+
+간단한 \dispcmd{ref}-like 명령으로 \wi{자동조사}를 테스트한다.
+\dispcmd{cite}도 잘 된다.
+
+\tref{tab:test}\와 \tref{tab:test2}\이 어떻게 보이나요?
+그리고 \fref{fig:examchapstyle}\은 \pref{fig:examchapstyle}\로
+가면 볼 수 있어요. 페이지~\pref{fig:examchapstyle}\로 가보세요.
+\showcommand{tref, \textbackslash fref}\showcommand{pref}
+
+위의 문장 입력:
+\bvsides\showcommand{bvsides}\showenv{boxedverbatim}
+\begin{boxedverbatim}
+\tref{tab:test}\와 \tref{tab:test2}\이 어떻게 보이나요?
+그리고 \fref{fig:examchapstyle}\은
+\pageref{fig:examchapstyle}\AltPageName\로 가면 볼 수 있어요.
+페이지~\pageref{fig:examchapstyle}\로 가보세요.
+\end{boxedverbatim}
+
+\section{그림 테스트}
+
+\newlength{\mylength}
+\begin{figure}
+\calccentering{\mylength}
+\begin{adjustwidth*}{\mylength}{-\mylength}
+\centering
+\includegraphics[width=.6\textwidth]{doeun}
+\caption{공부하는(?) 도은이}\label{doeunbike}
+\end{adjustwidth*}
+\end{figure}
+
+그림이 잘 들어가는지도 테스트해야 한다고 한다. \fref{doeunbike}\를 볼 것.
+이 그림은 마진폭을 계산해서 편집영역의 중간이 아니라 페이지 전체의
+중간으로 가도록 \dispcmd{calccentering}을 이용했다.\showcommand{calccentering}
+\showenv{adjustwidth*}
+이 계산이 표준 \LaTeX\ 클래스에서 얼마나 귀찮은 것이었는지 상상할 수 
+있겠는가?
+\query{그림넣기}
+
+\begin{boxedverbatim}
+\newlength{\mylength}
+\begin{figure}
+\calccentering{\mylength}
+\begin{adjustwidth*}{\mylength}{-\mylength}
+\centering
+\includegraphics[width=.6\textwidth]{doeun}
+\caption{공부하는(?) 도은이}\label{doeunbike}
+\end{adjustwidth*}
+\end{figure}
+\end{boxedverbatim}
+
+\end{subappendices}
+
+%%% part 페이지를 깨끗하게...
+\copypagestyle{part}{empty}
+
+%%%%%%%%%% Ruled를 사용하되 partmark를 정의함.
+\copypagestyle{MyRuled}{Ruled}
+\newlength{\MyRuledheadwidth}
+\setlength{\MyRuledheadwidth}{\textwidth}
+\addtolength{\MyRuledheadwidth}{\marginparsep}
+\addtolength{\MyRuledheadwidth}{\marginparwidth}
+\makerunningwidth{MyRuled}{\MyRuledheadwidth}
+\makeheadrule{MyRuled}{\MyRuledheadwidth}{\normalrulethickness}
+\makeheadposition{MyRuled}{flushright}{flushleft}{flushright}{flushleft}
+\makeatletter
+\makepsmarks{MyRuled}{%
+  \let\@mkboth\markboth
+  \def\partmark##1{\markboth{\hparttitlehead. ##1}{##1}}
+  \def\chaptermark##1{\markright{\hchaptertitlehead. ##1}}
+  \def\sectionmark##1{}
+}
+\def\partmark#1{\markboth{\hparttitlehead. #1}{#1}}
+\makeatother
+
+%%% 제2장. 페이지 스타일과 챕터 스타일을 바꿈.
+%%% 새로운 장에 새로운 스타일을 적용하려 할 때는,
+%%% chapterstyle은 \chapter명령보다 먼저 부르고 \pagestyle은
+%%% \chapter보다 나중에 부르는 것이 좋다.
+
+\part{테스트는 즐거워}
+\oblivoirchapterstyle{veelo}
+\pagestyle{MyRuled}
+
+\chapter{수학질문상자}\traceon\label{sec:math}\traceoff
+
+%% 절의 카운터를 \pnum으로.
+\renewcommand\thesection{\pnum{section}}
+
+\showcommand{makepagestyle}\showcommand{copypagestyle}
+
+\section{자연로그의 밑}
+
+이 절은 \cite{Kentaro}\을 인용하였다. \env{singlespacing}\을
+사용하였다.\showenv{singlespacing}
+
+%\begin{singlespacing}
+\[
+e^x =1+ \frac{x}{1!} + \frac{x^2}{2!} + \frac{x^3}{3!} + \cdots
+\]
+이라는 사실이 알려져 있다. 여기에서 $x=1$이라 하면,
+\[
+e=1+\frac{1}{1!}+\frac{1}{2!}+\frac{1}{3!} +\cdots
+\]
+가 된다.
+
+우선
+\[
+\lim_{n\to\infty}\left(1+ \frac{1}{n}\right)^{n} = e
+\]
+에서 $1/n = h$라 두면,
+\[
+\lim_{h\to 0}\left(1+h\right)^{\frac{1}{h}} = e
+\]
+라고 쓸 수 있다. $e$를 밑으로 하는 대수를 $\log$라고 표시하면,
+\[
+\frac{\log(1+h)}{h} = \log(1+h)^{\frac{1}{h}}
+\]
+인데, 여기에서 $h \to \infty$이라면,
+\[
+\lim_{h\to 0}\frac{\log(1+h)}{h} = \lim_{h\to 0}\log(1+h)^{\frac{1}{h}} =\log e.
+\]
+
+따라서,
+\[
+\log(1+h)=x, \quad\text{즉}\quad h=e^{x} -1
+\]
+이다. 여기에서,
+\[
+1=\lim_{h\to0}\frac{\log(1+h)}{h}=\lim_{x\to0}\frac{x}{e^x -1}.
+\]
+
+따라서,
+\[
+\lim_{x\to0}\frac{e^x -1}{x}=1
+\]
+을 얻는다. 그런데 여기에서,
+\[
+y=e^x
+\]
+의 도함수 $y'$를 구해본다.
+\[
+y'=\lim_{h\to0}\frac{e^{x+h}-e^x}{h}=e^x \lim_{h\to0}\frac{e^h -1}{h}=e^x.
+\]
+따라서,
+\[
+y=e^x \text{라면}, \qquad y'=e^x
+\]
+이다.
+
+또, $y=\log x$의 도함수를 구해본다.
+\begin{displaymath}
+\begin{split}
+y' &= \lim_{h\to0}\frac{\log(x+h)-\log x}{h} \\
+   &= \lim_{h\to0}\frac{1}{h}\log\left(1+ \frac{h}{x}\right) \\
+   &= \frac{1}{x}\lim_{h\to0}\frac{x}{h}\log\left(1+\frac{h}{x}\right) \\
+   &= \frac{1}{x}\lim_{\frac{h}{x}\to0}\log\left(1+\frac{h}{x}\right)^{\frac{x}{h}} \\
+   &= \frac{1}{x}\log e \\
+   &= \frac{1}{x}.
+\end{split}
+\end{displaymath}
+
+따라서, 
+\[
+y=\log x \text{라면}, \qquad y'=\frac{1}{x}.
+\]
+
+%\end{singlespacing}
+
+이와 같이 간단한 공식으로 얻어진 것은 대수의 밑으로 $e$를 썼기
+때문이다. $e$ 이외의 밑을 사용하면, 공식은 보다 복잡하게 된다.
+이런 의미에서 $e$를 밑으로 하는 대수를 \emph{자연로그}라고 부른다.\showcommand{emph}
+이상으로부터 상상할 수 있듯이, 미적분학과 같은 이론을 전개할 때는
+$e$를 밑으로 하는 대수를 사용하고, 실제의 수치계산에서는
+$10$을 밑으로 하는 상용로그를 사용한다.
+
+\fancybreak{* * *}
+
+$0 \le t \le 1$에 있어서, $f(t)$는 연속인 도함수 $f'(t)$를 가지고,\showcommand{fancybreak}
+$0 < f'(t) \le 1,\quad f(0)=0$이다. 이 때 다음 부등식이 성립함을 보여라.
+\[
+\left[ \int_{0}^{1} f(t)dt \right ] ^2 \ge \int_{0}^{1} [f(t)]^3 dt 
+\]
+
+\vskip\onelineskip
+
+적분구간의 상한을 변수 $x$로 바꾸어본다.
+\[
+\left[ \int_{0}^{x} f(t)dt \right]^2 \ge \int_0^x [f(t)]^3 dt
+\]
+이 식의 좌변에서 우변을 빼서 그것을 $F(x)$라고 두자.
+\[
+F(x) = \left[ \int_{0}^{x} f(t)dt \right]^2 - \int_0^x [f(t)]^3 dt
+\]
+이 때 $F(0)=0$이다.
+
+$F(x)$를 $x$로 미분하면
+\begin{equation}
+\begin{split}
+F'(x) &= 2\left[ \int_{0}^{x} f(t)dt \right]f(x) - \{f(x)\}^3 \\
+  &= f(x) \left[ 2\int_{0}^{2} f(t)dt - \{f(x)\}^2 \right]
+\end{split}
+\end{equation}
+
+문제의 의미에 의해 $0<x<1$에서 $f(x) > 0$이다. 
+\[
+G(x) = 2 \int_{0}^{x} f(t)dt - \{f(x)\}^2 \qquad (0 \le x \le 1)
+\]
+이라 놓으면 $G(0)=0$이고,
+\begin{equation}
+\begin{split}
+G'(x) &= 2f(x) - 2f(x)f'(x) \\
+      &= 2f(x) \{1-f'(x)\} \ge 0
+\end{split}
+\end{equation}
+이다. $0 \le x \le 1$인 모든 $x$에 관하여 $f'(x) \le 1$이므로
+$G'(x) \ge 0$. 따라서 $G(x) \ge 0$임을 말할 수 있다. 그러므로
+\uline{$F(x) \ge 0$이 성립한다.}\showcommand{uline (ulem package)}
+
+%% 부록 관련 명령
+%% \appendix 또는 appendices 환경
+%\appendix
+%% 부록 면주에 \hparttitlehead, \hchaptertitlehead 를 표시하지 않는다.
+\def\partmark#1{\markboth{#1}{#1}}
+\def\chaptermark#1{\markright{#1}}
+%
+
+\AppendixTitleToToc
+\AttachAppendixTitleToSecnum
+
+%\begin{appendices}
+\appendix
+\appendixpage*
+
+\renewcommand\thechapter{\Roman{APPchapter}}
+\renewcommand\thesubsection{\thesection.\arabic{APPsubsection}}
+\setcounter{APPchapter}{0}
+
+\chapterstyle{appendixdefault}
+\renewcommand*\prechapternum{\chapnamefont 부록\ \ 제}
+\renewcommand*\postchapternum{\chapnamefont 장}
+\renewcommand*\printchapternum{\chapnumfont\thechapter}
+%% appendix에서는 chaptersyle을 appendixcompanion,
+%% appendixdefault, appendixsection 등으로 지정할 것.
+%% 사용자가 새로운 chapterstyle을 설정하려 할 때는
+%% appendixXXXX 환경을 새로 만들어야 한다.
+%% appendix에서의 절 모양은 \thechapter.\arabic{section}으로
+%% 된다. 이것은 renewcommand할 수 있다.
+
+\chapter{19세기 초중엽}\label{sec:appchap}
+
+\chapterprecis{\noindent 부록에서는 한자가 많은 문장과 상호참조가 많은 문장을
+	시험한다.}
+\showcommand{chapterprecis}
+
+\showcommand{appendix}\showenv{appendices}
+\ResetHangulspace{1.333}{1.2}
+\showcommand{ResetHangulspace}
+\paragraphfootnotes
+\showcommand{paragraphfootnotes}
+
+\section{평안도 광산}\label{sec:appsec}
+19세기에 들어와서도 1807년 \wi{평안도} \wi[위원]{渭原} 지방에서
+\wi{광산}이 개발되자 단시일내에 수많은 광산노동자가 집결하여 커다란
+광산촌을 형성하였는데 이 광산도 앞의 遂安광산과 동일한 형태로
+운영되었을 것은 틀림없다. 1811년 평안도 농민전쟁 당시 서울에 있던
+禹君則의 物主(資本主)가 수천 냥의 자금을 보내어 그것으로 雲山의 금광을
+운영하게끔 한 사실, 또한 앞서 본 대로 雲山 광산노동자 800명을 官軍으로
+강제적으로 끌어들이려 한 계획, \wi[김창시]{金昌始}가
+\wi[운산광산]{雲山광산}의 \wi[우욱]{禹郁}과 연계하에 그곳의
+광산노동자를 농민전쟁에 끌어들이는 조직 사업을 진행하였다고 하는
+사실은\footnote{\bnm{日省錄} 哲宗 9年 2月 3日條} 이 시기에
+雲山금광에서도 수많은 광산노동자가 집결하여 있었음을 確證하여
+준다. 또한 1858년 함경도 암행어사 洪承裕의 보고에 의하면 당시
+함경도에서는 金, 銀, 銅의 潛採가 광범하게 이루어져서 하나의 광산이
+開發되기만 하면 도처에서 金店軍이 몇천 명씩 몰려와서 鑛山村이 형성되고
+場市가 열려서 각종 日用品이 광범하게 매매되고 있고 광산의 坑의 깊이가
+千餘尺에 달하는 경우도 적지 않았다.\footnote{\bnm{關南平亂錄} 卷五
+  安州牧使 牒報條.}
+
+\section{술어 논리의 완전성 정리}
+
+이 절의 텍스트는 \cite{incompl}\ pp.\ 155ff.에서 취하였다.
+\showcommand{cite}
+
+\subsection{먼저 기호의 설명을 잠깐\texorpdfstring{\ldots}{...}}
+
+술어논리의 형식화는 모든 대상과 논리법칙(공리)의 기호화로부터
+시작된다. ``태초에 기호가 있다''이다.
+
+\showcommand{texorpdfstring}
+기본 기호는 \fref{fig:syms}의 여섯 종류이다.
+\showcommand{fref}
+
+\begin{figure}
+\centering
+\begin{minipage}{.75\textwidth}
+\begin{tabbing}
+1111\=11111111111111111111\= \kill
+(1) \> 대상기호(상수) \> $ c_{1}, c_{2}, c_{3}, c_{4}, \ldots $ \\
+(2) \> 함수기호 \> $ f_{1}, f_{2}, f_{3}, f_{4}, \ldots $ \\
+(3) \> 술어기호 \> $ P_{1}, P_{2}, P_{3}, P_{4}, \ldots $ \\
+(4) \> 자유변수 \> $ a_{1}, a_{2}, a_{3}, a_{4}, \ldots $ \\
+(5) \> 속박변수 \> $ x_{1}, x_{2}, x_{3}, x_{4}, \ldots $ \\
+(6) \> 논리기호 \> $ \land, \lor, \rightarrow, \lnot, \forall, \exists $
+\end{tabbing}
+\end{minipage}
+\caption{기본 기호}\label{fig:syms}
+\end{figure}
+
+\showenv{tabbing}\showenv{minipage}
+
+이 중, `자유변수'란 불특정의 대상, `속박변수'란 논리기호 $\forall$과
+$\exists$의 어느 것인가와 함께 사용하는 변수를 나타낸다. $\forall$과
+$\exists$는 `속박기호' 또는 `양화기호'라 부르고 $\forall$을
+`전칭기호', $\exists$를 `존재기호'라고 말한다.
+
+이 $\forall$과 $\exists$를 포함하지 않는 논리 체계가 \bnm{프린키피아
+  마테마티카}에서 처음으로 체계화된 ``명제논리학''이다. 이쪽은 벌써
+1920년에 그 무모순성과 완전성이 당시 컬럼비아 대학의 학생에 지나지
+않았던 E.~L.~포스트에 의해서 증명되고 있다.
+
+논리기호는 초수학에 있어서는 추상적인 기호에 지나지 않는다. 그러나
+근원을 밝히면 그것들에는 원래 각각 고유한 의미가 있다. 즉 `$\lnot$'는
+``\ldots 이 아니다'', `$\lor$'는 ``또는'', `$\land$'는 ``동시에'',
+`$\rightarrow$'는 ``이라면'', $\forall$은 ``모든'', $\exists$는 ``어떤
+\ldots 가 존재한다''는 의미이다.
+
+이 해석으로 말하면 대상이 유한집합의 경우는 술어논리도 명제논리로
+환원될 수 있다. $\forall$과 $\exists$는 무한집합을 대상으로 할 때
+비로소 의미를 갖는 논리기호이다. 수학은 본질적으로 무한집합을 대상으로
+하고 있기 때문에 술어논리는 수학의 논리로 되어 있는 것이다.
+
+그러나 지금은 이러한 유래를 제외하고 형식적 체계만을 문제삼고 있기
+때문에 당분간 기호의 의미는 잊어버려도 상관없다. 오히려 적극적으로
+잊어버려서 기호의 조작에만 전념하려고 하는 것이 초수학의 기본
+방침이다.
+
+\subsection{`항', `논리식'의 정의와 논리법칙}
+
+기호가 갖추어진 곳에서 추론의 대상이 되는 `항'을 \pref{fig:term}의
+\fref{fig:term}\과 같이 정의한다.\showcommand{pref}
+
+\begin{figure}
+\centering
+\begin{minipage}{.75\textwidth}
+\begin{enumerate}[(1)]\tightlist\small\raggedright
+\item \label{itemone} 대상 기호와 자유변수는 항이다.
+\item \label{itemtwo} $f$가 $n$ 변수의 함수기호이고, $t_1 , t_2 ,
+  \ldots, t_n$이 항이라면 $f(t_1 , t_2 , \ldots t_n )$은 항이다.
+\item (\ref{itemone})\와 (\ref{itemtwo})\으로부터 얻어지는 것만이 항이다.
+\end{enumerate}
+\end{minipage}
+\caption{`항'의 정의}\label{fig:term}
+\end{figure}
+
+다음으로 이 항을 사용해서 `논리식'을 \fref{fig:logi}\과 같이 정의한다.
+
+\begin{figure}
+\centering
+\begin{minipage}{.85\textwidth}
+\begin{enumerate}[(1)]\tightlist\small\raggedright
+\item \label{st} $P$가 $n$ 변수의 술어기호이고, $t_1 , t_2 , \ldots ,
+  t_n $이 항이라면 $P(t_1 , t_2 , \ldots , t_n )$은 논리식이다. 특히
+  이것을 \emph{원시논리식}이라 부른다.
+\item \label{nd} $A, B$가 논리식일 때 $\lnot A, A \lor B, A \land B, A
+  \to B$도 논리식이다.
+\item \label{rd} $A(a)$가 자유변수 $a$를 포함하는 논리식이고 $x$가
+  $A(a)$ 속에 나타나지 않는 속박변수일 때 $\forall xA(x), \exists
+  xA(x)$는 논리식이다.
+\item (\ref{st}), (\ref{nd}), (\ref{rd})에 의해서 얻어지는 것만이
+  논리식이다.
+\end{enumerate}
+\small
+덧붙여 말하면, $\forall xA(x)$는 ``모든 $x$는 $A$를 충족시킨다'',
+$\exists xA(x)$는 ``$A$를 충족시키는 $x$가 존재한다''라고 해석한다.
+\end{minipage}
+\caption{`논리식'의 정의}\label{fig:logi}
+\end{figure}
+
+그러면 다음은 이들 논리식을 사용해서 추론을 행하기 위한 논리법칙의
+설정인데, 힐베르트-아카만의 공리계에서는 다음 \fref{fig:rules}\과 같이
+되어 있다.
+
+\begin{figure}
+\centering
+\begin{minipage}{.85\textwidth}\small
+\noindent\textsf{공리}\\
+\begin{enumerate}[(1)]\tightlist
+\item $A \to (B\to A)$
+\item $(A\to B)\to ((A\to (B\to C))\to (A\to C))$
+\item $A\to (B\to A\land B)$
+\item $A\land B\to A,\quad A\land B\to B$
+\item $A\to A\lor B,\quad B\to A\lor B$
+\item $(A\to C)\to ((B\to C)\to(A\lor B\to C))$
+\item $(A\to B)\to ((A\to \lnot B)\to \lnot A))$
+\item $\lnot\lnot A\to A$
+\item $A(t)\to \exists xA(x)$ ($t$는 항)
+\item $\forall xA(x) \to A(t)$ ($t$는 항)
+\end{enumerate}
+
+\bigskip
+
+\noindent\textsf{추론 규칙}\\
+\begin{enumerate}[1~~]
+\item \label{rules:st} $\dfrac{A,\; A\to B}{B}$
+\item $\dfrac{A(a)\to C}{\exists xA(x)\to C}$
+\item $\dfrac{C\to A(a)}{C\to \forall xA(x)}$
+\end{enumerate}
+다만, $A, B, C, \ldots, \forall xA(x), \ldots$ 등은 모두 논리식으로
+한다.
+\end{minipage}
+\caption{논리법칙 (힐베르트-아카만의 공리계를 따름)}\label{fig:rules}
+\end{figure}
+
+`추론규칙'이 형성하는 ``도형''을 ``연역도'' 또는 ``증명도''라 부르고
+이 도형은 ``위의 기호열로부터 아래의 기호열을 추론한다''라고
+해석한다. 예컨대 추론규칙 \ref{rules:st}\는 ``$A$와 $A\to B$로부터
+$B$를 추론한다''라고 해석하는 것이다.
+
+\subsection{증명과 해석}
+
+이만큼 준비가 된 곳에서 `증명가능'의 개념을 다음과 같이 정의한다.\showcommand{tightlist}
+\showenv{enumerate}
+\begin{enumerate}[(1)]\tightlist
+\item \label{ev:st} 공리는 증명가능하다.
+\item \label{ev:nd} 증명가능한 논리식에 추론규칙을 적용해서 얻어지는 논리식은
+  증명가능하다.
+\item (\ref{ev:st})\과 (\ref{ev:nd})에서 얻어진 논리식만이
+  증명가능하다.
+\end{enumerate}
+
+논리식 $A$가 $B_1 , B_2 , \ldots , B_n $을 가정했을 때 증명할 수
+있다면,
+\begin{displaymath}
+B_1 , B_2 , \ldots , B_n \vdash A
+\end{displaymath}
+라고 쓴다.\showenv{displaymath}
+
+또한 $A$가 술어논리의 공리만을 사용해서 증명가능할 때는
+\begin{displaymath}
+\vdash A
+\end{displaymath}
+라고 쓴다.
+
+\begin{shaded}
+실례를 두 가지 대비시켜서 보여주자.
+
+예컨대 논리식,
+$$
+\forall x \exists y (y < x)
+$$
+는 ``모든 $x$에 대해서 $y$가 존재하고 $y$는 $x$보다 작다''라고 해석할
+수 있다. 이 해석 아래에서는 실수의 영역이면 모델이 되나 자연수의
+영역에서는 모델이 되지 않는다.  자연수로 $x$를 $0$으로 잡으면 그것보다
+작은 자연수 $y$는 존재하지 않기 때문이다.
+
+대비적인 실례로서 논리식,
+$$
+\exists x \forall y (x \le y)
+$$
+를 취하자. 그 해석은 ``어떤 $x$가 존재하고 모든 $y$에 대해서 $y$는
+$x$와 같거나 $x$보다 크다''로 된다.  이것은 자연수가 모델이라면
+$0$이라는 최소수가 존재하기 때문에 진실이 되나 실수의 모델에서는 허위로
+되는 논리식이다.
+\end{shaded}
+\showenv{shaded}
+
+그래서 모든 해석에 대해서 진실이 되는 논리식을 `항진식' 또는
+`토톨로지'라 부르고 $A$가 토톨로지일 때
+\begin{displaymath}
+\vDash A
+\end{displaymath}
+라고 쓰기로 한다.
+
+\chapter{이 문서에 관하여}
+
+이 문서는 \pkg{memhangul-ucs}를 처음 만들 때 테스트용으로 작성한
+것이다.
+
+\pkg{oblivoir}는 원래 \pkg{dhucs}를 백그라운드 드라이버로 하여
+구현된 것이었다. 그러다가 \hologo{XeTeX}ko, \hologo{LuaTeX}ko를
+백그라운드로 한 \pkg{xoblivoir}가 만들어졌다.
+현재 버전의 \pkg{xoblivoir}는 이 둘을 합쳐서 어떤 엔진으로 컴파일해도
+거의 같은 결과를 얻게끔 되어 있다.
+따라서, 이 문서는 \hologo{pdfLaTeX}, \hologo{XeLaTeX}, \hologo{LuaLaTeX} 어느 것으로도 컴파일된다. \showcommand{hologo}
+
+\section{kotexindy에 관하여}
+찾아보기를 만들려면 |kotexindy|를 사용하라. 예를 들면 다음과 같다.
+\begin{verbatim}
+$ kotexindy memucstest.idx
+\end{verbatim}
+찾아보기를 찍는 명령은 |\printindex|이다. \showcommand{printindex}
+
+%\restorechapsec \showcommand{restorechapsec}
+%% 만약 appendix가 문서의 가장 끝에 오는 것이 아니라면
+%% 이 명령을 appendix 이후에 실행해준다.
+%% 아래와 같이 appendices 환경을 쓰는 경우에는
+%% 환경을 종료하기만 하면 된다.
+%\end{appendices}
+
+%%% 본문의 끝.
+\backmatter
+\chapterstyle{demo}
+
+%% \bibintoc 하면 참고문헌이 목록에 나온다.
+%% 기본값이므로 별도로 설정할 필요는 없다.
+%\bibintoc
+\renewcommand\prebibhook{%
+    \showcommand{bibintoc}%
+    이 참고문헌 예제는 시험을 위해서 작성된 것으로 실제 문서의
+    내용과는 무관하다.%
+    \showcommand{prebibhook}}
+\begin{thebibliography}{00}
+\bibitem[카누쓰86]{Knuth} Donald Knuth. \textit{The
+    \TeX{}book}. Addison-Wesley. 1986.
+\bibitem{memman} Peter Wilson.  ``The Memoir Class for Configurable
+  Typesetting --- User Guide,'' On-line 문서.
+  \url{http://www.ctan.org/tex-archive/macros/latex/contrib/memoir/}.
+\bibitem{incompl} 요시나가 요시마사, 임승원 (옮김), \bnm{불완전성 정리
+    --- ``이성의 한계''의 발견}. 전파과학사. 1993.
+\bibitem[수학질문상자]{Kentaro} 야노 겐타로(矢野健太郞), 전재복
+  (옮김).  \bnm{수학 질문 상자 --- 왜일까? 그것을 알고
+    싶다}. 전파과학사. 1991.  (원저: 고단샤, 1973).
+\end{thebibliography}
+
+\indexintoc 
+\renewcommand\preindexhook{%
+  찾아보기는 테스트를 위해서 임의의 단어들로 선정되었다.
+  \bigskip}
+\printindex
+
+%% memoir에서는 \listof... 명령을 아무데나 선언할
+%% 수 있다. 신기하다.
+\clearpage
+\showcommand{listof...}
+\listofqueries
+
+\end{document}
+

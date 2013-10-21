@@ -1,0 +1,51 @@
+%% xob-dotemph.sty
+%%
+%% Copyright (c) 2007-2013 Kangsoo Kim <karnes at ktug org>
+%%
+%% This work may be distributed and/or modified under the
+%% conditions of the LaTeX Project Public License, either version 1.3c
+%% of this license or (at your option) any later version.
+%% The latest version of this license is in
+%%  http://www.latex-project.org/lppl.txt
+%% and version 1.3c or later is part of all distributions of LaTeX
+%% version 2006/05/20 or later.
+%%
+%% xob-dotemph
+%%  2010-03-18
+%%  오전 9:01 2008-10-22
+%% xetexko-dotemph의 확장
+%%  dhucs/hangul compatible (\dotemph, \circemph, \useremph)
+%% ----------
+%% \useremph is different from xetexko's \useremph ***
+%%
+%% Updated for xetexko v2.1
+%% Kihwang Lee <leekh at ktug.org>
+%% 2013.08.26
+%%
+%%% from dhucs.sty
+\def\circemph#1{\begingroup\def\dotemphchar{^^^^02da}\dotemph{#1}\endgroup}
+\def\dhucs@useremph#1{\begingroup
+    \let\dotemphchar\useremphchar
+    \let\dotemphraise\useremphraisedim
+    \dotemph{#1}\endgroup} 
+
+\def\useremph{%
+    \@ifnextchar[\@user@emph{%
+	  \@ifnextchar*\@orig@useremph\@@user@emph}%
+}
+
+\def\@orig@useremph*#1{\dhucs@useremph{#1}}
+
+\def\@user@emph[#1]#2#3{%
+    \def\useremphchar{#2}%
+	\def\useremphraisedim{#1}%
+	\dhucs@useremph{#3}%
+}
+
+\def\@@user@emph#1#2{%
+    \def\useremphchar{#1}%
+	\def\useremphraisedim{6pt}%
+	\dhucs@useremph{#2}%
+}
+	
+\endinput
