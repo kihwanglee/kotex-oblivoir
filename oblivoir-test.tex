@@ -80,7 +80,7 @@
 %% float/fn의 좁은 행간 설정을 disable. \adjustfloatfnspacing
 \noadjustfloatfnspacing
 
-%% shaded 환경에 칠할 배경색.
+%% snugshade 환경에 칠할 배경색.
 \definecolor{shadecolor}{gray}{0.85}
 
 %%% from memman.tex. modified.
@@ -116,6 +116,19 @@
    }
    \makeoddfoot{plain}{}{}{\thepage}
 }
+
+\makechapterstyle{mycompanion}{%
+  \chapterstyle{default}
+  \renewcommand*{\chapnamefont}{\normalfont\LARGE\scshape}
+  \renewcommand*{\printchaptername}{\raggedleft\chapnamefont \@chapapp}
+  \renewcommand*{\prechapternum}{\raggedleft\chapnamefont \pre@chapter}
+  \renewcommand*{\chapnumfont}{\normalfont\Huge}
+  \setlength{\chapindent}{\marginparsep}
+  \renewcommand*{\printchaptertitle}[1]{%
+    \begin{adjustwidth}{}{-\chapindent}
+      \raggedleft \chaptitlefont ##1\par\nobreak
+    \end{adjustwidth}}} 
+
 \makeatother 
 
 %%% User's commands
@@ -442,11 +455,10 @@
 %% 본문은 companion chapter style로 식자할 것인데,
 %% default를 한 번 부른 이유는 앞서 사용한 demo의
 %% 글꼴 설정에 영향을 받기 때문이다.
-%\chapterstyle{default}
-\chapterstyle{companion}
 
 \part{xoblivoir 테스트}
 
+\chapterstyle{mycompanion}
 \pagestyle{companion}
 
 %% 제목은 두 줄로 식자하되, heading과 toc에는 개행 없이.
@@ -591,8 +603,8 @@ memoir 패키지의 인덱스 만들기의 특징 때문이다. 처음 한 번�
 %% memoir는 poem 스타일을 자체 내장하고 있다.
 %% plain poem title을 선언함.
 \PlainPoemTitle\showcommand{PoemTitle}\showcommand{PlainPoemTitle}
-\showenv{shaded}\showcommand{poemtitle}\showenv{verse}
-\begin{shaded}
+\showenv{snugshade}\showcommand{poemtitle}\showenv{verse}
+\begin{snugshade}
 \renewcommand\poemtoc{subsection}
 \settocdepth{subsection}
 \poemtitle{신안리에서}
@@ -614,7 +626,7 @@ memoir 패키지의 인덱스 만들기의 특징 때문이다. 처음 한 번�
 더 작은 풀꽃 인사한다.\\
 잊혀짐 너머 안부 묻는다.\\
 \end{verse}
-\end{shaded}
+\end{snugshade}
 
 이 스타일은 \pkg{memucs-setspace}\를 이용한다. 이 패키지는\footnote{
     이 스타일은 \pkg{setspace}\를 수정한 것이다.
@@ -630,26 +642,32 @@ float 안에 놓인 것과 같아지도록.\footnote{%
 verse, quote와 같은 환경을 조금 바꾸어서 행간을 약간 줄여주는
 기능이 있다.}
 
-\showcommand{memucsfninterwordhook}\showcommand{xspaceskip}
-만약 각주의 자간을 조절하고 싶으면 어떻게 할 것인가?
-이 때는 \dispcmd{memucsfninterwordhook}이라는 명령을 재정의해준다.
-이것을 간편하게 재정의하는 명령을 따로 제공하지 않는 이유는,
-이것을 재정의하는 것이 그다지 바람직하지 않기 때문이다.
-게다가 만약 이 명령에서 \dispcmd{xspaceskip} 등을 수정하면
-본문에도 영향을 미치기 때문에, 본문 중에서는 
-되도록 사용하지 않는 것이 좋다. 여기서는 오직 예시만을
-위하여 간단한 예를 들어두겠다.
-\let\ORIGmemucsfninterwordhook\memucsfninterwordhook
-\renewcommand\memucsfninterwordhook{%
-    \ifLuaOrXeTeX
-    \hangulfontspec[\interHANGUL=.5em]{\DefaultFont}
-    \fi
-    \spaceskip=.8em plus .133em minus .111em
-%   \xspaceskip=1em plus .05em minus .05em 
-}%
-이제 각주를 붙여보자.\footnote{%
-각주의 자간을 수정하려면
-위와 같이 한다. 잘 되는가?}
+%%%\showcommand{memucsfninterwordhook}\showcommand{xspaceskip}
+%%%만약 각주의 자간을 조절하고 싶으면 어떻게 할 것인가?
+%%%이 때는 \dispcmd{memucsfninterwordhook}이라는 명령을 재정의해준다.
+%%%이것을 간편하게 재정의하는 명령을 따로 제공하지 않는 이유는,
+%%%이것을 재정의하는 것이 그다지 바람직하지 않기 때문이다.
+%%%게다가 만약 이 명령에서 \dispcmd{xspaceskip} 등을 수정하면
+%%%본문에도 영향을 미치기 때문에, 본문 중에서는 
+%%%되도록 사용하지 않는 것이 좋다. 여기서는 오직 예시만을
+%%%위하여 간단한 예를 들어두겠다.
+%%%\let\ORIGmemucsfninterwordhook\memucsfninterwordhook
+%%%\renewcommand\memucsfninterwordhook{%
+%%%    \ifLuaTeX
+%%%    \hangulfontspec[InterHangul=.5em]{\DefaultFont}
+%%%    \else\ifXeTeX
+%%%    \hangulfontspec[interhchar=.5em]{\DefaultFont}
+%%%    \else\ifPDFTeX
+%%%    \interhchar{.5em}
+%%%    \fi\fi\fi
+%%%    \spaceskip=.8em plus .133em minus .111em
+%%%%   \xspaceskip=1em plus .05em minus .05em 
+%%%}%
+%%%이제 각주를 붙여보자.\footnote{%
+%%%각주의 자간을 수정하려면
+%%%위와 같이 한다. 잘 되는가?}
+%%%
+%%%\let\memucsfninterwordhook=\ORIGmemucsfninterwordhook
 
 %\DefaultInterHchar
 
@@ -675,7 +693,7 @@ verse, quote와 같은 환경을 조금 바꾸어서 행간을 약간 줄여주�
 
 verse류 환경의 행간은 quote를 따른다. 앞서 보인 시를 여기에서
 다시 식자해보자.
-\begin{shaded}
+\begin{snugshade}
 \renewcommand\poemtoc{subsection}
 \settocdepth{subsection}
 \PoemTitle{신안리에서}
@@ -697,7 +715,7 @@ verse류 환경의 행간은 quote를 따른다. 앞서 보인 시를 여기에�
 더 작은 풀꽃 인사한다.\\
 잊혀짐 너머 안부 묻는다.\\
 \end{verse}
-\end{shaded}
+\end{snugshade}
 
 여기서 다시 \dispcmd{noadjustquotespacing}을 선언함.
 
@@ -1064,6 +1082,8 @@ $G'(x) \ge 0$. 따라서 $G(x) \ge 0$임을 말할 수 있다. 그러므로
 %% appendix에서의 절 모양은 \thechapter.\arabic{section}으로
 %% 된다. 이것은 renewcommand할 수 있다.
 
+\pagestyle{hangul}
+
 \chapter{19세기 초중엽}\label{sec:appchap}
 
 \chapterprecis{\noindent 부록에서는 한자가 많은 문장과 상호참조가 많은 문장을
@@ -1260,7 +1280,7 @@ B_1 , B_2 , \ldots , B_n \vdash A
 \end{displaymath}
 라고 쓴다.
 
-\begin{shaded}
+\begin{snugshade}
 실례를 두 가지 대비시켜서 보여주자.
 
 예컨대 논리식,
@@ -1280,8 +1300,8 @@ $$
 $x$와 같거나 $x$보다 크다''로 된다.  이것은 자연수가 모델이라면
 $0$이라는 최소수가 존재하기 때문에 진실이 되나 실수의 모델에서는 허위로
 되는 논리식이다.
-\end{shaded}
-\showenv{shaded}
+\end{snugshade}
+\showenv{snugshade}
 
 그래서 모든 해석에 대해서 진실이 되는 논리식을 `항진식' 또는
 `토톨로지'라 부르고 $A$가 토톨로지일 때
