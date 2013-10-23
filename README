@@ -23,30 +23,30 @@ Files
     oblivoir-xlua.cls -> tex/latex/kotex-oblivoir/
     oblivoir.cls -> tex/latex/kotex-oblivoir/
     xoblivoir.cls -> tex/latex/kotex-oblivoir/
-    memhangul-ucs/10_5.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/fapapersize.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/hfontsel.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/hfontspec.nanum -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/memhangul-common.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/memhangul-patch.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/memhangul-ucs.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/memucs-enumerate.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/memucs-gremph.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/memucs-interword.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/memucs-setspace.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/nanumfontsel.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/ob-koreanappendix.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/ob-nokoreanappendix.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-ucs/ob-toclof.sty -> tex/latex/kotex-oblvoir/memhangul-ucs
-    memhangul-x/luatexko-xobfont.sty -> tex/latex/kotex-oblivoir/memhangul-x
-    memhangul-x/memhangul-x.sty -> tex/latex/kotex-oblivoir/memhangul-x
-    memhangul-x/memucs-interword-x.sty -> tex/latex/kotex-oblivoir/memhangul-x
-    memhangul-x/xetexko-var.sty -> tex/latex/kotex-oblivoir/memhangul-x
-    memhangul-x/xetexko-xobfont.sty -> tex/latex/kotex-oblivoir/memhangul-x
-    memhangul-x/xob-amssymb.sty -> tex/latex/kotex-oblivoir/memhangul-x
-    memhangul-x/xob-dotemph.sty -> tex/latex/kotex-oblivoir/memhangul-x
-    memhangul-x/xob-hyper.sty -> tex/latex/kotex-oblivoir/memhangul-x
-    memhangul-x/xob-paralist.sty -> tex/latex/kotex-oblivoir/memhangul-x
+    memhangul-ucs/10_5.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/fapapersize.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/hfontsel.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/hfontspec.nanum -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/memhangul-common.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/memhangul-patch.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/memhangul-ucs.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/memucs-enumerate.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/memucs-gremph.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/memucs-interword.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/memucs-setspace.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/nanumfontsel.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/ob-koreanappendix.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/ob-nokoreanappendix.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-ucs/ob-toclof.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
+    memhangul-x/luatexko-xobfont.sty -> tex/latex/kotex-oblivoir/memhangul-x/
+    memhangul-x/memhangul-x.sty -> tex/latex/kotex-oblivoir/memhangul-x/
+    memhangul-x/memucs-interword-x.sty -> tex/latex/kotex-oblivoir/memhangul-x/
+    memhangul-x/xetexko-var.sty -> tex/latex/kotex-oblivoir/memhangul-x/
+    memhangul-x/xetexko-xobfont.sty -> tex/latex/kotex-oblivoir/memhangul-x/
+    memhangul-x/xob-amssymb.sty -> tex/latex/kotex-oblivoir/memhangul-x/
+    memhangul-x/xob-dotemph.sty -> tex/latex/kotex-oblivoir/memhangul-x/
+    memhangul-x/xob-hyper.sty -> tex/latex/kotex-oblivoir/memhangul-x/
+    memhangul-x/xob-paralist.sty -> tex/latex/kotex-oblivoir/memhangul-x/
 
 ### Documents
 
