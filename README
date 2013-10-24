@@ -14,6 +14,14 @@ kotex-oblivoir belongs to the ko.TeX, a comprehensive Korean typesetting
 system together with packages kotex-utf, kotex-plain, kotex-utils,
 cjk-ko, xetexko, and luatexko.
 
+Dependencies
+------------
+
+kotex-oblivoir depends on the following packages to function:
+
+* memoir: base class
+* kotex-utf: Korean typesetting
+
 Files
 -----
 
