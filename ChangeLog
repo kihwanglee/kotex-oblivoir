@@ -1,9 +1,13 @@
 2013-11-08  Kihwang Lee  <leekh at ktug org>
 
+	No version change
+
 	* ChangeLog: added
 	Consolidated change logs from included files
 
 2013-10-26  Kangsoo Kim  <karnes at ktug org>
+
+	No version change
 
 	* oblivoir-base.cls: version 0.4.3
 	move \kscntformat definition to memhangul-ucs
@@ -11,15 +15,20 @@
 
 2013-10-24  Kihwang Lee  <leekh at ktug org>
 
-	Version 2.0.0
+	No version change
 	
-	* kotex-oblivoir packaging
-	uploaded to CTAN
+	* Uploaded to CTAN
 
 2013-10-22  Kangsoo Kim  <karnes at ktug org>
 
 	* memhangul-ucs.sty.: introduce memhangul-common.sty
 	* memhangul-x.sty: introduce memhangul-common.sty
+
+2013-10-21  Kihwang Lee  <leekh at ktug org>
+
+	Version 2.0.0
+
+	* kotex-oblivoir packaging, uploaded to https://github.com/kihwanglee/kotex-oblivoir
 
 2013-10-16  Kangsoo Kim  <karnes at ktug org>
 
