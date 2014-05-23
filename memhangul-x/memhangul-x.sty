@@ -14,8 +14,8 @@
 %%    part of oblivoir v2
 %%
 \NeedsTeXFormat{LaTeX2e}
-\def\filedate{2013/10/22}
-\def\fileversion{11.7.16}
+\def\filedate{2014/04/29}
+\def\fileversion{11.7.17}
 \ProvidesPackage{memhangul-x}[\filedate Hangul Typography for (x)oblivoir]
 \typeout{Hangul Typography for (x)oblivoir}
 
@@ -114,8 +114,10 @@
 \ifluatex
   \RequirePackage{luatexko}
   \RequirePackage{luatexko-xobfont}
+  \RequirePackage{xob-dotemph}
 \else\ifxetex
   \RequirePackage{xetexko-var}
+  \RequirePackage{xob-dotemph}
   \else
 	\ifKOTEXCJK
      \RequirePackage{cjkutf8-ko}
@@ -123,10 +125,6 @@
 %     \RequirePackage{dhucs}
     \fi
 \fi\fi
-
-\ifKOTEXCJK\else
-	\RequirePackage{xob-dotemph}
-\fi
 
 %% define memh@hu
 \newdimen\memh@hu\memh@hu=0.059375em
@@ -339,6 +337,7 @@
 \endinput
 
 % CHANGE LOG
+% 2014/04/29 : fix a bug reported by Progress
 % 2013/10/22 : introduce memhangul-common.sty
 % 2013/10/16 : \kscntformat and [kosection] bug fix.
 % 2013/09/27 : \cntrdotss

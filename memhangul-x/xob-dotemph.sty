@@ -11,6 +11,7 @@
 %% version 2006/05/20 or later.
 %%
 %% xob-dotemph
+%%  2014-04-29
 %%  2010-03-18
 %%  오전 9:01 2008-10-22
 %% xetexko-dotemph의 확장
@@ -22,14 +23,19 @@
 %% Kihwang Lee <leekh at ktug.org>
 %% 2013.08.26
 %%
-%%% from dhucs.sty
-\def\circemph#1{\begingroup\def\dotemphchar{^^^^02da}\dotemph{#1}\endgroup}
+%%
+\protected\def\circemph#1{%
+	\begingroup
+	\def\dotemphchar{^^^^02da}\dotemph{#1}%
+	\endgroup
+}
+
 \def\dhucs@useremph#1{\begingroup
     \let\dotemphchar\useremphchar
     \let\dotemphraise\useremphraisedim
     \dotemph{#1}\endgroup} 
 
-\def\useremph{%
+\protected\def\useremph{%
     \@ifnextchar[\@user@emph{%
 	  \@ifnextchar*\@orig@useremph\@@user@emph}%
 }
@@ -47,5 +53,5 @@
 	\def\useremphraisedim{6pt}%
 	\dhucs@useremph{#2}%
 }
-	
+
 \endinput

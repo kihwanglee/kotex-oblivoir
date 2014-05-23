@@ -1,3 +1,11 @@
+2014-05-23	Kangsoo Kim	<karnes at ktug org>
+
+	Version 2.0.1
+
+	* memhangul-x.sty: fixed a bug reported by Progress.
+	* xetexko-xobfont.sty:  disable "223C assignment.
+	* xob-dotemph.sty: fixed a minior bug.
+
 2013-11-08  Kihwang Lee  <leekh at ktug org>
 
 	No version change

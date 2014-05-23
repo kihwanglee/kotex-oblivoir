@@ -13,7 +13,7 @@
 %% a variant of xetexko-font.sty
 %
 \ifdefined\ProvidesPackage
-  \ProvidesPackage{xetexko-xobfont}[2009/10/29 v0.76  Korean font definition in conjunction with xetexko-space, a variant]
+  \ProvidesPackage{xetexko-xobfont}[2014/05/12 v0.77  Korean font definition in conjunction with xetexko-space, a variant]
 \fi 
 
 \@ifpackageloaded{xetexko-space}{}{%
@@ -95,7 +95,7 @@
 %%  \ifnum\count255 < "266E
 %%    \advance\count255 1 \repeat
 
-\XeTeXcharclass "223C = 1 % ∼
+% \XeTeXcharclass "223C = 1 % ∼
 
 %% 한글폰트 지정하기 :
 \@ifpackageloaded{xltxtra}{}{\RequirePackage{xltxtra}}
@@ -1048,6 +1048,7 @@
 
 \endinput
 
+%%% 2014-05-12 : disable "223C assignment
 %%% 2013-09-27 : nounfonts set to default.
 %%% 2012-12-31 : [unfonts], [nounfonts]
 %%% 오전 1:21 2008-10-13 : xetexko-xobfont 작성
