@@ -1,3 +1,25 @@
+2014-06-25	Kangsoo Kim	<karnes at ktug org>
+
+	Version 2.1.0
+
+	* oblivoir-base.cls: version 0.6
+	use new xob-font.sty, replace \renewcommand's with \setlength's.
+	* oblivoir-xlua.cls: version 0.7
+	use new xob-font.sty, replace false \renewcommand with \setlength.
+	* xoblivoir.cls: fontspec option introduced.
+	* memhangul-ucs/memhangul-common.sty: minor fixes to section titles.
+	* memhangul-ucs/memhangul-patch.sty: move patches into main code base.
+	* memhangul-ucs/memhangul-ucs.sty: version 1.4.4g
+	suppress auto loading etex.sty.
+	* memhangul-ucs/memucs-gremph.sty: \if@unfonts => \if@unfont.
+	* memhangul-x/luatexko-xobfont.sty: removed.
+	* memhangul-x/memhangul-x.sty: use new xob-font.sty.
+	* memhangul-x/xetexko-var.sty: use new xob-font.sty.
+	* memhangul-x/xetexko-xobfont.sty: removed.
+	* memhangul-x/xob-dotemph.sty: \useremph redefined.
+	* memhangul-x/xob-font.sty: newly introduced.
+	* memhangul-x/xob-paralist.sty: minor fixes.
+
 2014-04-29	Kangsoo Kim	<karnes at ktug org>
 
 	Version 2.0.1
