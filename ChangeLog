@@ -7,6 +7,8 @@
 	* oblivoir-xlua.cls: version 0.7
 	use new xob-font.sty, replace false \renewcommand with \setlength.
 	* xoblivoir.cls: fontspec option introduced.
+	* doc/oblivoir-simpledoc.tex: revised for version 2.1.0.
+	* doc/oblivoir-test.tex: minor fixes.
 	* memhangul-ucs/memhangul-common.sty: minor fixes to section titles.
 	* memhangul-ucs/memhangul-patch.sty: move patches into main code base.
 	* memhangul-ucs/memhangul-ucs.sty: version 1.4.4g
