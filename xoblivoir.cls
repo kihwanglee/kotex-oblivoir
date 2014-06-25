@@ -1,6 +1,6 @@
 %% File `xoblivoir.cls`
 %%
-%% (C) Copyright 2006-2013 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2014 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -10,7 +10,7 @@
 %% and version 1.3c or later is part of all distributions of LaTeX
 %% version 2006/05/20 or later.
 %%
-\ProvidesClass{xoblivoir}[2013/10/26]
+\ProvidesClass{xoblivoir}[2014/06/12]
 
 \RequirePackage{xkeyval}
 
@@ -36,14 +36,18 @@
 
 \ifLuaOrXeTeX
 \LoadClassWithOptions{oblivoir-xlua}
-\typeout{HANGUL DRIVER: xetexko/luatexko running}
+  \ifLuaTeX
+		\typeout{HANGUL DRIVER: luatexko}
+  \else
+		\typeout{HANGUL DRIVER: xetexko}
+  \fi
 \else
   \if@CJK
     \LoadClassWithOptions{oblivoir-xlua}
-	\typeout{HANGUL DRIVER: cjk-ko running}
+	\typeout{HANGUL DRIVER: cjk-ko}
   \else
     \LoadClassWithOptions{oblivoir-base}
-	\typeout{HANGUL DRIVER: dhucs running}
+	\typeout{HANGUL DRIVER: kotex-utf}
   \fi
 \fi
 

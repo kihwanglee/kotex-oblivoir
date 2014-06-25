@@ -1,6 +1,6 @@
 %% xetexko-var.sty
 %%
-%% Copyright (c) 2007-2013 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2007-2014 Kangsoo Kim <karnes at ktug org>
 %% Copyright (c) 2013      Kihwang Lee <leekh at ktug org>
 %%
 %% This work may be distributed and/or modified under the
@@ -17,14 +17,14 @@
 %% 2013.08.26
 %%
 \ProvidesPackage{xetexko-var}
-   [2013/08/26 v0.12 Korean Typesetting under XeTeX]
+   [2014/06/12 v0.13 Korean Typesetting under XeTeX]
 
 %%% common options for xob-font
-\DeclareOption{gremph}{\PassOptionsToPackage{\CurrentOption}{xetexko-xobfont}}
-\DeclareOption{itemph}{\PassOptionsToPackage{\CurrentOption}{xetexko-xobfont}}
-\DeclareOption{oldhangul}{\PassOptionsToPackage{\CurrentOption}{xetexko-xobfont}}
-\DeclareOption{latinquote}{\PassOptionsToPackage{\CurrentOption}{xetexko-xobfont}}
-\DeclareOption{nowinname}{\PassOptionsToPackage{\CurrentOption}{xetexko-xobfont}}
+\DeclareOption{gremph}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
+\DeclareOption{itemph}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
+\DeclareOption{oldhangul}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
+\DeclareOption{latinquote}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
+\DeclareOption{nowinname}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
 %%% for kolabels
 \newif\if@hangul
 \newif\if@hanja
@@ -35,8 +35,10 @@
 \DeclareOption{manualfontspec}{\@extfontspectrue}
 
 %%% unfonts
-\DeclareOption{unfonts}{\PassOptionsToPackage{\CurrentOption}{xetexko-xobfont}}
-\DeclareOption{nounfonts}{\PassOptionsToPackage{\CurrentOption}{xetexko-xobfont}}
+\DeclareOption{unfonts}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
+\DeclareOption{nounfonts}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
+\DeclareOption{nanum}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
+\DeclareOption{hcr}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
 \ProcessOptions\relax
 
 %%% xetexko sub-styles
@@ -49,10 +51,11 @@
 \RequirePackage{xob-hyper}
 
 \if@extfontspec
-  \PackageWarning{xetexko-var}{Load xetexko-xobfont and configure Korean Fonts manually!}{}
-  \RequirePackage{xetexko-font}
+  \PackageWarning{xetexko-var}{Load xetexko-font and configure Korean Fonts manually!}{}
 \else
-  \RequirePackage{xetexko-xobfont}
+%%% We will never use xetexko/luatexko's unfonts option.
+  \newif\if@unfonts\@unfontsfalse
+  \RequirePackage{xob-font}
 \fi
 
 \RequirePackage{kolabels-utf}
@@ -60,6 +63,7 @@
 
 \endinput
 
+%%% 2014-06-12: new xob-font.sty
 %%% 2013-09-27, nounfonts.
 %%% 오후 3:22 2008-11-16
 %%% 오후 17:59 2008-12-03 : nowinname 옵션 추가

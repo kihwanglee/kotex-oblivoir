@@ -1,6 +1,6 @@
 %% File `oblivoir.cls`
 %%
-%% (C) Copyright 2006-2013 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2014 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -11,7 +11,7 @@
 %% version 2006/05/20 or later.
 %%
 \ProvidesClass{oblivoir-base}
-  [2013/10/26 v0.4.3 article-like class to typeset UTF-8 korean using memoir.]
+  [2014/06/12 v0.6 article-like class to typeset UTF-8 korean using memoir.]
 %\typeout{oblivoir requires memoir, dhucs, and memhangul. 2008/10/23.}
 
 %%% Acknowledgements:
@@ -94,14 +94,18 @@
 \DeclareOptionX{figtabcapt}[]{\PassOptionsToPackage{\CurrentOption}{memhangul-ucs}}
 
 %%% 2013-09-26
-\newif\if@unfonts\@unfontsfalse
-\DeclareOptionX{unfonts}{\@unfontstrue}
-\DeclareOptionX{nounfonts}{\@unfontsfalse}
-\DeclareOptionX{nanum}{\@unfontsfalse}
+%%% disabled option unfonts/nounfonts, 2014-06-13
+\newif\if@unfont\@unfontfalse
+\DeclareOptionX{unfonts}{\@unfonttrue}
+\DeclareOptionX{nounfonts}{\@unfontfalse}
+\DeclareOptionX{nanum}{\@unfontfalse}
 \DeclareOptionX{uset1font}{\PassOptionsToPackage{\CurrentOption}{nanumfontsel}}
 
 \DeclareOptionX{cjk}{\PassOptionsToPackage{\CurrentOption}{memhangul-ucs}}
 \DeclareOptionX{dhucs}{\PassOptionsToPackage{\CurrentOption}{memhangul-ucs}}
+
+%%% Disabled Options
+\DeclareOptionX{hcr}{}   % do nothing
 
 \newif\if@AMSmath\@AMSmathfalse
 \DeclareOptionX{amsmath}{\@AMSmathtrue}
@@ -180,7 +184,7 @@
 
 %%% korean fontsettings
 \ifnokorean\else
-  \if@unfonts
+  \if@unfont
     \RequirePackage{hfontsel}
     \usehangulfontspec{obut}
   \else
@@ -214,7 +218,7 @@
 \if@itemph\else
  \ifnokorean\else
 %  \ifpdf
-  \if@unfonts
+  \if@unfont
       \SetGremphFonts{outgr}{outgt}
   \else
   	  \SetGremphFonts{nanumgt}{nanumgt}
@@ -302,15 +306,15 @@
 \renewcommand\chaptitlefont{\Large\bfseries}
 \renewcommand\printchapternonum{}
 \renewcommand\printchaptertitle[1]{\chaptitlefont #1}
-\renewcommand\afterchapskip{\onelineskip}
-\renewcommand\beforechapskip{1.5\onelineskip}
+\setlength\afterchapskip{\onelineskip}
+\setlength\beforechapskip{1.5\onelineskip}
 \fi
 
-\renewcommand\cftsectionindent{0pt}
+\setlength\cftsectionindent{0pt}
 \ifnokorean\else
-\renewcommand\cftsectionnumwidth{1.8em}
-\renewcommand\cftsubsectionindent{1.8em}
-\renewcommand\cftsubsectionnumwidth{2.5em}
+\setlength\cftsectionnumwidth{1.8em}
+\setlength\cftsubsectionindent{1.8em}
+\setlength\cftsubsectionnumwidth{2.5em}
 \fi
 \if@chapter\else
 \let\cftchapterindent\cftsectionindent
@@ -520,6 +524,8 @@
 \endinput
 
 %%% ChangeLog:
+%%% ver0.6   2014/06/12 : introduce new xob-font.sty
+%%% ver0.5   2014/06/06 : replace \renewcommand's with \setlength's.
 %%% ver0.4.3 2013/10/26 : move \kscntformat definition to memhangul-ucs
 %%% ver0.4.2 2013/10/03 : fix a typo.
 %%% ver0.4.1 2013/09/26 : [moreroom] thanks to Juho.Lee

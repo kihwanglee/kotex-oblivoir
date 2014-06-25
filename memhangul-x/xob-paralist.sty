@@ -13,7 +13,10 @@
 %% paralist,
 %%
 \@ifpackageloaded{paralist}{}{\RequirePackage{paralist}}
-\makeatletter
+\RequirePackage{iftex}
+\ifPDFTeX
+  \RequirePackage{dhucs-paralist}
+\else
 \def\pl@loop@{%
   \ifx 가\pl@temp		 \def\@tempa{\pl@label\gana  }\else
   \ifx ㈎\pl@temp		 \def\@tempa{\pl@label\pgana }\else
@@ -41,6 +44,5 @@
                  \fi\fi\fi\fi\fi\fi\fi\fi
                  \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
   \@tempa}
-\makeatother
-
+\fi
 \endinput

@@ -1,6 +1,6 @@
 %% File `oblivoir-xlua.cls`
 %%
-%% (C) Copyright 2006-2013 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2014 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,7 +14,7 @@
 %% depends upon Dohyun Kim's xetexko and the author's memhangul-x.
 %%
 \ProvidesClass{oblivoir-xlua}
-  [2013/09/01 v0.4.5 article-like class to typeset UTF-8 korean using memoir.]
+  [2014/06/12 v0.7 article-like class to typeset UTF-8 korean using memoir.]
 \typeout{A variant of oblivoir class for Lua- or XeLaTeX.}
 
 \providecommand\@DisabledOption[1]{%
@@ -48,7 +48,7 @@
 \DeclareOptionX{footnote}{\@koreanfntrue}
 \newif\if@toclofentry\@toclofentryfalse
 \DeclareOptionX{tocentry}{\@toclofentrytrue}
-\newif\if@itemph\@itemphfalse
+%\newif\if@itemph\@itemphfalse
 \DeclareOptionX{itemph}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
 \DeclareOptionX{gremph}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
 \newif\if@chapter\@chapterfalse
@@ -80,9 +80,10 @@
 \DeclareOptionX{preloadoption}[]{\def\PRELOADoptstr{#1}}
 
 %% [nounfonts] 
-\newif\if@unfonts\@unfontstrue
 \DeclareOptionX{unfonts}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
 \DeclareOptionX{nounfonts}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
+\DeclareOptionX{nanum}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
+\DeclareOptionX{hcr}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
 
 \DeclareOptionX{figtabcapt}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
 
@@ -147,21 +148,6 @@
 
 \RequirePackage{ifluatex}
 \RequirePackage{ifxetex}
-
-%%% ifluaorxetex.sty
-%\RequirePackage{iftex}
-%
-%\newif\ifLuaOrXeTeX
-%\ifXeTeX\global\LuaOrXeTeXtrue
-%	\else\ifLuaTeX\global\LuaOrXeTeXtrue
-%	\else\global\LuaOrXeTeXfalse
-%\fi\fi
-
-\ifx\XeTeX\undefined
-	\def\Xe{X\kern-.0833em\lower.5ex\hbox{\reflectbox{E}}}
-	\def\XeTeX{\Xe\kern-.1667em\TeX}
-	\def\XeLaTeX{\Xe\kern-0.0833em\LaTeX}
-\fi
 
 %%\RequirePackage{comment}
 %%\def\finemath@status{}
@@ -255,15 +241,15 @@
 \renewcommand\chaptitlefont{\Large\bfseries}
 \renewcommand\printchapternonum{}
 \renewcommand\printchaptertitle[1]{\chaptitlefont #1}
-\renewcommand\afterchapskip{\onelineskip}
-\renewcommand\beforechapskip{1.5\onelineskip}
+\setlength\afterchapskip{\onelineskip}
+\setlength\beforechapskip{1.5\onelineskip}
 \fi
 
-\renewcommand\cftsectionindent{0pt}
+\setlength\cftsectionindent{0pt}
 \ifnokorean\else
-\renewcommand\cftsectionnumwidth{1.8em}
-\renewcommand\cftsubsectionindent{1.8em}
-\renewcommand\cftsubsectionnumwidth{2.5em}
+\setlength\cftsectionnumwidth{1.8em}
+\setlength\cftsubsectionindent{1.8em}
+\setlength\cftsubsectionnumwidth{2.5em}
 \fi
 \if@chapter\else
 \let\cftchapterindent\cftsectionindent
@@ -464,6 +450,8 @@
 \endinput
 
 %%% ChangeLog:
+%%% 2014-06-12 : introduce new xob-font.sty
+%%% 2014-06-06 : replace false \renewcommand with \setlength
 %%% 2013-10-26 : moved \kscntformat definition to memhangul.
 %%% 2013-09-12 : integrate ifluaorxetex.sty
 %%% 2013-09-01 : [cjk], [dhucs] option introduced.

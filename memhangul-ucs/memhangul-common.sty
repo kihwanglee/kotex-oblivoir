@@ -1,6 +1,6 @@
 %% File `memhangul-common.sty`
 %%
-%% (C) Copyright 2013 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2013-2014 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -17,7 +17,7 @@
 %%% 편, 장 섹션 타이틀 재설정
 %%% 절의 섹션 타이틀은 수정하지 않음.
 %%
-\ProvidesPackage{memhangul-common}[2013/10/22]
+\ProvidesPackage{memhangul-common}[2014/06/12]
 
 \let\@CHAPAPP\@chapapp
 \def\refreshprepostchapters{%
@@ -46,26 +46,52 @@
 \newcommand\hparttitlehead{\pre@part\partnamenum\thepart\partnamenum\post@part}
 
 %% PART
+%\long\def\@part[#1]#2{%
+%  \M@gettitle{#1}%
+%  \ifnum \c@secnumdepth >-2\relax
+%    \refstepcounter{part}%
+%    \addcontentsline{toc}{part}%
+%      {\protect\partnumberline{\hparttitlehead}#1}%
+%  \else
+%    \addcontentsline{toc}{part}{#1}%
+%  \fi
+%%  \markboth{}{}%
+%  \ifx#1\@empty\partmark{#2}\else\partmark{#1}\fi
+%  {\centering
+%   \interlinepenalty \@M
+%   \normalfont
+%   \ifnum \c@secnumdepth >-2\relax
+%     \prepartnum \partnamenum \printpartnum \partnamenum \postpartnum
+%     \midpartskip
+%   \fi
+%   \printparttitle{#2}\par}%
+%  \@endpart}
 \long\def\@part[#1]#2{%
+%  \ifx#1\@empty\PrerenderUnicode{#2}\else\PrerenderUnicode{#1}\fi
   \M@gettitle{#1}%
   \ifnum \c@secnumdepth >-2\relax
     \refstepcounter{part}%
     \addcontentsline{toc}{part}%
+%      {\protect\partnumberline{\thepart}#1}%
       {\protect\partnumberline{\hparttitlehead}#1}%
+    \mempartinfo{\thepart}{#1}{#2}%
   \else
     \addcontentsline{toc}{part}{#1}%
+    \mempartinfo{}{#1}{#2}%
   \fi
-%  \markboth{}{}%
-  \ifx#1\@empty\partmark{#2}\else\partmark{#1}\fi
+  \partmark{#1}%
   {\centering
    \interlinepenalty \@M
    \normalfont
    \ifnum \c@secnumdepth >-2\relax
+%     \printpartname \partnamenum \printpartnum
+%     \midpartskip
      \prepartnum \partnamenum \printpartnum \partnamenum \postpartnum
      \midpartskip
    \fi
    \printparttitle{#2}\par}%
   \@endpart}
+
 
 \def\@spart#1{%
   \M@gettitle{#1}%
@@ -89,31 +115,136 @@
 
 %% CHAPTER
 %%%%%%%%%%%
-%% we don't adapt mempatch 3.6, just retrieved to memoir-original manner.
 \renewcommand{\@m@mchapter}[1][\@empty]{%
   \def\ch@pt@c{#1}% capture first optional arg
   \@dblarg{\@chapter}}
 %%\def\m@m@empty{\@empty} 
 
+%%%%\def\@chapter[#1]#2{%
+%%%%  \ifx\ch@pt@c\m@m@empty % no optional args
+%%%%    \def\f@rtoc{#1}%
+%%%%    \def\f@rhdr{#1}%
+%%%%  \else                  % at least one opt arg
+%%%%    \def\f@rtoc{\ch@pt@c}%
+%%%%    \nametest{#1}{#2}%
+%%%%    \ifsamename          % one opt arg
+%%%%      \def\f@rhdr{\ch@pt@c}%
+%%%%    \else                % two opt args
+%%%%      \def\f@rhdr{#1}%
+%%%%    \fi
+%%%%  \fi 
+%%%%  \ifnum \c@secnumdepth >\m@ne
+%%%%    \if@mainmatter
+%%%%      \refstepcounter{chapter}%
+%%%%    \fi
+%%%%  \fi
+%%%%  \chaptermark{\f@rhdr}%
+%%%%  \ifartopt
+%%%%    \@makechapterhead{#2}%
+%%%%    \@afterheading
+%%%%  \else
+%%%%    \insertchapterspace
+%%%%    \if@twocolumn
+%%%%      \@topnewpage[\@makechapterhead{#2}]%
+%%%%    \else
+%%%%      \@makechapterhead{#2}%
+%%%%    \fi
+%%%%    \@afterheading
+%%%%  \fi
+%%%%  \ifnum \c@secnumdepth >\m@ne
+%%%%    \if@mainmatter
+%%%%      \addcontentsline{toc}{chapter}{%
+%%%%%        \protect\chapternumberline{\thechapter}\f@rtoc}%
+%%%%        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%%%%    \else
+%%%%      \addcontentsline{toc}{chapter}{\f@rtoc}%
+%%%%    \fi
+%%%%  \else
+%%%%    \addcontentsline{toc}{chapter}{\f@rtoc}%
+%%%%  \fi
+%%%%  \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
+%%%%} 
+%%%%
+%%%%\def\@makechapterhead#1{%
+%%%%  \chapterheadstart%  \vspace*{50\p@}%
+%%%%  {\parindent \z@ \raggedright \normalfont
+%%%%   \ifnum \c@secnumdepth >\m@ne
+%%%%     \if@mainmatter
+%%%%       \memucsinterwordchapterskiphook
+%%%%%       \printchaptername \chapternamenum \printchapternum \chapternamenum \postchapternum
+%%%%       \prechapternum \chapternamenum \printchapternum \chapternamenum \postchapternum
+%%%%       \afterchapternum % \par\nobreak \vskip 20\p@
+%%%%     \else
+%%%%       \printchapternonum
+%%%%     \fi
+%%%%   \else
+%%%%     \printchapternonum
+%%%%   \fi
+%%%%   \interlinepenalty\@M
+%%%%   \printchaptertitle{#1} % \Huge \bfseries #1
+%%%%    \afterchaptertitle % \par\nobreak \vskip 40\p@
+%%%%  }}
+%%%%
+%%%%\def\@makeschapterhead#1{%
+%%%%  \chapterheadstart
+%%%%  {\parindent \z@ \raggedright \normalfont \memucsinterwordchapterskiphook
+%%%%   \printchapternonum
+%%%%   \interlinepenalty\@M
+%%%%   \printchaptertitle{#1}
+%%%%   \afterchaptertitle
+%%%%  }
+%%%%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% CHAPTER
+%% memhangul : opt args : different from memoir 1.618
+%% \chapter[toc][hdr]{title}
+%% \chapter[toc]{hdr/title}
+%% \chapter{toc/hdr/title}
 \def\@chapter[#1]#2{%
+%  \ifx\ch@pt@c\@empty % no optional args
+%    \def\f@rtoc{#2}%
+%    \def\f@rhdr{#2}%
+%    \PrerenderUnicode{#2}%
+%  \else                  % at least one opt arg
+%    \let\f@rtoc\ch@pt@c
+%    \ifx\@empty#1\@empty
+%      \let\f@rhdr\ch@pt@c
+%      \PrerenderUnicode{#1#2}%
+%    \else
+%      \def\f@rhdr{#1}%
+%      \PrerenderUnicode{#1}%
+%    \fi
+%  \fi
   \ifx\ch@pt@c\m@m@empty % no optional args
     \def\f@rtoc{#1}%
     \def\f@rhdr{#1}%
+%    \PrerenderUnicode{#1}%
   \else                  % at least one opt arg
     \def\f@rtoc{\ch@pt@c}%
     \nametest{#1}{#2}%
     \ifsamename          % one opt arg
       \def\f@rhdr{\ch@pt@c}%
+%      \PrerenderUnicode{#1#2}%
     \else                % two opt args
       \def\f@rhdr{#1}%
+%      \PrerenderUnicode{#1}%
     \fi
   \fi 
+  \m@m@Andfalse
   \ifnum \c@secnumdepth >\m@ne
     \if@mainmatter
-      \refstepcounter{chapter}%
+      \m@m@Andtrue
     \fi
   \fi
-  \chaptermark{\f@rhdr}%
+  \ifm@m@And
+   \ifanappendix
+    \refstepcounter{APPchapter}%
+   \else
+    \refstepcounter{chapter}%
+   \fi
+  \fi
+  \chaptermark{\f@rhdr}
   \ifartopt
     \@makechapterhead{#2}%
     \@afterheading
@@ -126,42 +257,73 @@
     \fi
     \@afterheading
   \fi
-  \ifnum \c@secnumdepth >\m@ne
-    \if@mainmatter
+  \ifm@m@And
+    \ifanappendix
+      \addcontentsline{toc}{appendix}{%
+%       \protect\chapternumberline{\thechapter}\f@rtoc}%
+       \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+    \else
       \addcontentsline{toc}{chapter}{%
 %        \protect\chapternumberline{\thechapter}\f@rtoc}%
         \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
-    \else
-      \addcontentsline{toc}{chapter}{\f@rtoc}%
+%      \memchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+       \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
     \fi
   \else
     \addcontentsline{toc}{chapter}{\f@rtoc}%
+    \ifanappendix
+      \memappchapinfo{}{\f@rtoc}{\f@rhdr}{#2}%
+    \else
+      \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
+    \fi
   \fi
   \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
-} 
+%%% for chapter
+  \ifanappendix
+     \protected@edef\@currentlabel{\thechapter}%
+  \fi
+}
 
 \def\@makechapterhead#1{%
   \chapterheadstart%  \vspace*{50\p@}%
   {\parindent \z@ \raggedright \normalfont
-   \ifnum \c@secnumdepth >\m@ne
-     \if@mainmatter
-       \memucsinterwordchapterskiphook
-%       \printchaptername \chapternamenum \printchapternum \chapternamenum \postchapternum
-       \prechapternum \chapternamenum \printchapternum \chapternamenum \postchapternum
-       \afterchapternum % \par\nobreak \vskip 20\p@
-     \else
-       \printchapternonum
-     \fi
+   \ifm@m@And
+   	 \memucsinterwordchapterskiphook
+%     \printchaptername \chapternamenum \printchapternum
+%     \afterchapternum % \par\nobreak \vskip 20\p@
+      \prechapternum \chapternamenum \printchapternum \chapternamenum \postchapternum
+      \afterchapternum % \par\nobreak \vskip 20\p@
    \else
      \printchapternonum
    \fi
    \interlinepenalty\@M
    \printchaptertitle{#1} % \Huge \bfseries #1
-    \afterchaptertitle % \par\nobreak \vskip 40\p@
+   \afterchaptertitle % \par\nobreak \vskip 40\p@
   }}
+
+\renewcommand{\@m@mschapter}[2][\@empty]{%
+  \@schapter{#2}%
+  \ifx \@empty#1
+    \def\f@rhdr{#2}%
+%    \PrerenderUnicode{#2}%
+  \else   % opt arg
+    \def\f@rhdr{#1}%
+%    \PrerenderUnicode{#1}%
+    \setcounter{secnumdepth}{-10}%
+    \chaptermark{#1}%
+    \setcounter{secnumdepth}{\value{maxsecnumdepth}}%
+  \fi
+  \ifanappendix
+    \memappchapstarinfo{\f@rhdr}{#2}%
+  \else
+    \memchapstarinfo{\f@rhdr}{#2}%
+  \fi}
 
 \def\@makeschapterhead#1{%
   \chapterheadstart
+%  {\parindent \z@ \raggedright \normalfont
   {\parindent \z@ \raggedright \normalfont \memucsinterwordchapterskiphook
    \printchapternonum
    \interlinepenalty\@M
@@ -169,6 +331,8 @@
    \afterchaptertitle
   }
 }
+
+%%%%%%%%%%%%%
 
 \renewcommand{\@chs@def@ult}{%
  \def\chapterheadstart{\vspace*{\beforechapskip}}
@@ -904,19 +1068,22 @@
 \fi
 
 %% 할주.
-%%  still experimental not complete.
+%%  still experimental
 %%  \hbox로 처리하기 때문에 행끝에서 할주 행나눔은 이루어지지 않는다.
 %%  글꼴이 \tiny로 고정. \footnotesize를 쓰면 행간이 흐트러짐.
 %%  TODO: 현재 설정은 10pt 문서에서 1pt정도가 행간에 추가됨.
 %%  \lineskiplimit를 이용해서 행간을 고정시켜둘 것인지는 아직
 %%  결정하지 못하였음.
 \newskip\divnoteskip
+\def\divnotedelimopen{\hskip.1em$\big($}
+\def\divnotedelimclose{$\big)$\hskip.1em}
 \divnoteskip = .18em plus .02em minus .02em
 \def\divnotestyle{%
  \spaceskip\divnoteskip\normalfont\tiny}
-\def\divnote#1{%
+\protected\def\divnote#1{%
   \settowidth{\@tempdima}{\divnotestyle #1}%
-  \hskip.1em$\big($\raise.2em\hbox{\parbox{.525\@tempdima}{\divnotestyle\singlespace #1}}$\big)$\hskip.1em%
+  \ifvmode\leavevmode\fi\divnotedelimopen
+  \raise.2em\hbox{\parbox{.525\@tempdima}{\divnotestyle\singlespace #1}}\divnotedelimclose
 }
 
 %% 각주 설정을 위한 추가 매크로
@@ -936,14 +1103,39 @@
 \def\obCaptionFont#1{\def\@figtabcaptfont@{#1}}
 \providecommand\@figtabcaptfont@{\normalfont}
 \if@figtabcapt@
-\precaption{{\@figtabcaptfont@\cnm@char@open}}
-\captiondelim{{\@figtabcaptfont@\cnm@char@close}\quad}
-\renewcommand\cfttablepresnum{\cnm@char@open\tablename\space}
-\renewcommand\cfttableaftersnum{\cnm@char@close}
-\renewcommand\cfttablenumwidth{3.8em}
-\renewcommand\cftfigurepresnum{\cnm@char@open\figurename\space}
-\renewcommand\cftfigureaftersnum{\cnm@char@close}
-\renewcommand\cftfigurenumwidth{4.5em}
+\AtBeginDocument{
+\@ifpackageloaded{caption}{%  requested by Progress
+	\DeclareCaptionLabelFormat{xob-cnm-parens}{\cnm{#1~#2}}
+	\captionsetup{labelformat=xob-cnm-parens,labelsep=space}
+}%
+{%
+	\precaption{{\@figtabcaptfont@\cnm@char@open}}
+	\captiondelim{{\@figtabcaptfont@\cnm@char@close}\quad}
+	\renewcommand\cfttablepresnum{\cnm@char@open\tablename\space}
+	\renewcommand\cfttableaftersnum{\cnm@char@close}
+	\setlength\cfttablenumwidth{3.8em}
+	\renewcommand\cftfigurepresnum{\cnm@char@open\figurename\space}
+	\renewcommand\cftfigureaftersnum{\cnm@char@close}
+	\setlength\cftfigurenumwidth{4.5em}
+}
+}
 \fi
+
+%%% LuaTeX, XeTeX logos
+\RequirePackage{xparse}
+\ExplSyntaxOn
+\tl_if_exist:NF \XeTeX
+{
+	\RequirePackage{hologo}
+	\ProvideDocumentCommand \XeTeX { } { \hologo{XeTeX} }
+	\ProvideDocumentCommand \XeLaTeX { } { \hologo{XeLaTeX} }
+}
+\tl_if_exist:NF \LuaTeX
+{
+	\RequirePackage{hologo}
+	\ProvideDocumentCommand \LuaTeX { } { \hologo{LuaTeX} }
+	\ProvideDocumentCommand \LuaLaTeX { } { \hologo{LuaLaTeX} }
+}
+\ExplSyntaxOff
 
 \endinput

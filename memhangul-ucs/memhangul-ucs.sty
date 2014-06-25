@@ -12,8 +12,8 @@
 %%
 %%
 \NeedsTeXFormat{LaTeX2e}
-\def\filedate{2013/10/22}
-\def\fileversion{1.7.6}
+\def\filedate{2014/06/12}
+\def\fileversion{1.7.7}
 \ProvidesPackage{memhangul-ucs}[\filedate UCS Hangul Package for memoir class]
 \typeout{memhangul-ucs\space v\fileversion\space \filedate}
 
@@ -388,7 +388,7 @@
 \def\bfemtrue{\@bfemtrue}
 \def\bfemfalse{\@bfemfalse}
 
-\if@unfonts
+\if@unfont
 \if@bfem
   \def\GrEmphFont{outbt}
   \def\GrEmphHanjaFont{outbt}
@@ -493,7 +493,7 @@
 
 \newdimen\useremphraisedim\useremphraisedim\z@
 
-\protected\def\useremph#1{\begingroup
+\def\@@user@emph#1{\begingroup
   \ifdim\useremphraisedim=\z@\relax
      \settoheight{\dhucs@emph@raise}{#1}%
      \addtolength{\dhucs@emph@raise}{-.4em}%
@@ -511,10 +511,46 @@
   \let\useremph\@firstofone
 }
 
+\RequirePackage{xparse}
+\ExplSyntaxOn
+
+\dim_new:N \tmp_user_emph_dim
+\dim_set:Nn \tmp_user_emph_dim { 1ex }
+\tl_set:Nn \tmp_user_emph_char { ˚ }
+\DeclareDocumentCommand \useremph { o o m }
+{
+	\IfValueT { #1 }
+	{
+		\tl_if_empty:nF { #1 }
+		{
+			\settoheight \tmp_user_emph_dim { #3 }
+			\dim_add:Nn \tmp_user_emph_dim { #1 }
+		}
+	}
+	\IfValueT { #2 }
+	{
+		\tl_if_empty:nF { #2 }
+		{
+			\tl_set:Nn \tmp_user_emph_char { #2 }
+		}
+	}
+	
+	\dim_set_eq:NN \useremphraisedim \tmp_user_emph_dim
+	\tl_set_eq:NN \useremphchar \tmp_user_emph_char
+	\@@user@emph{#3}
+}
+
+\ExplSyntaxOff
+
+\def\useremphstarblack{\tiny★}
+\def\useremphstarwhite{\tiny☆}
+
 \endinput
 
 % CHANGE LOG
 %
+% 2014/06/15: \useremph[raise][char]{text} compatible to xoblivoir
+% 2014/06/12: \if@unfonts => \if@unfont
 % 2013/10/22: introduce memhangul-common.sty
 % 2013/10/16: [kosection] bug fix
 % 2013/09/27: xoblivoir-related fixes.

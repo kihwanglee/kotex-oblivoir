@@ -1,9 +1,10 @@
 % !TEX Encoding = UTF-8 Unicode
-%%%
-%%% \xobclass{} 2008/10/23
-%%%  --10/09 Windows에서 작성/테스트함.
-%%%  ---10/10 Ubuntu Hardy에서 테스트함. 나눔명조체 설치.
-%%%
+%% oblivoir-simpledoc.tex
+%% written by Nova De Hi, 2014/06/15
+%% public domain.
+%%
+%% part of oblivoir
+%%
 \documentclass[
 	12pt,
 	a4paper,
@@ -11,72 +12,66 @@
 	footnote,
 	nobookmarks,
 	microtype,
-	hyperref=colorlinks,
-%	xcolor=x11names,
-%	fontspec=no-math,
-]{xoblivoir} %% ,latinquote
-
-%\documentclass[12pt,a4paper,footnote,xcolor={svgnames}{oblivoir}
+]{oblivoir}
 
 \usepackage{fapapersize}
 \usefapapersize{*,*,30mm,*,35mm,*}
 
 \usepackage{kotex-logo}
 
-\def\myREF#1#2{%
-	\ifPDFTeX \ref{#1}\else \ref{#2}\fi
+\hypersetup{colorlinks,linkcolor=blue}
+
+%%% ifpxltex can be installed from KTUG Private Repository. not included in TeX Live
+\usepackage{ifpxltex}
+
+\IfpxlTeXpxl*{p}{x,l}
+{
+	\def\myREF#1#2{\ref{#1}}
+	\def\myLabel#1#2{\label{#1}}
+	\def\myPageREF#1#2{\pageref{#1}}
 }
-\def\myLabel#1#2{%
-	\ifPDFTeX \label{#1}\else \label{#2}\fi
+{
+	\def\myREF#1#2{\ref{#2}}
+	\def\myLabel#1#2{\label{#2}}
+	\def\myPageREF#1#2{\pageref{#2}}
 }
-\def\myPageREF#1#2{%
-	\ifPDFTeX \pageref{#1}\else \pageref{#2}\fi
-}
+
+\def\cs#1{\texttt{\textbackslash #1}}
+\def\util#1{\texttt{#1}}
+\def\ct#1{\texttt{#1}}
 
 \ifx\oblivoirdblquote\undefined
 \def\oblivoirdblquote#1{``#1''}
 \fi
 
-\ifPDFTeX
-\ifx\XeTeX\undefined
-\def\Xe{\hologo{Xe}}
-\def\XeTeX{\hologo{XeTeX}}
-\def\XeLaTeX{\hologo{XeLaTeX}}
-\fi
-\ifx\LuaTeX\undefined
-\def\LuaTeX{\hologo{LuaTeX}}
-\def\LuaLaTeX{\hologo{LuaLaTeX}}
-\fi
-\else
-%%%%%% tested on Windows XP SP3
-\setkormonofont{은 필기}
-\setmonoscale{0.9}
-\defaultfontfeatures{Mapping=tex-text}
-%%%%%% tested on Linux/Ubuntu
-%\setmainfont[Mapping=tex-text]{Bradley Hand ITC}
-%\setmonofont[Scale=.85]{Comic Sans MS}
-%\setmainfont[Mapping=tex-text]{Monotype Corsiva}
-\setmonofont[Scale=.85]{Monaco}
-%\setkormainfont(문화 궁서 Std L){문화 궁서 흐림 Std L}(){네이버사전}
-\setkormainfont(* Bold)(*){HCR Batang LVT}
-%\setkorsansfont(문화 궁서 Std B)(문화 훈민 Std R){문화 고딕 Std R}(){한컴돋움}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\fi
+\IfpxlTeX*{x,l}
+{
+	\setkomonofont(MalgunGothic)[Scale=0.9]
+	\setobmonofont(Monaco)[Scale=.85]
+	\setobmainfont(Minion Pro)
+	\setobsansfont(Myriad Pro)
+	\setkomainfont[윤명조](320)(340)[ExternalLocation]
+}
 
 \newcommand\xobclass{x\-ob\-liv\-oir\oblivoirallowbreak}
 \newcommand\obclass{ob\-liv\-oir\oblivoirallowbreak}
 \def\xetexko{\XeTeX-\ko}
+\def\luatexko{\LuaTeX-\ko}
 
 \pagestyle{ruled}
 
 \usepackage{tabu}
-\usepackage[normalem]{ulem}
+
+\IfpxlTeX*{p,x}
+{
+	\usepackage[normalem]{ulem}
+}
 
 \begin{document}
 
-\title{초간단 \obclass{} v2.0 사용법}
+\title{초간단 \obclass{} v2.0.1 사용법}
 
-\date{2013년 10월}
+\date{2014년 6월}
 
 \author{x-ob-liv-oir }
 
@@ -139,8 +134,8 @@
 이 각각의 명령에 대한 정보를 얻으려면, memoir 매뉴얼(\texttt{texdoc memman}), 
 한글 패키지 매뉴얼(예컨대, \texttt{texdoc kotex}, \texttt{texdoc xetexko})을
 읽어야 한다.
-이 문서에서는 위의 두 패키지 층위의 명령군에 대해 언급할 때, 여백에 \fbox{memoir}, \fbox{kotex}등을
-표시하겠다. 그리고 엔진별로 고유한 옵션과 명령에 대해서는 해당 사항을 본문에서 밝힌다.
+%이 문서에서는 위의 두 패키지 층위의 명령군에 대해 언급할 때, 여백에 \fbox{memoir}, \fbox{kotex}등을
+%표시하겠다. 그리고 엔진별로 고유한 옵션과 명령에 대해서는 해당 사항을 본문에서 밝힌다.
 
 위의 두 층위의 문서에서 설명하지 않는 \obclass에 대한 정보를 이 문서에서 얻을 수 있다.
 
@@ -264,7 +259,7 @@ ms, showtrims
 \item [adjustmath] 한글 문서의 행간격이 벌어짐으로 인해서 display 수식의 전후에 너무 많은 공백이 생기는 것을 막아준다.
 \item [arabicfront] \verb|\frontmatter| 부분의 페이지 숫자를 아라비아 숫자로 찍는다. 기본값은 로만 숫자.
 \item [footnote] 각주 번호와 숫자를 한국식으로 식자한다.
-\item [figtabcapt] 그림과 표에 <그림 1>과 같은 방식으로 캡션을 단다.
+\item [figtabcapt] 그림과 표에 \cnm{그림 1}과 같은 방식으로 캡션을 단다.
 \item [gremph] 글꼴 대체 강조 방식을 쓴다. 이것이 기본값이다.
 \item [itemph] 기울인 글꼴 강조 방식을 쓴다.
 \item [nonfrench] nonfrenchspacing.
@@ -273,6 +268,8 @@ ms, showtrims
 \item [pdfbookmark] nokorean 옵션을 주면서도 북마크는 만들도록 hyperref을 로드해주는 역할을 한다. nokorean 옵션이 주어지지 않을 때는 무의미함.
 \item [10.5pt] 본문 활자 크기를 10.5pt로 한다.
 \item [quotespacing] quote, quotation 환경의 줄간격을 `좁은 줄간격'으로 줄인다.
+\item [nanum] 나눔명조/나눔고딕 트루타입 글꼴을 기본 글꼴로 사용하도록 설정한다.
+\item [hcr]   함초롬 LVT 글꼴을 기본 글꼴로 사용하도록 설정한다.
 \end{description}
 
 \bigskip
@@ -364,7 +361,7 @@ ms, showtrims
 %%%한글 문서 작성에 있어서 표준이 되고자 하는 \obclass{}를
 %%%\XeTeX 에서\explpunc.Lua\TeX 에서도.\ 편리하게 사용할 수 있게 되기를 바라 마지 않는다.
 
-\section{폰트 설정 방식에 대한 간단한 설명}\label{sec:font}
+\section{폰트 설정 방식에 대한 간단한 설명}\myLabel{sec:font}{sec:폰트}
 
 \subsection{\koTeX-utf 엔진}
 
@@ -401,7 +398,7 @@ gremph는 \koTeX-utf에서 \verb|\usepackage{dhucs-gremph}|를 선언한 경우�
 라틴 문자 글꼴을 따라가게 된다. 즉, \texttt{\textbackslash setmainfont}
 등으로 선언된 글꼴이 한글과 라틴 문자에 동시에 식자된다.\footnote{%
  이외에도 한글-라틴 문자 글꼴의 분리에 따르는 여러 가지 옵션 정의에 관련된
- \xetexko{} 매크로가 있으므로 이에 대해서는 \xetexko{} 매뉴얼을
+ \xetexko, \luatexko\ 매크로가 있으므로 이에 대해서는 \xetexko, \luatexko\ 매뉴얼을
  참고하라.
 }
 
@@ -409,6 +406,7 @@ gremph는 \koTeX-utf에서 \verb|\usepackage{dhucs-gremph}|를 선언한 경우�
 라틴 문자 폰트는 fontspec 패키지의 방식을 따른다.
 설정과 사용에 대해서는 fontspec 패키지 문서를 참고하라.
 매우 방대하고 훌륭한 문서이다.
+
 \begin{boxedverbatim}
 \setmainfont{<Font Name>}
 \setsansfont{...}
@@ -417,17 +415,19 @@ gremph는 \koTeX-utf에서 \verb|\usepackage{dhucs-gremph}|를 선언한 경우�
 
 이 명령의 옵션으로 \verb|[Ligatures=TeX]|을 주면 \verb|``|, \verb|---|와 같은 
 입력이 ``, ---와 같이 나타난다. 대부분의 텍 소스에는 이런 이른바 텍 리거쳐를 사용하는 것이
-일반적이므로 이 옵션을 지정하는 것이 좋다. \XeTeX 에서 \verb|[Mapping=tex-text]| 옵션을
-써도 좋은데 이 옵션은 \LuaTeX 에서는 무의미하므로 양쪽에 통용되는 \verb|[Ligatures=TeX]|을
-쓰도록 하자. 따라서 만약 TeX Gyre Termes를 라틴 문자 세리프 글꼴로 쓰려 한다면,
-\begin{boxedverbatim}
+일반적이므로 이 옵션을 지정하는 것이 좋다. 최신 버전의 fontspec은 이 옵션을 자동으로 붙여주며,
+아래 설명할 \cs{setkomainfont} 등의 명령을 써도 역시 이 옵션은 자동으로 붙는다.
+%\XeTeX 에서 \verb|[Mapping=tex-text]| 옵션을
+%써도 좋은데 이 옵션은 \LuaTeX 에서는 무의미하므로 양쪽에 통용되는 \verb|[Ligatures=TeX]|을
+%쓰도록 하자. 따라서 
+만약 \ct{TeX Gyre Termes}를 라틴 문자 세리프 글꼴로 쓰려 한다면,
+\begin{verbatim}
 \setmainfont[Ligatures=TeX]{TeX Gyre Termes}
-\end{boxedverbatim}
+\end{verbatim}
 와 같이 지정하면 된다.
 
 \paragraph{한글과 한자}
-한글 폰트는 다음과 같이 설정한다. 자세한 사항은
-매뉴얼을 참고하라.
+한글 폰트는 다음 명령을 사용하여 설정한다. 자세한 사항은 \xetexko, \luatexko\ 매뉴얼을 참고하라.
 \begin{boxedverbatim}
 \setmainhangulfont[Options]{FontName}
 \setsanshangulfont[Options]{FontName}
@@ -436,25 +436,36 @@ gremph는 \koTeX-utf에서 \verb|\usepackage{dhucs-gremph}|를 선언한 경우�
 \setsanshanjafont[Options]{FontName}
 \setmonohanjafont[Options]{FontName}
 \end{boxedverbatim}
-\xobclass 에서도 이 방식의 폰트 정의를 할 수 있다. %이 문법은
-%fontspec 패키지를 따르는 것이다.
 
-한글 폰트만을 이용해서 한글/라틴 문자에 모두 식자할 필요가 있을
-수 있다. 이 경우 다음과 같이 하는 것이 한 가지 방법이다.
+이밖에 특별한 명령으로 \luatexko에는 fallbackfont를 위한 명령이 있다.
 \begin{boxedverbatim}
-\disablekoreanfonts
-\setmainfont{NanumMyeongjo}
+\setmainfallbackfont
+\setsansfallbackfont
+\setmonofallbackfont
 \end{boxedverbatim}
-또는,
-\begin{boxedverbatim}
-\setmainhangulfont{NanumMyeongjo}
-\hangulmarks
-\end{boxedverbatim}
-이렇게 하면 라틴 문자와 문장부호, 숫자를 나눔명조로 식자한다.
+\xetexko에는 이 명령이 없는 대신 \cs{newfontfamily}\cs{fallbackhanjafont}를 이용하여
+fallback 폰트를 정의할 수 있다. 이 기능은 한자(또는 한글/한자) 글꼴에서도 찾을 수 없는 한자를
+식자하기 위해서 사용된다.
 
-더 세세한 지정을 위하여
-그리고 alphas, nums, parens, quotes, colons, hyphens, puncts, cjksymbols가 식자될 폰트의 영역(latin, hangul, hanja, prevfont)을 정의하는 \verb|\xetexkofontregime| 명령도 쓸 수 있다.
-이에 대해서는 \xetexko\ 매뉴얼을 반드시 참조하라.
+여기 언급하지 못한 다양한 명령들이 제공되므로 해당 매뉴얼을 반드시 읽어보기 바란다.
+oblivoir에서도 \xetexko, \luatexko 의 폰트 설정 방식을 그대로 활용할 수 있다.
+
+%한글 폰트만을 이용해서 한글/라틴 문자에 모두 식자할 필요가 있을
+%수 있다. 이 경우 다음과 같이 하는 것이 한 가지 방법이다.
+%\begin{boxedverbatim}
+%\disablekoreanfonts
+%\setmainfont{NanumMyeongjo}
+%\end{boxedverbatim}
+%또는,
+%\begin{boxedverbatim}
+%\setmainhangulfont{NanumMyeongjo}
+%\hangulmarks
+%\end{boxedverbatim}
+%이렇게 하면 라틴 문자와 문장부호, 숫자를 나눔명조로 식자한다.
+%
+%더 세세한 지정을 위하여
+%그리고 alphas, nums, parens, quotes, colons, hyphens, puncts, cjksymbols가 식자될 폰트의 영역(latin, hangul, hanja, prevfont)을 정의하는 \verb|\xetexkofontregime| 명령도 쓸 수 있다.
+%이에 대해서는 \xetexko\ 매뉴얼을 반드시 참조하라.
 
 \paragraph{임시 폰트 교체}
 문장을 작성 중에 일시적으로 폰트를 교체하기 위한 명령으로 
@@ -469,209 +480,557 @@ gremph는 \koTeX-utf에서 \verb|\usepackage{dhucs-gremph}|를 선언한 경우�
 \end{boxedverbatim}
 명령도 정의되어 있으며, \verb|\fontspec| 명령이 적용되지 않는 한글과 한자 영역에 효력을 발휘하므로 필요한 대로 쓸 수 있다.
 
-\subsection{\obclass의 폰트 설정 명령}
+\subsection{\obclass의 폰트 설정 명령 (\protect\cs{setko...} 명령군)}
 
-\subsubsection{간단한 폰트 지정}
+\subsubsection{글꼴의 이름}
+fontspec을 이용하여 글꼴을 지정하는 데 있어서 사용자가 곤란을 겪는 문제 중의 하나가 글꼴 이름을 
+지정하는 것이다. 먼저 특정 폰트(여기서는 함초롬바탕LVT)의 글꼴 이름을 알아보기 위해 \util{otfinfo}를
+사용해보자. 글꼴에 대하여 \util{otfinfo -i}를 실행하면 다음과 같은 결과가 나온다.
 
-한편, 한글 글꼴을 선언하는 데 있어서
-\xobclass 에서는 약간 다른 방법(더 편리한?)의 폰트 정의가
-가능하다. 이것은 다음 세 명령으로 이루어져 있다.
-\begin{boxedverbatim}
-\setkormainfont(<Bold>)(<Italic>){<Regular>}
-\setkorsansfont(<Bold>)(<Italic>){<Regular>}
-\setkormonofont{<Mono>}
-\end{boxedverbatim}
-
-이러한 폰트 정의 방식은 xoblivoir 클래스의 원래 의도인 `되도록 간단하게
-필요한 것만' 사용하자는 데서 나온 것이다. 그러므로 옛한글 설정이나
-자간, 장평 등 복잡한 폰트 속성을 적용하려 한다면 당연히 \xetexko 의 (즉 fontspec의)
-설정 방식을 이용하는 것이 좋다.
-
-이후의 설명은 \verb|\setkormainfont|에 대해서만 한다. 다른 두
-명령의 사용법은 동일하다.
-
-\begin{boxedverbatim}
-\setkormainfont{Font_Family_Name}
-\end{boxedverbatim}
-한글 글꼴 가운데 어떤 것은\explpunc.모든 한글 글꼴이 그렇지는 않다는
-데 주의하라.\ 글꼴 가족을 이루고 있는 것이 있다. 예를 들면
-\oblivoirdblquote{맑은 고딕}은 맥락에 따라 \oblivoirdblquote{맑은 고딕 Bold}를
-글꼴 가족으로 인식한다. 이런 경우 예를 들어
+\begin{footnotesize}
 \begin{verbatim}
-\setsansfont{Malgun Gothic}
+$ otfinfo -i HANBatang-LVT.ttf
+Family:              HCR Batang LVT
+Subfamily:           Regular
+Full name:           HCR Batang LVT
+PostScript name:     HCRBatangLVT
+Mac font menu name:  HCR Batang LVT
+Version:             Version 1.940; KTS Build 20140401
+Unique ID:           YoonDesign: HCR Batang LVT: KTS 20140401
+Description:         The Korean TeX Society has added GSUB/GPOS/vhea/vmtx tables 
+                     chiefly for old hangul rendering. 
+                     Please contact http://www.ktug.org for these issues.
+Designer URL:        http://yoonfont.co.kr/
+Manufacturer:        YoonDesign; The Korean TeX Society
+Vendor URL:          http://yoonfont.co.kr/
+Trademark:           HCR Batang is a trademark of YoonDesign.
+Copyright:           Copyright (c) 2010-2013 Hancom INC(HNC). All rights reserved.
+License URL:         http://yoonfont.co.kr/
+License Description: YoonDesign Inc.
+Vendor ID:           YDI
+\end{verbatim}
+\end{footnotesize}
+이 가운데, ``Full name''과 ``Postscript name''을 사용하면 된다.\footnote{%
+	2014년 6월 현재, 대체로 \XeTeX 은 ``Full name''을 쓰면 거의 오류없이 동작하고
+	\LuaTeX 은 Postscript name을 선호하는 듯하다. 이 사정은 \ct{luaotfload}나
+	\XeTeX\ 엔진의 개선에 따라 달라질 수 있다.}
+%일반적으로 Postscript name을
+%쓰는 쪽이 좋다. 
+여기서 ``Family''는 같은 글꼴 가족들이 똑같은 이름을 가진다. 예를 들어 함초롬바탕LVT Bold체는
+Family가 ``HCR Batang LVT''이고 Subfamily가 ``Bold''로 되어 있다. 이렇게 글꼴 자체가 글꼴 가족에 대한 정보를 가지고 있으면 Regular만 지정해도 자동으로 Bold 글꼴을 글꼴가족에서 찾는다 (모든 한글 글꼴이 이렇지는 않다).
+
+예를 들면
+\oblivoirdblquote{맑은 고딕}은 맥락에 따라 \oblivoirdblquote{맑은 고딕 Bold}를
+글꼴 가족으로 인식한다. 맑은 고딕의 폰트 정보 중에서 이름(name)과 가족에 해당하는 부분을 보면,
+\begin{verbatim}
+$ otfinfo -i Malgun.ttf | grep -e "name" -e "amily"
+Family:              Malgun Gothic
+Subfamily:           Regular
+Full name:           Malgun Gothic
+PostScript name:     MalgunGothicRegular
+
+$ otfinfo -i Malgunbd.ttf | grep -e "name" -e "amily"
+Family:              Malgun Gothic
+Subfamily:           Bold
+Full name:           Malgun Gothic Bold
+PostScript name:     MalgunGothicBold
+\end{verbatim}
+
+그러므로
+\begin{verbatim}
+\setkosansfont(Malgun Gothic)
 \end{verbatim}
 이렇게만 지정해도 굵은 글꼴이 요구되는 곳에서는 \oblivoirdblquote{맑은 고딕 Bold}를
 식자해준다.
-이렇게 잘 만들어진 글꼴을 이용하는 경우, 간단히 하나의 옵션으로
-글꼴을 지정해주는 것만으로 굵은 글꼴을 사용하게 할 수 있다. 
+%이렇게 잘 만들어진 글꼴을 이용하는 경우, 간단히 하나의 인자로
+%글꼴을 지정해주는 것만으로 굵은 글꼴을 사용하게 할 수 있다. 
 
+폰트 파일 이름 자체를 쓸 수도 있다. 다만 이 경우는 글꼴 가족을 지정하는 것이 아니므로 Bold나 Italic subfamily를
+자동으로 인식하지 못할 수 있다. 파일 이름으로 사용하려면 확장자를 붙여주면 된다. 예컨대 함초롬바탕 LVT라면
+\texttt{HANBatang-LVT.ttf}를 그대로 지정할 수 있다. 굳이 \texttt{[ExternalLocation]} 옵션을 주지
+않아도 확장자를 붙이는 것만으로 ExternalLocation과 동일한 결과를 얻는다.
+
+\subsubsection{간단한 폰트 지정}
+
+\XeTeX-\ko, \LuaTeX-\ko의 기본 한글/한자 폰트 지정 명령인
+\begin{verbatim}
+\setmainhangulfont, \setsanshangulfont, \setmonohangulfont
+\setmainhanjafont,  \setsanshanjafont,  \setmonohanjafont
+\end{verbatim}
+들이 있으나, 
+\xobclass 에서는 약간 다른 방법(더 편리한?)의 폰트 정의가
+가능하다. 이것은 다음 세 명령으로 이루어져 있다.
 \begin{boxedverbatim}
-\setkormainfont[Options]{Font_Name}
-\end{boxedverbatim}
-만약 각괄호(\verb|[|)가 첫 인자로 나오면 이 명령의 사용법은
-\verb|\setmainhangulfont|와 동일하다. 즉 fontspec 명령을 그대로
-쓸 수 있다.
-\begin{boxedverbatim}
-\setkormainfont[Options]{Font_Name}[hnj_Options]{hnj_Font_Name}
-\end{boxedverbatim}
-다른 점은 위와 같이 한자 글꼴을 잇대어 정의할 수 있다는 것이다.
-이 때 반드시 한자 글꼴 추가 정의가 시작된다는 듯으로 각괄호 []를
-써주어야 한다. 아무런 옵션을 지정하지 않더라도 이 부호는 있어야
-한다.
-
-\subsubsection{폰트 가족의 지정}
-
-한글 폰트의 폰트 가족(font family)은 인위적으로 지정해주어야 할 때가 있다.
-여러 한글 폰트를 임의로 묶어서 하나의 폰트 가족처럼 다루는 경우이다.
-
-한글의 폰트 가족은 Regular/Bold/Italic
-으로 이루어진다고 가정하고 있다.%
-\footnote{원한다면 BoldItalic까지 포함할 수 있으나, \xobclass{}는 
-	BoldItalic을 별도로 설정하는 것을 기본으로
-	삼지 않았다. 지나치게 번거로울 뿐 아니라 BoldItalic에 
-	특별한 의미를 부여하기 힘들었기 때문이다. 반면, \xetexko 는
-	BoldItalic을 별도로 설정할 수 있게 하고 있으므로 혹시라도 
-	원한다면 이것은 사용자에게 맡겨져 있다.
-} 
-폰트 가족을 지정하여 글꼴 설정을 할 때는 다음과 같이 한다.
-\begin{boxedverbatim}
-\setkormainfont(<hgBd>)(<hgIt>){<Hangul>}
-\setkorsansfont(<hgBd>)(<hgIt>){<Hangul>}
-\end{boxedverbatim}
-첫 두 인자를 둘러싼 괄호가 각괄호 []가 아니라 괄호 ()임에 주의하라.\footnote{%
-  이것은 2008/11/09 버전의 변경사항이다. 하위호환성을 제공하지
-  않으므로 이전의 모든 소스를 수정해야 한다.}
-아무튼 괄호 ()로 둘러싸인 부분은 생략가능하다. 첫 괄호 인자만 있고
-이탤릭 글꼴을 지정하지 않으면 기본 글꼴로 치환된다.
-
-한글 폰트와 별도의 한자 폰트를 설정할 필요가 있을 때는 다음과 같이 한다.
-\begin{boxedverbatim}
-\setkormainfont(<hgBd>)(<hgIt>){<Hangul>}(<hjBd>)(<hjIt>){<Hanja>}
-\setkorsansfont(<hgBd>)(<hgIt>){<Hangul>}(<hjBd>)(<hjIt>){<Hanja>}
-\end{boxedverbatim}
-한자를 한글과 별도의 폰트로 식자하도록 하는 것은 그 번거로움을 피할 수 없지만,
-한글 폰트 가운데 한자 영역이 거의 없거나 있더라도 부실한 것이 너무 많기 때문에
-현재의 한글 폰트의 사정을 돌아볼 때 부득이하고 불가피하다.
-
-두 번째 선택 인자는 이탤릭체를 나타낸다. 이 인자를 지정하지 않으면 
-기본 글꼴로 치환된다. Regular 폰트를 이 자리에 쓰고 싶을 때가 있다. 이럴 경우 간단히
-\begin{boxedverbatim}
-\setkormainfont(BOLD)(*){REGULAR}
-\end{boxedverbatim}
-와 같이 (*)로 줄여 쓸 수 있다. 즉, 아예 두번째 인자가 없으면 REGULAR 폰트로 치환되고, (*)로 지시되면 REGULAR 글꼴을 이탤릭으로 식자한다.
-만약 itemph 옵션이 지시되어 있다면 REGULAR의 FakeSlanted 글자가
-식자되고, gremph 옵션이 지시되어 있다면 이 자리에 선언된 글꼴이 곧은 모양으로 찍힐 것이다.
-이 줄인 옵션은 두 번째 선택 인자, 즉 이탤릭 선언에만 동작하며,
-\verb|\setkormainfont|와 \verb|\setkorsansfont|에서 쓸 수 있다.
-
-\subsection{디폴트 치환}\myLabel{sec:default}{sec:디폴트}
-
-필요한 정보가 충분히 주어지지 않으면 폰트 설정은 기본값으로
-치환된다. 아래 몇 가지 사용례를 보기로 하자.
-
-\begin{boxedverbatim}
-\setkormainfont{HCR Batang LVT}
-\end{boxedverbatim}
-위의 명령을 실행하면 Regular와 Bold, Italic이 지정한 폰트로 바뀐다.
-%여기 예시한 글꼴은 font family를 이루고 있지 않은 개별 글꼴이므로
-%굵은 글꼴에도 같은 폰트가 식자된다.
-예시한 글꼴은 Bold 서체가 font family를 이루고 있으므로 굵은 글꼴을 자동으로
-HCR Batang LVT Bold로 식자한다. 그러나 그렇지 않은 글꼴을 예를 들면,
-\begin{boxedverbatim}
-\setmainfont{YJ BELLA Medium}
-\end{boxedverbatim}
-과 같이 하는 경우 양재벨라체가 굵은 글꼴 자리에도 똑같은 글꼴로 식자하게 된다.
-
-
-\begin{boxedverbatim}
-\setkormainfont[BoldFont={NanumMyeongjo ExtraBold},%
-       ItalicFont={NanumBarunGothic},%
-       ItalicFeatures={FakeSlant={.17}}]{NanumMyeongjo}
-\end{boxedverbatim}
-위와 같이 fontspec 문법의 옵션을 지정할 수 있다.
-
-\begin{boxedverbatim}
-\setkormainfont(NanumMyeongjo ExtraBold){NanumMyeongjo}
-\end{boxedverbatim}
-이 명령은 Regular와 Bold만 지정된다.
-
-\begin{boxedverbatim}
-\setkormainfont(NanumMyeongjo ExtraBold)(*){NanumMyeongjo}
-\end{boxedverbatim}
-이 명령은 Italic에 NanumMyeonjo를 식자하게 한다. gremph에서는
-upshape와 itshape가 똑같이 찍히게 되지만 itemph에서는 같은
-글꼴이 기울어져 식자될 것이다.
-
-\begin{boxedverbatim}
-\setkormainfont(* ExtraBold)(Malgun Gothic){NanumMyeongjo}
-\end{boxedverbatim}
-이것은 Regular, Bold, Italic을 한 가족으로 묶는다. BoldItalic이 만약 필요해지면 Bold체와
-동일하게 설정된다.\footnote{%
-	BoldItalic은 위에서 설명한 (*) 줄인 옵션의 영향을 받지 않는다.}
-한편 (* ExtraBold)라는 표기는 NanumMyeongjo와 같은 이름이기 때문에 줄여 쓴 것이다.
-
-한자 글꼴을 별도로 설정해야 할 때가 있다.
-% \footnote{%
-   % 이 기능은 2008/10/09 이후의 xkospace에 바탕을 둔 \xobclass{} 이후 버전에서 가능하다.
-% }
-한자 글꼴을 설정하기 위해서는 위의 명령을 확장하여 다음과 같이 지정한다.
-
-\begin{boxedverbatim}
-\setkormainfont(한글볼드)(한글이탤릭){한글레귤러}%
-               (한자볼드)(한자이탤릭){한자레귤러}
+\setkomainfont[<basename>](<Regular>)(<Bold>)(<Italic>)
+\setkosansfont[<basename>](<Regular>)(<Bold>)(<Italic>)
+\setkomonofont[<basename>](<Regular>)(<Bold>)(<Italic>)
 \end{boxedverbatim}
 
-\texttt{()}로 둘러싸인 부분은 모두 생략가능하지만, 이것이 한자 폰트를 설정하는 것이라는
-점을 알리기 위해 한자 시작 부분에 ( 문자를 지정해야 한다. 즉,
+이 세 명령을 사용할 때 주의할 점은 중괄호 \{ \}가 전혀 쓰이지 않는다는 것이다.
+입력상 실수하기 쉬우므로 주의를 요한다.
+
+이러한 폰트 정의 방식은 xoblivoir 클래스의 원래 의도인 `되도록 간단하게
+필요한 것만' 사용하자는 데서 나온 것이다.
+%그러므로 옛한글 설정이나
+%자간, 장평 등 복잡한 폰트 속성을 적용하려 한다면 당연히 \xetexko 의 (즉 fontspec의)
+%설정 방식을 이용하는 것이 좋다.
+
+이후의 설명은 \verb|\setkomainfont|에 대해서만 한다. 다른 두 명령의 사용법은 동일하다.
 \begin{boxedverbatim}
-\setkormainfont(){NanumMyeongjo}(){HCR Batang LVT}
+\setkomainfont(Font Name)
 \end{boxedverbatim}
-위와 같이 하면 한글 영역에 나눔명조, 한자 영역에 함초롬 LVT 바탕을 식자할 수 있다.
-이 때 볼드를 지정하지 않지만 최소한 \texttt{()}를 써주어야 한다는 점에 주의한다.
-한글 폰트 정의에서 괄호 ()를 사용했다면 한자 정의 확장에도 같은 괄호 ()를 
-써야 한다. 한글 폰트 정의에서 각괄호 []를 사용했다면 한자 정의 확장에도
-같은 괄호 []를 써야 한다.
-%참고로, 일부 한글 기호문자는 한자 폰트로 식자된다.
+가장 기본적인 사용법은 위와 같다. 중괄호 \verb|{ }|가 아니라 괄호 \verb|( )|를 쓰고 있음에 주의하라.
 
+\paragraph{긴 명령}
+이 명령의 완전한 형태는 다음과 같다.
 \begin{boxedverbatim}
-\setmonoscale{<scale>}
+\setkomainfont[<namebase>]%
+              (regular)%
+              (bold)%
+              (italic)%
+              [hangul-feature]%
+              [<hanja namebase>]%
+              (hanja-regular)%
+              (hanja-bold)%
+              (hanja-italic)%
+              [hanja-feature]
 \end{boxedverbatim}
+모두 열 개의 옵션 인자가 올 수 있는데 그 가운데 적어도 하나의 괄호 옵션 인자는 반드시 있어야 한다.
+그러므로 그것(첫번째 regular)은 ``옵션'' 인자가 아니라 그냥 인자이지만 하나만을 중괄호로 묶는 것이 오히려 코딩 
+실수를 증가시킬 것으로 보아서 모두 괄호 인자를 사용하도록 했다.
+괄호 옵션 인자를 하나만 준다면 그것은 한글 regular 글꼴 이름으로 받아들일 것이다.
+나머지 아홉 개의 옵션 인자는 생략 가능하다. 각 옵션 인자가 생략가능하기 때문에
+괄호나 꺾쇠괄호 사이에 스페이스를 남기지 않도록 주의해야 한다. 예를 들어 \verb*|(fontname) [feature]|와 같이 
+적으면 스페이스 때문에 옵션 인자의 파싱에 실패할 수 있다.
 
-한글 mono 폰트를 기본값(은 타자)이 아닌 글꼴로 지정할 경우 scaling이 필요할 때가 있다.
-이를 위하여 위의 명령이 정의되어 있다. 이것은 한글 및 한자 mono 글꼴에만
-영향을 미친다. 라틴 문자자는 fontspec 옵션으로 지정하면 될 것이다.
-% 이 문서의 경우 mono 한글 폰트를 맑은 고딕으로
-% 하면서 scale 값을 0.9로 지정했다.
+기본적으로 폰트 이름은 \verb|( )| 안에 들어간다. 그리고 미리 오는 \verb|[ ]|는 이름의 공통 부분을 축약하기 위한 것이고 끝에 오는 \verb|[ ]|는 속성을 추가하기 위한 것이다. 이 규칙이 두 번 반복된다고 생각하면 되겠다.
 
-문장 중간에서 한글 및 한자 폰트를 일부 바꾸어 써야 할 때가 있다. 이 경우에는 \xetexko 의
-\verb|\hangulfontspec| 명령을 이용하면 매우 간편하게 이를 실현할 수 있다.
+\paragraph{한글과 한자}
+이 가운데 앞의 다섯 개는 한글, 뒤의 다섯 개는 한자관련 설정이다. 그런데 예컨대
+\begin{verbatim}
+\setkomainfont(Fontname A)(Fontname B)
+\end{verbatim}
+이렇게 코딩해서 Fontname B가 한자 글꼴이 되게 하려 해도
+두 번째 괄호 옵션 인자는 한자 regular로 받아들이는 것이 아니라
+한글 bold 이름으로 인식할 것이다.
+따라서 한글과 한자 사이에 다음과 같이 경계를 주면
+\begin{verbatim}
+\setkomainfont(한글 글꼴)[](한자 글꼴)
+\end{verbatim}
+이제 의도대로 동작한다. 다음 보기는 한글을 함초롬바탕LVT, 한자를 맑은 고딕으로 선택하는 예가 된다.
+\begin{verbatim}
+\setkomainfont(HCR Batang LVT)[](Malgun Gothic)
+\end{verbatim}
 
-\subsection{ExternalLocation}
+한자 설정은 한글 설정 이후에 잇대어 쓰는 것으로 한글 설정 방식과 완전히 똑같다.
+실제로 \verb|\setkomainfont(A)[](B)| 명령은
+\begin{verbatim}
+\setmainhangulfont{A}
+\setmainhanjafont{B}
+\end{verbatim}
+와 동일하기 때문에 굳이 한자 글꼴을 따로 지정하지 않아도 한자 자면을 가진 한글 글꼴을 설정하면
+한자가 잘 표시된다.
+그러나 NanumMyeongjo와 같이 한자 자면이 없는 글꼴이라면 한자 글꼴을 별도로 선언해주어야 할 
+것이다.
 
-ExternalLocation으로 폰트를 찾도록 하는 설정은 특히 폰트 정보가 이상한 한글 폰트를 사용할 때를 위해서도
-매우 중요하다. 굳이 폰트 캐싱을 할 필요가 줄어들기도 하므로, 이 방식을 선호하는 경우도 있다. \xobclass{}에서는
-\textquotedblleft 별표붙인 명령\textquotedblright 으로 지정한다.
-참고로 별표붙인 명령을 쓸 때는 fontspec 옵션을 지정하는 명령형식을
-쓸 수 없다. 그 이유는 fontspec 명령 형식에서는 ExternalLocation
-옵션을 줄 수 있기 때문이다.
+한자 폰트 부분을 선언하면 \LuaTeX-\ko의 \verb|\hanjabyhanjafont|를 1로 만들어서 선언된
+한자 글꼴이 우선적으로 사용되도록 하는 효과가 있다. 만약 이를 원하지 않는다면 \verb|\hanjabyhanjafont 0|을
+직접 선언하도록 하라.
 
+\paragraph{regular, bold, italic, bolditalic}
+글꼴 가족이 잘 설정된 폰트를 사용한다면 bold를 굳이 지정할 필요는 없다.
+bold를 지정하지 않는 것은 이 인자를 주지 않는 것이다. \verb|()|와 같이 비운 인자를 주면
+bold 글꼴에 regular 글꼴이름을 사용하므로 오히려 bold 효과가 사라진다.
+bold 글꼴을 아예 별도로 지정할 때는 글꼴 이름을 다 적어준다. 한편, 예컨대
+HCR Batang LVT에 대하여 HCR Batang LVT Bold가 볼드체 이름임을 이용하여
+\verb|\setkomainfont(HCR Batang LVT)(* Bold)|와 같이 지정하는 방법도 통한다.
+함초롬바탕의 full name을 쓰지 않고 Postscript name을 쓴다면,
+\begin{verbatim}
+\setkomainfont(HCRBatangLVT)(*-Bold)
+\end{verbatim}
+와 같이 하면 될 것이다.
+
+한글은 이탤릭이 없지만 우사체를 쓰는 관행이 있다. oblivoir 클래스 옵션으로 \texttt{[itemph]}를
+설정하면 italic을 써야 할 곳에서 기울어진 서체를 쓸 수 있다. 반면 \texttt{[gremph]}로 하면
+바로 선 서체를 사용한다. \texttt{[gremph]}가 디폴트이며, 이 경우 이탤릭을 써야 할 곳에 다른
+폰트를 사용하게 할 수 있다. 예를 들면
+\begin{verbatim}
+\setkomainfont(HCR Batang LVT)(* Bold)(NanumGothic)
+\end{verbatim}
+이렇게 하면 이탤릭을 쓸 자리에 나눔고딕이 사용된다. 만약 클래스 옵션 \texttt{[itemph]}가
+주어져 있다면 나눔고딕도 기울어진다.
+이탤릭 글꼴을 아예 지정하지 않으면 regular에 지정된 글꼴을 그대로 쓴다. \texttt{[itemph]}라면
+이탤릭 글꼴을 지정하지 않아도 될 것이고 \texttt{[gremph]}라면 적당한 글꼴을 적어주면 될 것이다.
+
+bolditalic의 경우 볼드체 글꼴과 이탤릭 속성을 사용한다. 즉 \texttt{[gremph]}이면 bold와
+bolditalic이 동일할 것이고, \texttt{[itemph]}라면 bold 글꼴이 기울어진 모양으로 나온다.
+bolditalic 폰트를 별도로 지정하려 한다면 아래에서 설명할 feature 추가 방식으로 다음과 같이 하여야 한다.
+\begin{verbatim}
+\setkomainfont(Regular)(Bold)(Italic)[BoldItalicFont={Fontname}]
+\end{verbatim}
+
+\paragraph{base name을 사용하여 공통 부분 줄여쓰기}
+KoPubBatang체 같은 경우, 글꼴 가족이 서로 다른 다음 세 폰트가 있다.
+\begin{verbatim}
+KoPubBatangLight.ttf    KoPubBatangLight   KoPubBatang Light
+KoPubBatangMedium.ttf   KoPubBatangMedium  KoPubBatang Medium
+KoPubBatangBold.ttf     KoPubBatangBold    KoPubBatang Bold
+\end{verbatim}
+이 글꼴은 앞부분 이름은 같지만 Regular/Bold에 대응하는 글꼴로 설정되어 있지 않다.
+이러한 상황에서 앞의 같은 부분을 base name으로 지정하고 나머지 부분을 각각 써넣는 방식으로 
+글꼴을 지정할 수 있다.
+\begin{verbatim}
+\setkomainfont[KoPubBatang](Light)(Bold)
+\end{verbatim}
+이것은
+\begin{verbatim}
+\setkomainfont(KoPubBatangLight)(KoPubBatangBold)
+\end{verbatim}
+를 줄여쓴 것으로 이해하면 된다. 이탤릭 폰트는 지정하지 않은 보기인데, 원한다면 세번째 괄호 옵션에
+써넣을 수 있다. 단, 이 방법을 쓸 때는 별표(*)를 사용할 수 없다. 왜냐하면 별표를 사용하였을 때
+KoPubBatang*이라는 이름의 폰트를 찾으려 할 것이기 때문이다.
+
+예를 들어, 서울시체를 본문 글꼴로 하고 바탕 글꼴용 한자는 한양해서를 쓰고 싶다면(실제 해보면 그다지 어울리지 않지만) 어떻게 할 수 있을까?
+\begin{verbatim}
+\setkomainfont[SeoulHangang](L)(B)[](HYhaeseo)
+\setkosansfont[SeoulNamsan](L)(B)
+\end{verbatim}
+
+이 방식에서 주의할 것은 예컨대 이탤릭 글꼴로 완전히 이름이 다른 것을 쓰고자 한다면
+이런 식으로 할 수 없다는 점이다.
+
+\paragraph{feature의 추가}
+네 번째 옵션 인자는 한글 폰트를 설정할 때 넘겨줄 feature를 지정한다.
+\begin{verbatim}
+\setkomainfont(HCRBatangLVT)[FakeStretch=0.95,InterHangul=-0.05em]
+\end{verbatim}
+이것은 장평을 95\%로 하고 자간을 5\% 줄이는 예이다. 여기에 쓸 수 있는 feature에 관해서는
+fontspec 설명서와 \xetexko, \luatexko\ 설명서를 참고하라.
+
+다섯번째 옵션 인자는 한자의 base name이다. 네번째 없이 다섯번째만 올 수 없으므로 이것을
+설정하려면
+\begin{verbatim}
+\setkomainfont(HCRBatangLVT)[][KoPubBatang](Light)
+\end{verbatim}
+와 같이 적어도 네번째 옵션 인자를 (비우더라도) 지정해야 할 것이다.
+
+\paragraph{ExternalLocation}
+폰트를 그 이름(full name 또는 Postscript name)으로 지정하지 않고 파일 이름으로 찾으려 할 때,
+다음과 같은 방법이 있다.
+먼저 옵션 인자로 \texttt{ExternalLocation}을 선언하는 방법이다. 이 때는 확장자를 지정하지 않아도 된다.
+\begin{verbatim}
+\setkomainfont(HANBatang-LVT)[ExternalLocation]
+\end{verbatim}
+파일 이름을 그대로 적어주는 방법이 있다. 이렇게 하면 \texttt{ExternalLocation}과 똑같이 동작한다.
+\begin{verbatim}
+\setkomainfont(HANBatang-LVT.ttf)
+\end{verbatim}
+
+파일 이름으로 호출하는 경우 별표(*)를 이용하여 이름의 공통부분을 줄여쓰는 방법을 사용할 수 없다.
+그리고 
+하나의 글꼴군 세트에서 ``이름으로 찾기''와 ``파일이름으로 찾기''를 둘 다 사용할 수 없다. 즉 다음과 같이 하는 것은 오류이다.
+\begin{verbatim}
+\setkomainfont(HCRBatangLVT)(HANDotum-LVT.ttf)
+\end{verbatim}
+그러나 한글군/한자군에 대해서는 따로 사용해도 상관없다. 다음은 한글은 Postscript 이름으로,
+한자는 파일 이름으로 찾게 설정한 경우이다. 오류없이 동작한다. 그렇지만 되도록 일관성있게 쓰는 것이 좋을 것이다.
+\begin{verbatim}
+\setkomainfont(HCRBatangLVT)(*-Bold)[](UNI_HSR.ttf)
+\end{verbatim}
+\XeTeX 에서만 되는 FakeBold를 한자에만 적용해보자면,
+\begin{verbatim}
+\setkomainfont(HCRBatangLVT)(*-Bold)[](UNI_HSR.ttf)[AutoFakeBold]
+\end{verbatim}
+이렇게 하면 되는데, FakeBold는 가급적 사용하지 않는 것이 좋겠다.
+
+\paragraph{\cs{setob...} 명령}
+
+라틴 문자 영역의 폰트를 설정하는 데는 \cs{setmainfont} 등이 그다지 불편하지 않기 때문에
+그냥 쓰면 된다. 그러나 \cs{setkomainfont}의 괄호 \ct{( )}를 이용한 폰트 지정 방식과
+유사하게 쓰려 하거나, base name을 이용한 축약 기능을 라틴 문자 정의에도 쓰고 싶다면 다음처럼 해도 상관없다.
 \begin{boxedverbatim}
-\setkormainfont*(BOLD)(ITALIC){REGULAR}
+\setobmainfont[<base name>](<rm>)(<bf>)(<it>)[features]
 \end{boxedverbatim}
+일반적으로는 거의 의미없는 명령이나 반은 재미로 마련해두었다.
+
+\subsection{기정의 폰트 세트}
+
+클래스 옵션으로 \texttt{[nanum]}을 지정하면 본문이 나눔명조와 나눔고딕으로 식자된다.\footnote{%
+	\LuaTeX-\ko는 아무 옵션이 없어도 nanumtype1으로 본문을 표시하지만 \XeTeX-\ko에서는
+	한글 부분이 비어 나온다. 이 옵션을 주면 \LuaTeX-\ko 에서도 nanumtype1이 아니라 트루타입을 쓰게 된다.}
+나눔명조에 없는 한자는 나눔고딕에서 가져다가 찍는다.
+
+클래스 옵션 \texttt{[hcr]}은 함초롬 LVT 바탕, 함초롬 LVT 돋움 글꼴을 본문 글꼴로 사용하게 한다.
+\texttt{[Script=Hangul]}을 지정하여 옛한글도 잘 처리하게 한다.\footnote{%
+	\cs{setkomainfont} 명령의 인자로 HCR 계열이 지정되면 이 옵션이 자동으로 추가된다.
+	그밖의 폰트에서 옛한글을 처리하게 하려면(예를 들어 Malgun Gothic, UnBatang 등)
+	feature 추가 옵션으로 \texttt{[Script=Hangul]}을 지정할 수 있다.}
+
+클래스 옵션 \texttt{[unfonts]}는 은 바탕, 은 돋움, 은 타자, 은 그래픽을 이용하여 본문 글꼴을 식자하게 한다.
+\texttt{[gremph]}일 때 바탕글꼴의 이탤릭이 은 그래픽으로 찍힌다. 또한 이 옵션은 \texttt{[Script=Hangul]}을
+자동으로 추가하여 옛한글을 은 바탕으로 잘 처리할 수 있게 하였다. 은 글꼴을 옵션으로 주지 않고 \cs{setkomainfont} 명령으로 주려면 다음과 같이 하는 것이 좋다. HCR 글꼴과 달리 자동으로 폰트 이름을 보고 \texttt{[Script=Hangul]}을 삽입하지 않으므로 feature 옵션에 지정한다. base name을 ``UnBatang''으로 하고 확장자를 잇대어 쓰도록 
+다음처럼 정의할 수 있다.
+\begin{verbatim}
+\setkomainfont[UnBatang](.ttf)(Bold.ttf)[Script=Hangul]
+\end{verbatim}
+은 그래픽을 이탤릭 대용으로 쓰려 한다면,
+\begin{verbatim}
+\setkomainfont[Un](Batang.ttf)(BatangBold.ttf)%
+                  (Graphic.ttf)[Script=Hangul]
+\end{verbatim}
+이름의 공통부분(base name)이 ``Un''밖에 없으니까 이렇게 할 수밖에 없다. 은 그래픽은 한자가 나오지 않는데
+필요하다면 한자 글꼴 지정을 잇대어 하면 된다. 실제로 해보자면,
+\begin{verbatim}
+\setkomainfont[Un](Batang.ttf)(BatangBold.ttf)(Graphic.ttf)%
+            [Script=Hangul][UnBatang](.ttf)(Bold.ttf)(.ttf)
+\end{verbatim}
+한자는 은 그래픽이 아니라 은 바탕에서 찾아서 찍게 한 것이다.
+
+\subsection{폰트 설정 명령 (\protect\cs{setkor...} 명령군)}
+
+이전 버전의 oblivoir에서는 다음 세 명령을 제공하였다.
+이 명령군도 여전히 유지되고 있는데 그것은 이전에 작성된 문서와의 호환성을 위해서이다.
+\begin{boxedverbatim}
+\setkormainfont(<Bold>)(<Italic>){<Regular>}
+\setkorsansfont(<Bold>)(<Italic>){<Regular>}
+\setkormonofont(<Bold>)(<Italic>){<Regular>}
+\end{boxedverbatim}
+이 명령들도 한자 지정을 위하여 확장가능하다.
+\begin{boxedverbatim}
+\setkormainfont(<Bold>)(<Italic>){<Regular>}%
+               (<HJbold>)(<HJitalic>){<HJregular>}
+\end{boxedverbatim}
+
+괄호 옵션 인자와 중괄호 인자가 있다는 점과 bold, italic, regular의 순서가
+\cs{setkomainfont}와 다르다는 데 주의하라.
+이전 버전에 비하여 확장된 기능은 feature를 줄 수 있다는 것이다.
+\begin{boxedverbatim}
+\setkormainfont(Bold)(Italic){Regular}[Feature]
+\end{boxedverbatim}
+이런 식으로 마지막 옵션 인자로 feature를 지정하면 유효하다.
+
+한글과 한자 사이에는 적어도 괄호 인자가 하나는 와야 구별된다.
+\begin{verbatim}
+\setkormainfont{HCR Batang LVT}(){HYhaeseo}
+\end{verbatim}
+
+이 때문에, 예를 들어 다음과 같이 하는 것은 오류이다.
+\begin{verbatim}
+\setkormainfont{HCR Batang LVT}[]{HYhaeseo}
+\end{verbatim}
+한글 feature를 지정하고 한자도 지정하려면 다음과 같이 해야 한다.
+\begin{verbatim}
+\setkormainfont{HCR Batang LVT}[...](){HYhaeseo}
+\end{verbatim}
+
+한편, \cs{setkormainfont} 다음 문자가 \texttt{[}이면 
+\begin{boxedverbatim}
+\setkormainfont[ ... ]{한글 폰트이름}[ ... ]{한자 폰트이름}
+\end{boxedverbatim}
+이것은 앞의 두 인자에 대하여 \cs{setmainhangulfont}를 실행하고
+뒤의 두 인자에 대하여 \cs{setmainhanjafont}를 실행하게 하는 것으로
+이전 버전과 같다. 이 명령은 반드시 \texttt{[}로 시작해야 하며
+한글과 한자의 경계는 [ ]로 이루어지므로 예컨대
+다음과 같은 코딩은 오류를 일으키지 않는다.
+\begin{verbatim}
+\setkormainfont[]{Hangul}[]{Hanja}
+\end{verbatim}
+
+그리고 \cs{setkormainfont} 다음 문자가 \texttt{*}이면
+\texttt{ExternalLocation}으로 실행되는 것도 이전과 같다.
+파일 이름을 직접 써넣는 것이 좋으므로 거의 필요없는 명령이 되었지만
+이전 버전과의 호환성을 위하여 이 기능을 유지시켜 두었다.
+단, \cs{setkormainfont*()} 형식과는 쓸 수 없고 \cs{setkormainfont*[]} 형식으로만 
+가능하게 기능이 제한되었다. 이 명령은 앞으로 사용하지 않기를 바란다.
+\begin{boxedverbatim}
+\setkormainfont*{한글 폰트 이름}
+\end{boxedverbatim}
+
+이상에서 설명한 \cs{setkor...} 명령군 대신 새로 도입한 \cs{setko...} 명령군을
+사용하는 것을 권장한다. 사용법이 훨씬 간단해졌기 때문이다.\footnote{%
+	내부적으로 \cs{setkormainfont} 명령들은 \cs{setmainhangulfont}와 \cs{setmainhanjafont}를
+	부르고, \cs{setkomainfont} 명령들은 \cs{setkormainfont}를 부른다.}
+
+%이후의 설명은 \verb|\setkormainfont|에 대해서만 한다. 다른 두
+%명령의 사용법은 동일하다.
+%
+%\begin{boxedverbatim}
+%\setkormainfont{Font_Family_Name}
+%\end{boxedverbatim}
+%
+%\begin{boxedverbatim}
+%\setkormainfont[Options]{Font_Name}
+%\end{boxedverbatim}
+%만약 각괄호(\verb|[|)가 첫 인자로 나오면 이 명령의 사용법은
+%\verb|\setmainhangulfont|와 동일하다. 즉 fontspec 명령을 그대로
+%쓸 수 있다.
+%\begin{boxedverbatim}
+%\setkormainfont[Options]{Font_Name}[hnj_Options]{hnj_Font_Name}
+%\end{boxedverbatim}
+%다른 점은 위와 같이 한자 글꼴을 잇대어 정의할 수 있다는 것이다.
+%이 때 반드시 한자 글꼴 추가 정의가 시작된다는 듯으로 각괄호 []를
+%써주어야 한다. 아무런 옵션을 지정하지 않더라도 이 부호는 있어야
+%한다.
+%
+%\subsubsection{폰트 가족의 지정}
+%
+%한글 폰트의 폰트 가족(font family)은 인위적으로 지정해주어야 할 때가 있다.
+%여러 한글 폰트를 임의로 묶어서 하나의 폰트 가족처럼 다루는 경우이다.
+%
+%한글의 폰트 가족은 Regular/Bold/Italic
+%으로 이루어진다고 가정하고 있다.%
+%\footnote{원한다면 BoldItalic까지 포함할 수 있으나, \xobclass{}는 
+%	BoldItalic을 별도로 설정하는 것을 기본으로
+%	삼지 않았다. 지나치게 번거로울 뿐 아니라 BoldItalic에 
+%	특별한 의미를 부여하기 힘들었기 때문이다. 반면, \xetexko 는
+%	BoldItalic을 별도로 설정할 수 있게 하고 있으므로 혹시라도 
+%	원한다면 이것은 사용자에게 맡겨져 있다.
+%} 
+%폰트 가족을 지정하여 글꼴 설정을 할 때는 다음과 같이 한다.
+%\begin{boxedverbatim}
+%\setkormainfont(<hgBd>)(<hgIt>){<Hangul>}
+%\setkorsansfont(<hgBd>)(<hgIt>){<Hangul>}
+%\end{boxedverbatim}
+%첫 두 인자를 둘러싼 괄호가 각괄호 []가 아니라 괄호 ()임에 주의하라.\footnote{%
+%  이것은 2008/11/09 버전의 변경사항이다. 하위호환성을 제공하지
+%  않으므로 이전의 모든 소스를 수정해야 한다.}
+%아무튼 괄호 ()로 둘러싸인 부분은 생략가능하다. 첫 괄호 인자만 있고
+%이탤릭 글꼴을 지정하지 않으면 기본 글꼴로 치환된다.
+%
+%한글 폰트와 별도의 한자 폰트를 설정할 필요가 있을 때는 다음과 같이 한다.
+%\begin{boxedverbatim}
+%\setkormainfont(<hgBd>)(<hgIt>){<Hangul>}(<hjBd>)(<hjIt>){<Hanja>}
+%\setkorsansfont(<hgBd>)(<hgIt>){<Hangul>}(<hjBd>)(<hjIt>){<Hanja>}
+%\end{boxedverbatim}
+%한자를 한글과 별도의 폰트로 식자하도록 하는 것은 그 번거로움을 피할 수 없지만,
+%한글 폰트 가운데 한자 영역이 거의 없거나 있더라도 부실한 것이 너무 많기 때문에
+%현재의 한글 폰트의 사정을 돌아볼 때 부득이하고 불가피하다.
+%
+%두 번째 선택 인자는 이탤릭체를 나타낸다. 이 인자를 지정하지 않으면 
+%기본 글꼴로 치환된다. Regular 폰트를 이 자리에 쓰고 싶을 때가 있다. 이럴 경우 간단히
+%\begin{boxedverbatim}
+%\setkormainfont(BOLD)(*){REGULAR}
+%\end{boxedverbatim}
+%와 같이 (*)로 줄여 쓸 수 있다. 즉, 아예 두번째 인자가 없으면 REGULAR 폰트로 치환되고, (*)로 지시되면 REGULAR 글꼴을 이탤릭으로 식자한다.
+%만약 itemph 옵션이 지시되어 있다면 REGULAR의 FakeSlanted 글자가
+%식자되고, gremph 옵션이 지시되어 있다면 이 자리에 선언된 글꼴이 곧은 모양으로 찍힐 것이다.
+%이 줄인 옵션은 두 번째 선택 인자, 즉 이탤릭 선언에만 동작하며,
+%\verb|\setkormainfont|와 \verb|\setkorsansfont|에서 쓸 수 있다.
+%
+%\subsection{디폴트 치환}\myLabel{sec:default}{sec:디폴트}
+%
+%필요한 정보가 충분히 주어지지 않으면 폰트 설정은 기본값으로
+%치환된다. 아래 몇 가지 사용례를 보기로 하자.
+%
+%\begin{boxedverbatim}
+%\setkormainfont{HCR Batang LVT}
+%\end{boxedverbatim}
+%위의 명령을 실행하면 Regular와 Bold, Italic이 지정한 폰트로 바뀐다.
+%%여기 예시한 글꼴은 font family를 이루고 있지 않은 개별 글꼴이므로
+%%굵은 글꼴에도 같은 폰트가 식자된다.
+%예시한 글꼴은 Bold 서체가 font family를 이루고 있으므로 굵은 글꼴을 자동으로
+%HCR Batang LVT Bold로 식자한다. 그러나 그렇지 않은 글꼴을 예를 들면,
+%\begin{boxedverbatim}
+%\setmainfont{YJ BELLA Medium}
+%\end{boxedverbatim}
+%과 같이 하는 경우 양재벨라체가 굵은 글꼴 자리에도 똑같은 글꼴로 식자하게 된다.
+%
+%
+%\begin{boxedverbatim}
+%\setkormainfont[BoldFont={NanumMyeongjo ExtraBold},%
+%       ItalicFont={NanumBarunGothic},%
+%       ItalicFeatures={FakeSlant={.17}}]{NanumMyeongjo}
+%\end{boxedverbatim}
+%위와 같이 fontspec 문법의 옵션을 지정할 수 있다.
+%
+%\begin{boxedverbatim}
+%\setkormainfont(NanumMyeongjo ExtraBold){NanumMyeongjo}
+%\end{boxedverbatim}
+%이 명령은 Regular와 Bold만 지정된다.
+%
+%\begin{boxedverbatim}
+%\setkormainfont(NanumMyeongjo ExtraBold)(*){NanumMyeongjo}
+%\end{boxedverbatim}
+%이 명령은 Italic에 NanumMyeonjo를 식자하게 한다. gremph에서는
+%upshape와 itshape가 똑같이 찍히게 되지만 itemph에서는 같은
+%글꼴이 기울어져 식자될 것이다.
+%
+%\begin{boxedverbatim}
+%\setkormainfont(* ExtraBold)(Malgun Gothic){NanumMyeongjo}
+%\end{boxedverbatim}
+%이것은 Regular, Bold, Italic을 한 가족으로 묶는다. BoldItalic이 만약 필요해지면 Bold체와
+%동일하게 설정된다.\footnote{%
+%	BoldItalic은 위에서 설명한 (*) 줄인 옵션의 영향을 받지 않는다.}
+%한편 (* ExtraBold)라는 표기는 NanumMyeongjo와 같은 이름이기 때문에 줄여 쓴 것이다.
+%
+%한자 글꼴을 별도로 설정해야 할 때가 있다.
+%% \footnote{%
+%   % 이 기능은 2008/10/09 이후의 xkospace에 바탕을 둔 \xobclass{} 이후 버전에서 가능하다.
+%% }
+%한자 글꼴을 설정하기 위해서는 위의 명령을 확장하여 다음과 같이 지정한다.
+%
+%\begin{boxedverbatim}
+%\setkormainfont(한글볼드)(한글이탤릭){한글레귤러}%
+%               (한자볼드)(한자이탤릭){한자레귤러}
+%\end{boxedverbatim}
+%
+%\texttt{()}로 둘러싸인 부분은 모두 생략가능하지만, 이것이 한자 폰트를 설정하는 것이라는
+%점을 알리기 위해 한자 시작 부분에 ( 문자를 지정해야 한다. 즉,
+%\begin{boxedverbatim}
+%\setkormainfont(){NanumMyeongjo}(){HCR Batang LVT}
+%\end{boxedverbatim}
+%위와 같이 하면 한글 영역에 나눔명조, 한자 영역에 함초롬 LVT 바탕을 식자할 수 있다.
+%이 때 볼드를 지정하지 않지만 최소한 \texttt{()}를 써주어야 한다는 점에 주의한다.
+%한글 폰트 정의에서 괄호 ()를 사용했다면 한자 정의 확장에도 같은 괄호 ()를 
+%써야 한다. 한글 폰트 정의에서 각괄호 []를 사용했다면 한자 정의 확장에도
+%같은 괄호 []를 써야 한다.
+%%참고로, 일부 한글 기호문자는 한자 폰트로 식자된다.
+%
+%\begin{boxedverbatim}
+%\setmonoscale{<scale>}
+%\end{boxedverbatim}
+%
+%한글 mono 폰트를 기본값(은 타자)이 아닌 글꼴로 지정할 경우 scaling이 필요할 때가 있다.
+%이를 위하여 위의 명령이 정의되어 있다. 이것은 한글 및 한자 mono 글꼴에만
+%영향을 미친다. 라틴 문자자는 fontspec 옵션으로 지정하면 될 것이다.
+%% 이 문서의 경우 mono 한글 폰트를 맑은 고딕으로
+%% 하면서 scale 값을 0.9로 지정했다.
+%
+%문장 중간에서 한글 및 한자 폰트를 일부 바꾸어 써야 할 때가 있다. 이 경우에는 \xetexko 의
+%\verb|\hangulfontspec| 명령을 이용하면 매우 간편하게 이를 실현할 수 있다.
+
+\subsection{ExternalLocation에 관한 첨언}
+
+폰트를 호출하는 이름은 앞서 설명한 \util{otfinfo -i}를 사용하여 확인할 수 있는
+full name이나 Postscript name을 사용하는 것이 가장 좋다. 그러나 부득이한 경우 
+파일 이름으로 사용하는 것도 가능하다.
+
+이 방식은 특히 폰트 정보가 이상한 한글 폰트를 사용할 때를 위해서도
+필요하다.
+굳이 폰트 캐싱을 할 필요가 줄어들기도 하므로, 이 방식을 선호하는 경우도 있다.
+% \xobclass{}에서는
+%\textquotedblleft 별표붙인 명령\textquotedblright 으로 지정한다.
+%참고로 별표붙인 명령을 쓸 때는 fontspec 옵션을 지정하는 명령형식을
+%쓸 수 없다. 그 이유는 fontspec 명령 형식에서는 ExternalLocation
+%옵션을 줄 수 있기 때문이다.
+%\begin{boxedverbatim}
+%\setkormainfont*(BOLD)(ITALIC){REGULAR}
+%\end{boxedverbatim}
 
 \TeX\,Live를 포함하여 대부분의 \TeX{} 임플리멘테이션에서 시스템의 폰트 폴더를 kpathsearch로
-찾을 수 있으므로 예컨대 Windows 폰트 폴더의 폰트들도 이 방식으로 호출할 수 있다. 한편, 한겨레결체의 경우 폰트
-이름을 라틴 문자으로 바꾸어두고 ExternalLocation으로 찾아야만 사용할 수 있다.%
-\footnote{즉, 폰트 이름 정보가 잘못되어 있는 글꼴이다.%
-}
-휴먼명조와 같은 글꼴도 마찬가지여서 이 글꼴은 ExternalLocation 옵션으로 \verb|HMKMM.TTF|를 
+찾을 수 있으므로 예컨대 Windows 폰트 폴더의 폰트들도 이 방식으로 호출할 수 있다.
+% 한편, 한겨레결체의 경우 폰트
+%이름을 라틴 문자으로 바꾸어두고 ExternalLocation으로 찾아야만 사용할 수 있다.%
+%\footnote{즉, 폰트 이름 정보가 잘못되어 있는 글꼴이다.%
+%}
+휴먼명조와 같은 글꼴은 ExternalLocation 방식으로 \verb|HMKMM.TTF|를 
 직접 지시하는 것이 가장 안전하다.
 
-한글 폰트 이름은 폰트 자체의 특성에 따라서 매우 복잡한 양상을 보인다.
-이 글에서는 Windows에서 확인할 수 있는 이름을 기준으로 하고 있으나,
-플랫폼에 따라서는 이름으로 폰트를 호출하기 위해서 다른 방법을 사용해야
-할 수도 있다.
-가장 안전한 방법은 ExternalLocation으로 폰트 파일의 이름을 부르는 것이다.
+%한글 폰트 이름은 폰트 자체의 특성에 따라서 매우 복잡한 양상을 보인다.
+%이 글에서는 Windows에서 확인할 수 있는 이름을 기준으로 하고 있으나,
+%플랫폼에 따라서는 이름으로 폰트를 호출하기 위해서 다른 방법을 사용해야
+%할 수도 있다.
+%가장 안전한 방법은 ExternalLocation으로 폰트 파일의 이름을 부르는 것이다.
 이 때 몇 가지 이슈가 있다.
 \begin{enumerate}[(가)]\tightlist
 \item Windows에서는 한글 폰트 파일 이름을 부를 수 없다. 모든 폰트 파일 이름은
@@ -684,7 +1043,7 @@ ExternalLocation으로 호출할 수 있을 것이다. 리눅스에서는 모르
 이것이 가능했다.
 
 \item texmf.cnf의 OSFONTDIR 변수를 수작업으로 수정해야 하는 경우가 있다. Windows의
-KC2008이나 TeXLive 자체가 이것을 잘 설정하여 주므로 사용자가 신경쓸 것이 없으나
+\koTeX\,Live라면 이것을 잘 설정하여 주므로 사용자가 신경쓸 것이 없으나
 경우에 따라 이 변수를 설정해야 할 필요가 있을 수 있다. 맥의 경우,
 /usr/local/texlive/2013/texmf.cnf 파일을 열어서\footnote{/usr/local/texlive/2013/texmf/web2c/texmf.cnf를
 수정해서는 안된다.} 다음 내용을 자신의 환경에 맞게 써넣으면 될 것이다.
@@ -698,11 +1057,11 @@ OSFONTDIR = {/Library/Fonts;~/Library/Fonts;/System/Library/Fonts;}
 
 \end{enumerate}
 
-폰트를 이름으로 호출하는 것은 폰트 자체에 정의된 이름과 파일이름이 다른 것이 너무 많아서
-손쉽게 말하기가 어렵다. 대부분의 시스템에서(맥 제외) \verb|fc-list| 명령은 \XeTeX 으로
-부를 수 있는 폰트 이름을 확인하게 해준다. 한편 \LuaTeX의 경우는 좀더 복잡하여
-\XeTeX 에서 호출할 수 있는 것과 같을 때도 있고 다를 때도 있다.
-파일 이름으로 호출(즉 ExternalLocation)하는 것이 가장 편리할 때도 있다.
+%폰트를 이름으로 호출하는 것은 폰트 자체에 정의된 이름과 파일이름이 다른 것이 너무 많아서
+%손쉽게 말하기가 어렵다. 대부분의 시스템에서(맥 제외) \verb|fc-list| 명령은 \XeTeX 으로
+%부를 수 있는 폰트 이름을 확인하게 해준다. 한편 \LuaTeX의 경우는 좀더 복잡하여
+%\XeTeX 에서 호출할 수 있는 것과 같을 때도 있고 다를 때도 있다.
+%파일 이름으로 호출(즉 ExternalLocation)하는 것이 가장 편리할 때도 있다.
 
 %\subsection{파일 이름 문제: 조금 더}\myLabel{sec:nowinname}{sec:노윈네임}
 
@@ -750,16 +1109,16 @@ OSFONTDIR = {/Library/Fonts;~/Library/Fonts;/System/Library/Fonts;}
 \subsection{이탤릭, 기울임}
 
 한글 글꼴에 이탤릭은 없다. 그러므로 강조를 위해 기울임으로 이탤릭을 대용하는 것은 그다지 권장하지 않는다. 예를 들어 
-\begin{boxedverbatim}
-\setkormainfont(* Bold)(Gungsuh){Malgun Gothic}
-\end{boxedverbatim}
+\begin{verbatim}
+\setkomainfont(Malgun Gothic)(* Bold)(Gungsuh)
+\end{verbatim}
 으로 지정했을 때, 궁서체가 이탤릭에 해당하는 폰트로 설정된다. gremph가 디폴트이므로 궁서체는 곧은 모양으로 찍힌다.
 
 그러나 디자인 상의 효과를 위해서나 다른 이유에서 
 이 서체를 기울이고 싶은 경우가 있을 것이다.
 이 경우 \texttt{[itemph]} 클래스 옵션을 지정한다.
-그 반대의 경우는 \texttt{[gremph]}이고 이것이 디폴트이다. 부분부분 기울이려 한다면 fontspec
-명령을 써서 조작할 수 있으므로 별도로 명령을 만들어두거나 하지 않았다.
+그 반대의 경우는 \texttt{[gremph]}이고 이것이 디폴트이다. 부분부분 기울이려 한다면 \cs{hangulfontspec}이나
+\cs{hanjafontspec}, 즉 \cs{adhochangulfont}를 이용하거나 \cs{addhangulfontfeature} 명령을 써서 조작할 수 있으므로 별도로 명령을 만들어두거나 하지 않았다.
 
 %\subsection{따옴표}
 %
@@ -795,6 +1154,38 @@ OSFONTDIR = {/Library/Fonts;~/Library/Fonts;/System/Library/Fonts;}
 
 \section{그밖의 사항들}
 
+\subsection{판면 설정을 위한 fapapersize}
+
+memoir는 geometry 패키지와는 다른 방식의 자체 판면 설정 명령을 가지고 있다.
+oblivoir에서도 기본적으로 memoir의 판면 설정 방식을 사용할 수 있다.
+이와 더불어, \textsf{fapapersize}라는 패키지가
+oblivoir에서 제공된다.
+
+\begin{boxedverbatim}
+\usepackage{fapapersize}
+\usefapapersize{*,*,1in,*,1in,*}
+\end{boxedverbatim}
+
+\cs{usefapapersize}는 여섯 개의 콤마로 연결된 인자를 취하는데, 첫번째, 두번째, 네번째, 여섯번째 인자를 별표(*)로 대용할 수 있다. 이 각각은 
+\begin{itemize}\tightlist
+\item paperwidth
+\item paperheight
+\item left margin
+\item right margin
+\item upper margin
+\item lower margin
+\end{itemize}
+이다. 만약 \cs{setheadfoot}이라든가 marginnote 설정이 필요하다면 \cs{usefapapersize} 명령 앞에 둔다.
+적어도 left margin과 upper margin은 반드시 주어야 한다는 점과, 콤마 사이에 공백이 없도록 해야 한다는 점에 주의하여야 한다.
+
+용지(stock)를 설정하려면 다음과 같이 한다.
+\begin{boxedverbatim}
+\usepackage[stock]{fapapersize}
+\usestocksize{210mm,297mm}
+\usefapapersize{190mm,260mm,1in,*,1in,*}
+\end{boxedverbatim}
+\texttt{[showtrims]} 옵션이 주어져 있다면 crop 선이 함께 나타날 것이다.
+
 \subsection{enumerate}
 
 enumerate 패키지의 enumerate 아이템 항목 머리 설정은
@@ -810,10 +1201,9 @@ enumerate 패키지의 enumerate 아이템 항목 머리 설정은
 \item 둘째 항목
 \end{enumerate}
 paralist에서 위와 같은 방식으로 항목 머리를 설정하려면 
-레거시 텍을 위해서는 dhucs-paralist를, \XeTeX과 \LuaTeX을 위해서는 
 xob-paralist를 로드한다.\footnote{%
 	물론 paralist 자체는 그 이전에 부르거나
-	xob-paralist(dhucs-paralist)가 스스로 부르도록 할 것이고 xob-paralist(dhucs-paralist) 뒤에
+	xob-paralist가 스스로 부르도록 할 것이고 xob-paralist 뒤에
 	paralist만 별도로 다시 부르면 안 된다.
 }
 
@@ -856,7 +1246,7 @@ png, jpg, pdf 그림을 잘 불러온다. 즉 \obclass가 알맞게 이 패키�
 \end{verbatim}
 \end{minipage}\hfill
 \begin{minipage}{.45\textwidth}
-\hfill “소절 \ref{sec:font}\를 보라.”
+\hfill “소절 \myREF{sec:font}{sec:폰트}\를 보라.”
 \end{minipage}
 
 \noindent\hologo{XeTeX}, \hologo{LuaTeX}:\\
@@ -864,8 +1254,10 @@ png, jpg, pdf 그림을 잘 불러온다. 즉 \obclass가 알맞게 이 패키�
 \begin{verbatim}
  “소절 \ref{sec:폰트}\를 보라.”
 \end{verbatim}
+\end{minipage}\hfill
+\begin{minipage}{.45\textwidth}
+\hfill “소절 \myREF{sec:font}{sec:폰트}\를 보라.”
 \end{minipage}
-
 
 \subsection{방점}
 
@@ -873,26 +1265,107 @@ png, jpg, pdf 그림을 잘 불러온다. 즉 \obclass가 알맞게 이 패키�
 	가로쓰기에서는 \dotemph{점을 글자 위에 찍으므로} \circemph{傍점}이 아니라
 	\circemph{上점}이 맞겠지만 관행적으로 방점이라 불러왔다.
 	이 문장부호의 정확한 명칭은 “드러냄표”이다.}%
-을 지원했다. \xetexko{}에서도 이 명령을 사용할 수 있게 되었고,
-xoblivoir에서 조금 확장했다. 기본인
+을 지원했다. \xetexko와 \luatexko에서도 이 명령을 사용할 수 있으며,
+oblivoir에서 조금 확장했다. 기본인
 \texttt{\textbackslash dotemph}
 외에
 \texttt{\textbackslash circemph}
 \texttt{\textbackslash useremph}
 두 개의 명령을 더 쓸 수 있다.
 
-\marginpar{\fbox{xe(lua)tex}}
-\xobclass에서 기원한 새로운 텍 엔진을 위한 \obclass 에서
-마지막의 \texttt{\textbackslash useremph} 명령은
-\useremph{˚}{하나의 선택 인자와 두 개의 인자}를 요구한다. 즉,
+\cs{dotemph}와 \cs{circemph}의 결과는 다음과 같다.
+
+\medskip
+
+\noindent\begin{minipage}{.45\textwidth}
 \begin{verbatim}
-\useremph[<height>]{<dotchar>}{text}
+\dotemph{우리나라} \circemph{대한민국}
 \end{verbatim}
-height는 방점으로 사용할 문자가 올라갈 길이이고 dotchar는
-방점 문자이다. text는 방점을 찍을 텍스트.
-단, 이 \verb|\useremph| 명령은 \xetexko 에서 제공되는 같은 이름의
-명령과도 그 사용법이 다르고 레거시 텍을 위한 \obclass에서의 사용법과도 다르므로 주의를 요한다.
- 
+\end{minipage}\hfill
+\begin{minipage}{.45\textwidth}
+\dotemph{우리나라} \circemph{대한민국}
+\end{minipage}
+
+\medskip
+
+\cs{useremph} 명령은 이전 버전과 사용법이 달라졌다. 2014년 6월 이전 oblivoir에서
+\cs{useremph}는 pdf\TeX 에서와 \XeTeX, \LuaTeX 에서 사용법이 서로 달랐고 
+하나의 선택 인자와 두 개의 인자를 요구하는 등 사용법이 복잡했으나 이것이 모두 다음과 같이
+간단하게 바뀌었다.
+\begin{boxedverbatim}
+\useremph[<raise>][<char>]{text}
+\end{boxedverbatim}
+한 번 raise 값과 char를 주고난 후에는 그 설정이 보존된다. 즉 \cs{useremph}를
+인자 없이 쓰면 이전에 설정된 것을 따라가고, 이전에 설정된 것이 없으면 \cs{useremph}와
+\cs{circemph}가 동일하다.
+
+\begin{verbatim}
+\useremph{드러냄표}
+\useremph[.3ex][\tiny★]{드러냄표}
+다시한번 \useremph{드러냄표}
+이번에는 \useremph[][\tiny+]{드러냄표}
+높이조절 \useremph[0ex]{드러냄표}
+\end{verbatim}
+
+이 코드의 결과는 다음과 같다:\\
+\useremph{드러냄표}
+\useremph[.3ex][\tiny★]{드러냄표} 다시한번 \useremph{드러냄표}
+이번에는 \useremph[][\tiny+]{드러냄표}
+높이조절 \useremph[0ex]{드러냄표}
+
+\medskip
+
+편의를 위하여 \cs{useremphstarwhite}({\useremphstarwhite})와 \cs{useremphstarblack}({\useremphstarblack})
+명령을 준비해두었다. 이것은 현재 식자하는 폰트에 해당 글자가 있으면 잘 나타난다.
+
+\medskip
+
+\noindent\begin{minipage}{.7\textwidth}
+\begin{verbatim}
+\useremph[.5ex][\useremphstarwhite]{드러냄표}
+\end{verbatim}
+\end{minipage}\hfill
+\begin{minipage}{.28\textwidth}
+\useremph[.5ex][\useremphstarwhite]{드러냄표}
+\end{minipage}
+
+%\marginpar{\fbox{xe(lua)tex}}
+%\xobclass에서 기원한 새로운 텍 엔진을 위한 \obclass 에서
+%마지막의 \texttt{\textbackslash useremph} 명령은
+%\useremph{˚}{하나의 선택 인자와 두 개의 인자}를 요구한다. 즉,
+%\begin{verbatim}
+%\useremph[<height>]{<dotchar>}{text}
+%\end{verbatim}
+%height는 방점으로 사용할 문자가 올라갈 길이이고 dotchar는
+%방점 문자이다. text는 방점을 찍을 텍스트.
+%단, 이 \verb|\useremph| 명령은 \xetexko 에서 제공되는 같은 이름의
+%명령과도 그 사용법이 다르고 레거시 텍을 위한 \obclass에서의 사용법과도 다르므로 주의를 요한다.
+
+\subsection{chapter styles}
+최근의 memoir는 상당히 많은 chapter style을 정의하고 있다. oblivoir의 chapter style
+정의 방식은 기본적으로 memoir와 동일하지만 다음 몇 가지가 다르다.
+
+\begin{itemize}\tightlist
+\item \cs{printchaptername} 명령이 무의미하다.
+\item \cs{prechapternum} 명령과 \cs{postchapternum} 명령이 추가되었다.
+\item \cs{hchaptertitlehead}라는 명령이 사용된다. 이것은 특히 running heading과 관련이 있다.
+\end{itemize}
+
+KTUG 사설 저장소를 통하여 설치할 수 있는\footnote{%
+	사설 저장소를 등록할 수 없는 상황이라면 직접 다운로드하라. 
+	\url{http://ftp.ktug.org/KTUG/texlive/tlnet/archive/}
+}
+ob-chapstyles라는 패키지에는 몇 가지 memoir
+chapter 스타일을 oblivoir화해둔 것이 있다. 이 자체를 그대로 써도 좋고 이를 자신만의 스타일을
+만드는 데 참고하여도 좋을 것이다.
+
+\subsection{한글 pagestyle}
+
+oblivoir가 추가적으로 제공하는 페이지 스타일로 \texttt{hangul}이 있다.
+\begin{boxedverbatim}
+\pagestyle{hangul}
+\end{boxedverbatim}
+
 \section{샘플 문서}
 
 이 작은 안내서에 더하여 간단한 \obclass\ 샘플 문서를 하나 제공한다.

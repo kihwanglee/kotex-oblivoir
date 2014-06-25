@@ -1,6 +1,6 @@
 %% xob-dotemph.sty
 %%
-%% Copyright (c) 2007-2013 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2007-2014 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -11,13 +11,14 @@
 %% version 2006/05/20 or later.
 %%
 %% xob-dotemph
+%%  2014-06-15, \useremph redefined
 %%  2014-04-29
 %%  2010-03-18
 %%  오전 9:01 2008-10-22
 %% xetexko-dotemph의 확장
 %%  dhucs/hangul compatible (\dotemph, \circemph, \useremph)
 %% ----------
-%% \useremph is different from xetexko's \useremph ***
+%% \useremph is different from kotex-utf's \useremph ***
 %%
 %% Updated for xetexko v2.1
 %% Kihwang Lee <leekh at ktug.org>
@@ -30,28 +31,45 @@
 	\endgroup
 }
 
-\def\dhucs@useremph#1{\begingroup
+\def\xob@useremph#1{\begingroup
     \let\dotemphchar\useremphchar
     \let\dotemphraise\useremphraisedim
     \dotemph{#1}\endgroup} 
 
-\protected\def\useremph{%
-    \@ifnextchar[\@user@emph{%
-	  \@ifnextchar*\@orig@useremph\@@user@emph}%
+%%%%% 2014/06/15
+%%%%% \useremph[dim][char]{letter}
+%%%%%
+\RequirePackage{xparse}
+
+\ExplSyntaxOn
+
+\dim_new:N \useremphraisedim \dim_set:Nn \useremphraisedim { 1ex }
+\tl_set:Nn \useremphchar { ^^^^02da }
+
+\DeclareDocumentCommand \useremph { o o m }
+{
+	\IfValueT { #1 }
+	{
+		\tl_if_empty:nF { #1 }
+		{
+			\settoheight \useremphraisedim { #3 }
+			\dim_add:Nn \useremphraisedim { #1 }
+		}
+	}
+	
+	\IfValueT { #2 }
+	{
+		\tl_if_empty:nF { #2 }
+		{
+			\tl_set:Nn \useremphchar { #2 }
+		}
+	}
+	\xob@useremph { #3 }
 }
 
-\def\@orig@useremph*#1{\dhucs@useremph{#1}}
+\ExplSyntaxOff
 
-\def\@user@emph[#1]#2#3{%
-    \def\useremphchar{#2}%
-	\def\useremphraisedim{#1}%
-	\dhucs@useremph{#3}%
-}
-
-\def\@@user@emph#1#2{%
-    \def\useremphchar{#1}%
-	\def\useremphraisedim{6pt}%
-	\dhucs@useremph{#2}%
-}
+\def\useremphstarblack{\tiny★}
+\def\useremphstarwhite{\tiny☆}
 
 \endinput

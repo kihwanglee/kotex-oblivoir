@@ -1,6 +1,6 @@
 %% File `memucs-gremph.sty`
 %%
-%% Copyright (c) 2006-2013 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2006-2014 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -33,7 +33,7 @@
 %	\def\GrEmphFont{utbt}
 %	\def\GrEmphHanjaFont{utbt}
 %\else
-\if@unfonts
+\if@unfont
   \if@vargremphhangulfont\else
 	\def\GrEmphFont{outgr}\fi
 	\if@vargremphhanjafont\else
@@ -109,6 +109,7 @@
 % end of style.
 %
 % CHANGE LOG.
+% * 2014/06/12. \if@unfonts => \if@unfont
 % * 2007/08/02. redundant space bug fix
 % * 2007/06/08. \slshape independent from \itshape
 % * 2005/08/17. \slhangul added.

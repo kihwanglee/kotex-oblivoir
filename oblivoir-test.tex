@@ -1,19 +1,26 @@
-% -*- UTF-8 : LaTeX -*-
+%!TEX encoding = UTF-8 Unicode
+% arara: xelatex
+% arara: kotexindy
+% arara: xelatex
 %%
+%% 이 파일은 oblivoir 패키지 문서의 일부로서, oblivoir 클래스의 여러 기능을
+%% 테스트하기 위한 목적으로 제공합니다. 일부 기능은 테스트 목적으로 과장되어 있습니다.
+%% pdflatex, xelatex, lualatex으로 컴파일할 수 있습니다. (결과의 완전한 동일성은
+%% 보장하지 못합니다.)
+%% 
+%% 2014/06/15. 부분 수정.
 %% 2013/09/28. xoblivoir ver2 버전으로 포팅.
 %% 2010/03/17. xoblivoir 버전으로 포팅
 %%
-%% memhangul-ucs v1.44 테스트 파일
+%% oblivoir 2.0.1 테스트 파일
 %% Written by 도은이아빠.
+%% public domain.
 %%
 
-\documentclass[demo,chapter,openany,amsmath,gremph,adjustmath]{xoblivoir}
+\documentclass[demo,chapter,openany,amsmath,gremph,adjustmath]{oblivoir}
 %%% amsmath 옵션은 amsmath, amssymb 패키지를 로드해준다..
 
-%\usepackage[logonly]{trace} %% for debugging.
-\let\traceon\relax\let\traceoff\relax
-
-%%% display overfullrule
+%% display overfullrule
 %\setlength\overfullrule{5pt}
 
 %% 페이지 레이아웃. fapapersize를 이용한다..
@@ -21,28 +28,30 @@
 \usefapapersize{220mm,276mm,20mm,80mm,30mm,35mm}
 
 %% 폰트 설정
-\def\DefaultFont{HCR Batang LVT}
 \ifPDFTeX
 	\usepackage{mathpazo}
 \else\ifLuaOrXeTeX
-	\defaultfontfeatures{Mapping=tex-text,Ligatures=TeX}
 	\setmainfont{TeX Gyre Pagella}
+ 	\setsansfont[Scale=.95]{TeX Gyre Heros}
+%% \setkomain/sansfont : see oblivoir-simpledoc.
+	\setkomainfont[HCRBatangLVT]()(-Bold)()
+	\setkosansfont[NanumGothic]()[](HCRDotumLVT)
+%% 수학 폰트
 	\usepackage{unicode-math}
 	\setmathfont{Asana-Math.otf}
- 	\setsansfont[Scale=.95]{TeX Gyre Heros}
- 	\setkormainfont[ItalicFont=\DefaultFont,ItalicFeatures={FakeSlant=.167}]{\DefaultFont}[]{\DefaultFont}
- 	\setkorsansfont[]{NanumGothic}[]{HCR Dotum LVT}
 \fi\fi
 
 \ifLuaTeX
 \def\interHANGUL{InterHangul}
-\let\circemph=\dotemph
 \else\ifXeTeX
 \def\interHANGUL{interhchar}
 \fi\fi
 
 %% logos
-\usepackage{hologo}
+\usepackage{kotex-logo}
+%% index for \koTeX
+%\let\ORIGkoTeX \koTeX
+%\def\koTeX{\ORIGkoTeX\index{ko.TeX}}
 
 %%% marginfix
 %\usepackage{marginfix}
@@ -221,13 +230,7 @@
 %% 활성화해볼 것.
 %\showindexmarktrue
 
-%% 문장 부호 관련 명령은 스타일에 포함시켰음.
-%% \bnm, \snm, \cnm, \ccnm.
-
 %% index를 만든다. 
-%% makeindex를 실행할 때는 makeindex-dhucs.pl을 이용할 것.
-%% #> perl makeindex-dhucs.pl -s dhhangulucs.ist <filename>
-%%
 \makeindex
 
 %% newlist
@@ -263,12 +266,11 @@
 }
 
 %% 각주. footmisc는 memoir와 함께 쓸 수 있다.
-%\usepackage[bottom]{footmisc}
-%% 그러나, 위의 예와 같이 [bottom] footnote를 위해서라면 
+%% 참고. [bottom] footnote를 위해서라면 
 %% 다음과 같이 할 것을 권장함. raggedbottom에서 동작함.
-\renewcommand*{\footnoterule}{\kern-3pt\vfill
-    \hrule width 0.4\columnwidth \kern 2.6pt}
-%% 각주를 floats 아래.
+%\renewcommand*{\footnoterule}{\kern-3pt\vfill
+%    \hrule width 0.4\columnwidth \kern 2.6pt}
+%% 각주를 floats 아래 두는 memoir 명령.
 \feetbelowfloat
 
 %% 밑줄.
@@ -278,31 +280,6 @@
 
 %% 사소한 설정
 \def\util#1{\texttt{#1}\index{Utility!#1}}
-
-%% \useremph compatibility
-\ifPDFTeX
-  \let\ORIGuseremph=\useremph
-  \def\useremphchar{\tiny★}
-  \setlength\useremphraisedim{10pt}
-  \def\useremph#1{\ORIGuseremph{#1}}
-\else\ifXeTeX
-  \let\ORIGuseremph=\useremph
-  \def\useremph#1{\ORIGuseremph[10pt]{\tiny★}{#1}}
-\else\ifLuaTeX
-  \let\ORIGdotemph=\dotemph
-  \def\dotemph#1{%
-	\def\dotemphraise{0.4em}
-	\def\dotemphchar{˙}
-	\ORIGdotemph{#1}}	
-  \def\circemph#1{%
-	\def\dotemphraise{0.4em}
-	\def\dotemphchar{˚}
-	\ORIGdotemph{#1}}
-  \def\useremph#1{%
-	\def\dotemphraise{10pt}
-	\def\dotemphchar{\tiny★}
-	\ORIGdotemph{#1}}
-\fi\fi\fi
 
 %%%
 %\headnamereftrue
@@ -475,7 +452,7 @@
 % 것.
 \chapter[memoir 클래스에서 한글...][memoir 클래스에서 한글을 쓰자]{%
 	memoir 클래스에서\\ 한글을 쓰자}
-\traceon\label{sec:firstchap}\traceoff
+\label{sec:firstchap}
 
 \chapterprecis{\noindent 이 장에서는 memoir 클래스에 대해 간략히
 	소개하고 한글화에 대하여 개관한다.}
@@ -642,35 +619,6 @@ float 안에 놓인 것과 같아지도록.\footnote{%
 verse, quote와 같은 환경을 조금 바꾸어서 행간을 약간 줄여주는
 기능이 있다.}
 
-%%%\showcommand{memucsfninterwordhook}\showcommand{xspaceskip}
-%%%만약 각주의 자간을 조절하고 싶으면 어떻게 할 것인가?
-%%%이 때는 \dispcmd{memucsfninterwordhook}이라는 명령을 재정의해준다.
-%%%이것을 간편하게 재정의하는 명령을 따로 제공하지 않는 이유는,
-%%%이것을 재정의하는 것이 그다지 바람직하지 않기 때문이다.
-%%%게다가 만약 이 명령에서 \dispcmd{xspaceskip} 등을 수정하면
-%%%본문에도 영향을 미치기 때문에, 본문 중에서는 
-%%%되도록 사용하지 않는 것이 좋다. 여기서는 오직 예시만을
-%%%위하여 간단한 예를 들어두겠다.
-%%%\let\ORIGmemucsfninterwordhook\memucsfninterwordhook
-%%%\renewcommand\memucsfninterwordhook{%
-%%%    \ifLuaTeX
-%%%    \hangulfontspec[InterHangul=.5em]{\DefaultFont}
-%%%    \else\ifXeTeX
-%%%    \hangulfontspec[interhchar=.5em]{\DefaultFont}
-%%%    \else\ifPDFTeX
-%%%    \interhchar{.5em}
-%%%    \fi\fi\fi
-%%%    \spaceskip=.8em plus .133em minus .111em
-%%%%   \xspaceskip=1em plus .05em minus .05em 
-%%%}%
-%%%이제 각주를 붙여보자.\footnote{%
-%%%각주의 자간을 수정하려면
-%%%위와 같이 한다. 잘 되는가?}
-%%%
-%%%\let\memucsfninterwordhook=\ORIGmemucsfninterwordhook
-
-%\DefaultInterHchar
-
 \showcommand{noadjustquotespacing}\showcommand{adjustquotespacing}
 이 아래는 본문 중에서 \dispcmd{noadjustquotespacing}과 \dispcmd{adjustquotespacing}을
 불렀을 때 \env{quote} 안에서 행간이 어떻게 변하는지 보여준다.
@@ -741,7 +689,7 @@ verse, quote와 같은 환경을 조금 바꾸어서 행간을 약간 줄여주�
 하다.\showcommand{circemph}\showcommand{dotemph}
 맨처음에 이 명령은 H\LaTeX\ 1.01에서 구현된 것이었는데,
 그 후 
-\useremph{발전을 거듭하여}
+\useremph[.3ex][\tiny★]{발전을 거듭하여}
 현재에 이르렀다.
 \showcommand{useremph}
 
@@ -917,7 +865,7 @@ H\LaTeX{}에서는 {\itshape\wi[강조]{기울인 글꼴}}을 쓰는 방법을 �
 \oblivoirchapterstyle{veelo}
 \pagestyle{MyRuled}
 
-\chapter{수학질문상자}\traceon\label{sec:math}\traceoff
+\chapter{수학질문상자}\label{sec:math}
 
 %% 절의 카운터를 \pnum으로.
 \renewcommand\thesection{\pnum{section}}
