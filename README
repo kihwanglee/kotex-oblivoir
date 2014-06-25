@@ -46,12 +46,11 @@ Files
     memhangul-ucs/ob-koreanappendix.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
     memhangul-ucs/ob-nokoreanappendix.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
     memhangul-ucs/ob-toclof.sty -> tex/latex/kotex-oblvoir/memhangul-ucs/
-    memhangul-x/luatexko-xobfont.sty -> tex/latex/kotex-oblivoir/memhangul-x/
     memhangul-x/memhangul-x.sty -> tex/latex/kotex-oblivoir/memhangul-x/
     memhangul-x/memucs-interword-x.sty -> tex/latex/kotex-oblivoir/memhangul-x/
     memhangul-x/xetexko-var.sty -> tex/latex/kotex-oblivoir/memhangul-x/
-    memhangul-x/xetexko-xobfont.sty -> tex/latex/kotex-oblivoir/memhangul-x/
     memhangul-x/xob-amssymb.sty -> tex/latex/kotex-oblivoir/memhangul-x/
+    memhangul-x/xob-font.sty -> tex/latex/kotex-oblivoir/memhangul-x/
     memhangul-x/xob-dotemph.sty -> tex/latex/kotex-oblivoir/memhangul-x/
     memhangul-x/xob-hyper.sty -> tex/latex/kotex-oblivoir/memhangul-x/
     memhangul-x/xob-paralist.sty -> tex/latex/kotex-oblivoir/memhangul-x/
@@ -59,9 +58,9 @@ Files
 ### Documents
 
     README (this file) -> doc/latex/kotex-oblivoir/
-    oblivoir-simpledoc.pdf -> doc/latex/kotex-oblivoir/
-    oblivoir-simpledoc.tex -> doc/latex/kotex-oblivoir/
-    oblivoir-text.tex -> doc/latex/kotex-oblivoir/
+    doc/oblivoir-simpledoc.pdf -> doc/latex/kotex-oblivoir/
+    doc/oblivoir-simpledoc.tex -> doc/latex/kotex-oblivoir/
+    doc/oblivoir-text.tex -> doc/latex/kotex-oblivoir/
 
 Usage
 -----
@@ -100,9 +99,9 @@ using XeTeX-ko or LuaTeX-ko as follows:
 
 Oblivoir class also has its own commands for specifying Korean fonts.
 
-    \setkormainfont(<Bold>)(<Italic>){<Regular>}
-    \setkorsansfont(<Bold>)(<Italic>){<Regular>}
-    \setkormonofont{<Mono>}
+    \setkormainfont[<basename>](<Regular>)(<Bold>)(<Italic>)
+    \setkorsansfont[<basename>](<Regular>)(<Bold>)(<Italic>)
+    \setkormonofont[<basename>](<Regular>)(<Bold>)(<Italic>)
 
 ### Sample document
 
@@ -118,5 +117,5 @@ Contacts
 --------
 
 Please report any errors or suggestions to the package maintainer,
-Kihwang Lee <leekh at ktug org>.
+Kihwang Lee <leekh at ktug.org>.
 
