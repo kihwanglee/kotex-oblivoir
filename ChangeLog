@@ -1,3 +1,11 @@
+2015-04-19	Kangsoo Kim	<karnes at ktug org>
+
+	Version 2.1.1
+
+	* oblivoir-xlua.cls: version 0.8
+	suppress spacefoctors.
+	* doc/oblivoir-simpledoc.tex: minor typo corection.
+
 2014-06-25	Kangsoo Kim	<karnes at ktug org>
 
 	Version 2.1.0

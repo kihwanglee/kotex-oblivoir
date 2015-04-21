@@ -1,10 +1,13 @@
 % !TEX Encoding = UTF-8 Unicode
 %% oblivoir-simpledoc.tex
-%% written by Nova De Hi, 2014/06/15
+%% written by Nova De Hi, 2015/04/19
 %% public domain.
 %%
 %% part of oblivoir
 %%
+% arara: xelatex
+% arara: xelatex
+% arara: lmkclean
 \documentclass[
 	12pt,
 	a4paper,
@@ -46,11 +49,12 @@
 
 \IfpxlTeX*{x,l}
 {
-	\setkomonofont(MalgunGothic)[Scale=0.9]
-	\setobmonofont(Monaco)[Scale=.85]
+	\defaultfontfeatures{Renderer=OpenType}
+	\setkomonofont(NanumBarunGothic-YetHangul.ttf)[Scale=0.9]
+	\setobmonofont(Menlo)[Scale=.9]
 	\setobmainfont(Minion Pro)
 	\setobsansfont(Myriad Pro)
-	\setkomainfont[윤명조](320)(340)[ExternalLocation]
+	\setkomainfont[KoPubBatang ](Light)(Bold)
 }
 
 \newcommand\xobclass{x\-ob\-liv\-oir\oblivoirallowbreak}
@@ -71,7 +75,7 @@
 
 \title{초간단 \obclass{} v2.1 사용법}
 
-\date{2014년 6월}
+\date{2015년 4월}
 
 \author{x-ob-liv-oir }
 
@@ -517,7 +521,7 @@ Vendor ID:           YDI
 %일반적으로 Postscript name을
 %쓰는 쪽이 좋다. 
 여기서 ``Family''는 같은 글꼴 가족들이 똑같은 이름을 가진다. 예를 들어 함초롬바탕LVT Bold체는
-Family가 ``HCR Batang LVT''이고 Subfamily가 ``Bold''로 되어 있다. 이렇게 글꼴 자체가 글꼴 가족에 대한 정보를 가지고 있으면 Regular만 지정해도 자동으로 Bold 글꼴을 글꼴가족에서 찾는다 (모든 한글 글꼴이 이렇지는 않다).
+Family가 ``HCR Batang LVT''이고 Subfamily가 ``Bold''로 되어 있다. 이렇게 글꼴 자체가 글꼴 가족에 대한 정보를 가지고 있으면 Family만 지정해도 자동으로 Bold 글꼴을 글꼴가족에서 찾는다 (모든 한글 글꼴이 이렇지는 않다).
 
 예를 들면
 \oblivoirdblquote{맑은 고딕}은 맥락에 따라 \oblivoirdblquote{맑은 고딕 Bold}를
@@ -1042,10 +1046,11 @@ CP949로 불려져야 하는데 우리가 작성하는 tex 원본 파일은 UTF-
 ExternalLocation으로 호출할 수 있을 것이다. 리눅스에서는 모르겠으나 매킨토시에서는
 이것이 가능했다.
 
-\item texmf.cnf의 OSFONTDIR 변수를 수작업으로 수정해야 하는 경우가 있다. Windows의
-\koTeX\,Live라면 이것을 잘 설정하여 주므로 사용자가 신경쓸 것이 없으나
+\item texmf.cnf의 OSFONTDIR 변수를 수작업으로 수정해야 하는 경우가 있다. 
+이것은 폰트를 ``파일 이름으로'' 찾게 하기 위해 필요하다.
+Windows의 \TeX\,Live라면 이것을 잘 설정하여 주므로 사용자가 신경쓸 것이 없으나
 경우에 따라 이 변수를 설정해야 할 필요가 있을 수 있다. 맥의 경우,
-/usr/local/texlive/2013/texmf.cnf 파일을 열어서\footnote{/usr/local/texlive/2013/texmf/web2c/texmf.cnf를
+/usr/local/texlive/2015/texmf.cnf 파일을 열어서\footnote{/usr/local/texlive/2015/texmf/web2c/texmf.cnf를
 수정해서는 안된다.} 다음 내용을 자신의 환경에 맞게 써넣으면 될 것이다.
 \begin{verbatim}
 OSFONTDIR = {/Library/Fonts;~/Library/Fonts;/System/Library/Fonts;}
@@ -1181,7 +1186,7 @@ oblivoir에서 제공된다.
 용지(stock)를 설정하려면 다음과 같이 한다.
 \begin{boxedverbatim}
 \usepackage[stock]{fapapersize}
-\usestocksize{210mm,297mm}
+\usefastocksize{210mm,297mm}
 \usefapapersize{190mm,260mm,1in,*,1in,*}
 \end{boxedverbatim}
 \texttt{[showtrims]} 옵션이 주어져 있다면 crop 선이 함께 나타날 것이다.
