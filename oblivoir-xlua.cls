@@ -1,6 +1,6 @@
 %% File `oblivoir-xlua.cls`
 %%
-%% (C) Copyright 2006-2014 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2015 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,7 +14,7 @@
 %% depends upon Dohyun Kim's xetexko and the author's memhangul-x.
 %%
 \ProvidesClass{oblivoir-xlua}
-  [2014/06/12 v0.7 article-like class to typeset UTF-8 korean using memoir.]
+  [2015/04/12 v0.8 article-like class to typeset UTF-8 korean using memoir.]
 \typeout{A variant of oblivoir class for Lua- or XeLaTeX.}
 
 \providecommand\@DisabledOption[1]{%
@@ -58,6 +58,8 @@
 \newif\if@subfigure\@subfigurefalse
 \DeclareOptionX{subfigure}{\@subfiguretrue}
 \DeclareOptionX{adjustmath}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
+\newif\if@manspace\@manspacefalse
+\DeclareOptionX{obspace}{\@manspacetrue}
 %
 %%% new Options
 \DeclareOptionX{latinquote}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
@@ -195,7 +197,8 @@
 %%% 기본 자간
 \newdimen\ob@hu  % 1jw=.95em, 1hu=1/16jw. see hfontspec.oblivoir
 \ifnokorean\ob@hu=\z@\else\ob@hu=.059375em\fi
-%%% defaultskip
+%%% defaultskip: suppressed (2015/04/19)
+\if@manspace
 \def\ob@DEFAULTskips{%
 	\def\memucshangulskips{}%
 	\def\memucsinterwordskip{%
@@ -211,8 +214,13 @@
 		\fi
 	}%
 }
-
 \let\DEFAULTskips\ob@DEFAULTskips
+\else
+\let\memucshangulskips\relax
+\let\memucsinterwordskip\relax
+\let\memucsinterwordchapterskip\relax
+\let\DEFAULTskips\relax
+\fi
 \def\ob@thinthinspace{\hskip2\ob@hu}
 \def\ob@onethirdspace{\hskip5\ob@hu}
 
@@ -450,6 +458,7 @@
 \endinput
 
 %%% ChangeLog:
+%%% 2015-04-19 : suppress spacefoctors
 %%% 2014-06-12 : introduce new xob-font.sty
 %%% 2014-06-06 : replace false \renewcommand with \setlength
 %%% 2013-10-26 : moved \kscntformat definition to memhangul.
