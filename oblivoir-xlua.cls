@@ -458,7 +458,7 @@
 \endinput
 
 %%% ChangeLog:
-%%% 2015-04-19 : suppress spacefoctors
+%%% 2015-04-19 : suppress space factors
 %%% 2014-06-12 : introduce new xob-font.sty
 %%% 2014-06-06 : replace false \renewcommand with \setlength
 %%% 2013-10-26 : moved \kscntformat definition to memhangul.
