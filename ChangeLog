@@ -1,4 +1,4 @@
-2015-04-19	Kangsoo Kim	<karnes at ktug org>
+2015-04-19  Kangsoo Kim  <karnes at ktug org>
 
 	Version 2.1.1
 
@@ -6,7 +6,7 @@
 	suppress space factors.
 	* doc/oblivoir-simpledoc.tex: minor typo corection.
 
-2014-06-25	Kangsoo Kim	<karnes at ktug org>
+2014-06-25  Kangsoo Kim  <karnes at ktug org>
 
 	Version 2.1.0
 
@@ -30,7 +30,7 @@
 	* memhangul-x/xob-font.sty: newly introduced.
 	* memhangul-x/xob-paralist.sty: minor fixes.
 
-2014-04-29	Kangsoo Kim	<karnes at ktug org>
+2014-04-29  Kangsoo Kim  <karnes at ktug org>
 
 	Version 2.0.1
 
