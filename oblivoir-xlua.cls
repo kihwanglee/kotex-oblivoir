@@ -14,7 +14,7 @@
 %% depends upon Dohyun Kim's xetexko and the author's memhangul-x.
 %%
 \ProvidesClass{oblivoir-xlua}
-  [2015/04/12 v0.8 article-like class to typeset UTF-8 korean using memoir.]
+  [2015/07/10 v0.8.1 article-like class to typeset UTF-8 korean using memoir.]
 \typeout{A variant of oblivoir class for Lua- or XeLaTeX.}
 
 \providecommand\@DisabledOption[1]{%
@@ -132,7 +132,9 @@
 \fi
 
 %%% fontspec problem
-\if@noinserts\else\reserveinserts{40}\fi
+\if@noinserts\else
+  \RequirePackage{etex}\reserveinserts{40}%
+\fi
 
 %%% workaround with flowfram
 \if@foursix
@@ -458,6 +460,7 @@
 \endinput
 
 %%% ChangeLog:
+%%% 2015-07-10 : etex-pkg conflicts fixed.
 %%% 2015-04-19 : suppress space factors
 %%% 2014-06-12 : introduce new xob-font.sty
 %%% 2014-06-06 : replace false \renewcommand with \setlength

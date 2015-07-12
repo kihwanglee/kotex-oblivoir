@@ -1,3 +1,10 @@
+2015-07-10  Kangsoo Kim  <karnes at ktug org>
+
+	Version 2.1.2
+
+	* oblivoir-xlua.cls: version 0.8.1
+	etex-pkg conflicts fixed.
+
 2015-04-19  Kangsoo Kim  <karnes at ktug org>
 
 	Version 2.1.1
