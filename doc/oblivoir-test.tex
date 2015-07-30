@@ -1,6 +1,6 @@
 %!TEX encoding = UTF-8 Unicode
 % arara: xelatex
-% arara: kotexindy
+% arara: komkindex
 % arara: xelatex
 %%
 %% 이 파일은 oblivoir 패키지 문서의 일부로서, oblivoir 클래스의 여러 기능을
@@ -28,7 +28,7 @@
 \usepackage{fapapersize}
 \usefapapersize{220mm,276mm,20mm,80mm,30mm,35mm}
 
-%% 폰트 설정
+% 폰트 설정
 \ifPDFTeX
 	\usepackage{mathpazo}
 \else\ifLuaOrXeTeX
@@ -38,8 +38,8 @@
 	\setkomainfont[HCRBatangLVT]()(-Bold)()
 	\setkosansfont[NanumGothic]()[](HCRDotumLVT)
 %% 수학 폰트
-	\usepackage{unicode-math}
-	\setmathfont{Asana-Math.otf}
+%	\usepackage{unicode-math}
+%	\setmathfont{Asana-Math.otf}
 \fi\fi
 
 \ifLuaTeX

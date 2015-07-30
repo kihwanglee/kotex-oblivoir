@@ -14,7 +14,7 @@
 %% depends upon Dohyun Kim's xetexko and the author's memhangul-x.
 %%
 \ProvidesClass{oblivoir-xlua}
-  [2015/07/10 v0.8.1 article-like class to typeset UTF-8 korean using memoir.]
+  [2015/07/27 v0.8.2 article-like class to typeset UTF-8 korean using memoir.]
 \typeout{A variant of oblivoir class for Lua- or XeLaTeX.}
 
 \providecommand\@DisabledOption[1]{%
@@ -32,6 +32,8 @@
 %%% active Options
 \newif\ifnokorean\nokoreanfalse
 \DeclareOptionX{nokorean}{\nokoreantrue}
+\newif\if@polyglossia\@polyglossiafalse
+\DeclareOptionX{polyglossia}{\@polyglossiatrue}
 \newif\iftwosidedoc\twosidedocfalse
 \DeclareOptionX{twoside}{\twosidedoctrue}
 \newif\ifopenrightdoc\openrightdocfalse
@@ -161,18 +163,17 @@
 %\fi\fi
 
 \def\@Load@Memhangul{%
-  \ifluatex
-      \usepackage[nonfrench,hangulpagestyle]{memhangul-x}
-  \else\ifxetex
-      \usepackage[nonfrench,hangulpagestyle]{memhangul-x}
+  \if@polyglossia
+    \RequirePackage[polyglossia]{memhangul-x}
   \else
-  	  \usepackage[nonfrench,hangulpagestyle]{memhangul-x}
-  \fi\fi
+    \RequirePackage[nonfrench,hangulpagestyle]{memhangul-x}
+  \fi
 }
 
 \ifnokorean\else
   \@Load@Memhangul
 \fi
+
 \if@chapter\else
   \counterwithout{section}{chapter}
 \fi
@@ -205,15 +206,15 @@
 	\def\memucshangulskips{}%
 	\def\memucsinterwordskip{%
 		\spaceskip = .390\BASE@FONTsize plus .1\BASE@FONTsize minus .1\BASE@FONTsize
-		\if@nonfrench
+%		\if@nonfrench
 		\xspaceskip = .432\BASE@FONTsize plus .11\BASE@FONTsize minus .1\BASE@FONTsize
-		\fi
+%		\fi
 	}%
 	\def\memucsinterwordchapterskip{%
 		\spaceskip = .41\BASE@FONTsize plus .11\BASE@FONTsize minus .1\BASE@FONTsize
-		\if@nonfrench
+%		\if@nonfrench
 		\xspaceskip = .55\BASE@FONTsize plus .1\BASE@FONTsize minus .1\BASE@FONTsize
-		\fi
+%		\fi
 	}%
 }
 \let\DEFAULTskips\ob@DEFAULTskips
@@ -460,6 +461,7 @@
 \endinput
 
 %%% ChangeLog:
+%%% 2015-07-27 : fix nokorean bug 
 %%% 2015-07-10 : etex-pkg conflicts fixed.
 %%% 2015-04-19 : suppress space factors
 %%% 2014-06-12 : introduce new xob-font.sty

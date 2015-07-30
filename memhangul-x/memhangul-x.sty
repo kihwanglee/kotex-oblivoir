@@ -14,10 +14,10 @@
 %%    part of oblivoir v2
 %%
 \NeedsTeXFormat{LaTeX2e}
-\def\filedate{2014/06/12}
-\def\fileversion{11.8}
+\def\filedate{2015/07/27}
+\def\fileversion{11.9}
 \ProvidesPackage{memhangul-x}[\filedate Hangul Typography for (x)oblivoir]
-\typeout{Hangul Typography for (x)oblivoir}
+%\typeout{Hangul Typography for (x)oblivoir}
 
 %% Options :
 
@@ -64,6 +64,8 @@
 \DeclareOption{hangulpagestyle}{\@defaulthangulpagestyletrue}
 \newif\if@pdfbookmark{\@pdfbookmarkfalse}
 \DeclareOption{pdfbookmark}{\@pdfbookmarktrue}
+\newif\if@polyglos\@polyglosfalse
+\DeclareOption{polyglossia}{\@polyglostrue}
 
 \ifxetex
 %%% xetexko options
@@ -119,6 +121,17 @@
 
 \ProcessOptions \relax
 
+\if@polyglos
+  \RequirePackage{polyglossia}
+  \RequirePackage{xparse}
+  \NewDocumentCommand\sethangulfont{mo}{%
+    \IfValueTF{#2}{%
+      \newfontfamily\hangulfont{#1}[#2]%
+    }{%
+      \newfontfamily\hangulfont{#1}%
+    }
+  }
+\else
 \ifluatex
   \RequirePackage{luatexko}
   \RequirePackage{xob-font}
@@ -127,12 +140,12 @@
   \RequirePackage{xetexko-var}
   \RequirePackage{xob-dotemph}
   \else
-	\ifKOTEXCJK
+    \ifKOTEXCJK
      \RequirePackage{cjkutf8-ko}
 %    \else
 %     \RequirePackage{dhucs}
     \fi
-\fi\fi
+\fi\fi\fi
 
 %% define memh@hu
 \newdimen\memh@hu\memh@hu=0.059375em
