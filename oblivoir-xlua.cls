@@ -28,6 +28,7 @@
 \DeclareOptionX{finemath}{\@DisabledOption{\CurrentOption}}
 \DeclareOptionX{nofinemath}{\@DisabledOption{\CurrentOption}}
 \DeclareOptionX{strictcharcheck}{\@DisabledOption{\CurrentOption}}
+\DeclareOptionX{noreserveinserts}{\@DisabledOption{\CurrentOption}}
 
 %%% active Options
 \newif\ifnokorean\nokoreanfalse
@@ -75,8 +76,6 @@
 \newif\if@amsmath\@amsmathfalse
 \DeclareOptionX{amsmath}{\@amsmathtrue}
 \DeclareOptionX{nowinname}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
-\newif\if@noinserts\@noinsertsfalse
-\DeclareOptionX{noreserveinserts}{\@noinsertstrue}
 %
 \newif\ifPRELOAD\PRELOADfalse
 \DeclareOptionX{preload}[]{\PRELOADtrue\def\PRELOADstr{#1}}
@@ -134,9 +133,7 @@
 \fi
 
 %%% fontspec problem
-\if@noinserts\else
-  \RequirePackage{etex}\reserveinserts{40}%
-\fi
+%  \RequirePackage{etex}\reserveinserts{40}%
 
 %%% workaround with flowfram
 \if@foursix
@@ -461,6 +458,7 @@
 \endinput
 
 %%% ChangeLog:
+%%%% 2015-08-01 : drop etex.sty 
 %%% 2015-07-27 : fix nokorean bug 
 %%% 2015-07-10 : etex-pkg conflicts fixed.
 %%% 2015-04-19 : suppress space factors

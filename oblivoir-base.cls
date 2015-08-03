@@ -1,6 +1,6 @@
 %% File `oblivoir.cls`
 %%
-%% (C) Copyright 2006-2014 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2015 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -11,7 +11,7 @@
 %% version 2006/05/20 or later.
 %%
 \ProvidesClass{oblivoir-base}
-  [2014/06/12 v0.6 article-like class to typeset UTF-8 korean using memoir.]
+  [2015/08/01 v0.7 article-like class to typeset UTF-8 korean using memoir.]
 %\typeout{oblivoir requires memoir, dhucs, and memhangul. 2008/10/23.}
 
 %%% Acknowledgements:
@@ -47,7 +47,7 @@
 %%%   unfonts-type-1
 %%%
 
-\RequirePackage{etex}
+%\RequirePackage{etex}
 \RequirePackage{xkeyval}
 
 \newif\ifnokorean\nokoreanfalse
@@ -119,20 +119,21 @@
 \ProcessOptionsX
 
 %%% moreroom, reported by Juho Lee, 2013-09-26.
-\if@FULLROOM
-\def\alloc@#1#2#3#4#5%
- {\ifnum\count1#1<#4% make sure there's still room
-    \allocationnumber\count1#1
-    \global\advance\count1#1\@ne
-    \global#3#5\allocationnumber
-    \wlog{\string#5=\string#2\the\allocationnumber}%
-  \else\ifnum#1<6
-    \def\etex@dummy@definition{}% <-- code added
-    \begingroup \escapechar\m@ne
-    \expandafter\alloc@@\expandafter{\string#2}#5%
-  \else\errmessage{No room for a new #2}\fi\fi
- }
-\fi
+%%% 2015-08-01: LaTeX will do auto-alloc.
+%\if@FULLROOM
+%\def\alloc@#1#2#3#4#5%
+% {\ifnum\count1#1<#4% make sure there's still room
+%    \allocationnumber\count1#1
+%    \global\advance\count1#1\@ne
+%    \global#3#5\allocationnumber
+%    \wlog{\string#5=\string#2\the\allocationnumber}%
+%  \else\ifnum#1<6
+%    \def\etex@dummy@definition{}% <-- code added
+%    \begingroup \escapechar\m@ne
+%    \expandafter\alloc@@\expandafter{\string#2}#5%
+%  \else\errmessage{No room for a new #2}\fi\fi
+% }
+%\fi
 
 %%% moreverb : 2008/10/23
 \if@moreverb
@@ -524,6 +525,7 @@
 \endinput
 
 %%% ChangeLog:
+%%%          2015/08/01 : etex.sty dropped
 %%% ver0.6   2014/06/12 : introduce new xob-font.sty
 %%% ver0.5   2014/06/06 : replace \renewcommand's with \setlength's.
 %%% ver0.4.3 2013/10/26 : move \kscntformat definition to memhangul-ucs
