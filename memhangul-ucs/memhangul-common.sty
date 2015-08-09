@@ -1,6 +1,6 @@
 %% File `memhangul-common.sty`
 %%
-%% (C) Copyright 2013-2014 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2013-2015 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -17,7 +17,7 @@
 %%% 편, 장 섹션 타이틀 재설정
 %%% 절의 섹션 타이틀은 수정하지 않음.
 %%
-\ProvidesPackage{memhangul-common}[2014/06/12]
+\ProvidesPackage{memhangul-common}[2015/08/07]
 
 \let\@CHAPAPP\@chapapp
 \def\refreshprepostchapters{%
@@ -522,7 +522,7 @@
 %%% CHAPTERSTYLE
 
 \makechapterstyle{default}{%
-  \renewcommand{\post@chapter}{장}%
+  \renewcommand{\post@chapter}{\chaptername}%
   \renewcommand{\chapnamefont}{\normalfont\huge\bfseries}
   \renewcommand{\chapnumfont}{\normalfont\huge\bfseries}
   \renewcommand{\chaptitlefont}{\normalfont\Huge\bfseries}
@@ -1139,3 +1139,5 @@
 \ExplSyntaxOff
 
 \endinput
+
+%%% 2015/08/07: default chapter style, postchapternum (hoze & gromov)

@@ -1,3 +1,10 @@
+2015-08-07  Kangsoo Kim  <karnes at ktug org>
+
+	Version 2.1.4a
+
+	* memhangul-common.sty
+	fix default chapter style, postchapternum (hoze & gromov).
+
 2015-08-01  Kangsoo Kim  <karnes at ktug org>
 
 	Version 2.1.4
