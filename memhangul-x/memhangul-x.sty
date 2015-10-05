@@ -1,6 +1,6 @@
 %% File `memhangul-x.sty`
 %%
-%% (C) Copyright 2006-2013 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2015 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,8 +14,8 @@
 %%    part of oblivoir v2
 %%
 \NeedsTeXFormat{LaTeX2e}
-\def\filedate{2015/07/27}
-\def\fileversion{11.9}
+\def\filedate{2015/10/05}
+\def\fileversion{11.10}
 \ProvidesPackage{memhangul-x}[\filedate Hangul Typography for (x)oblivoir]
 %\typeout{Hangul Typography for (x)oblivoir}
 
@@ -124,13 +124,23 @@
 \if@polyglos
   \RequirePackage{polyglossia}
   \RequirePackage{xparse}
-  \NewDocumentCommand\sethangulfont{mo}{%
-    \IfValueTF{#2}{%
-      \newfontfamily\hangulfont{#1}[#2]%
-    }{%
-      \newfontfamily\hangulfont{#1}%
+%%% \sethangulfont{FONTNAME} or \sethangulfont[tt]{FONTNAME}[FEATURES]
+  \NewDocumentCommand\sethangulfont{omo}{%
+    \IfValueTF{#1}{%
+      \IfValueTF{#3}{%
+      	\expandafter\newfontfamily\csname hangulfont#1\endcsname
+		{#2}[#3]}{%
+		\expandafter\newfontfamily\csname hangulfont#1\endcsname
+		{#2}}%
+	}%
+	{%
+      \IfValueTF{#3}{%
+      	\newfontfamily\hangulfont{#2}[#3]%
+    	}{%
+	    \newfontfamily\hangulfont{#2}%
+    	}%
+  	}%
     }
-  }
 \else
 \ifluatex
   \RequirePackage{luatexko}
@@ -358,6 +368,7 @@
 \endinput
 
 % CHANGE LOG
+% 2015/10/05 : change \sethangulfont command for polyglossia
 % 2014/04/29 : fix a bug reported by Progress
 % 2013/10/22 : introduce memhangul-common.sty
 % 2013/10/16 : \kscntformat and [kosection] bug fix.
