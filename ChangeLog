@@ -1,3 +1,14 @@
+2015-10-05  Kangsoo Kim  <karnes at ktug org>
+
+	Version 2.1.5
+
+	* oblivor-base.cls: version 0.8
+	enhance dhucs-eumerate compatibility.
+	* ob-koreanappendix.sty
+	improve Korean appendix typesetting.
+	* memhangul-x.sty: version 11.10
+	change \sethangulfont command for polyglossia.
+
 2015-08-07  Kangsoo Kim  <karnes at ktug org>
 
 	Version 2.1.4a
@@ -11,7 +22,7 @@
 
 	* oblivoir-base.sty: versin 0.7
 	etex.sty dropped.
-	* oblivoir-: version 0.8.2a
+	* oblivoir-xlua.cls: version 0.8.2a
 	etex.sty dropped.
 
 2015-07-27  Kangsoo Kim  <karnes at ktug org>
