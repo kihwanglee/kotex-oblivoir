@@ -1,6 +1,6 @@
 %% File `ob-koreanappendix.sty`
 %%
-%% Copyright (c) 2007-2013 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2007-2015 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,8 +14,12 @@
 %% \appendix (부록)
 %%
 \gdef\set@appendix@chapter{%
-  \ifanappendix\counterwithout{APPsection}{APPchapter}\fi%
   \renewcommand\thesection{\Alph{APPsection}}%
+  \renewcommand\thesubsection{\thesection.\arabic{APPsubsection}}
+  \ifanappendix
+    \counterwithout{APPsection}{APPchapter}
+    \counterwithin{APPsubsection}{APPsection}
+  \fi%
   \counterwithin{figure}{APPsection}\counterwithin{table}{APPsection}%
   \counterwithin{equation}{APPsection}%
   \renewcommand\thefigure{\Alph{APPsection}.\arabic{figure}}%
