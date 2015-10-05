@@ -11,7 +11,7 @@
 %% version 2006/05/20 or later.
 %%
 \ProvidesClass{oblivoir-base}
-  [2015/08/01 v0.7 article-like class to typeset UTF-8 korean using memoir.]
+  [2015/08/24 v0.8 article-like class to typeset UTF-8 korean using memoir.]
 %\typeout{oblivoir requires memoir, dhucs, and memhangul. 2008/10/23.}
 
 %%% Acknowledgements:
@@ -466,35 +466,60 @@
 
 %%% modified from dhucs-enumerate.sty
 \ifnokorean\else
-\g@addto@macro\@enhook{%
-  \ifx^^ea\@entemp  % 가,  
-    \let\@memtempa\@dhucs@enumerate\else %%%%%
+\def\@enloop@{%
+  \ifx A\@entemp         \def\@memtempa{\@enLabel\Alph  }\else
+  \ifx a\@entemp         \def\@memtempa{\@enLabel\alph  }\else
+  \ifx i\@entemp         \def\@memtempa{\@enLabel\roman }\else
+  \ifx I\@entemp         \def\@memtempa{\@enLabel\Roman }\else
+  \ifx 1\@entemp         \def\@memtempa{\@enLabel\arabic}\else
+  \ifx \@sptoken\@entemp \let\@memtempa\@enSpace         \else
+  \ifx \bgroup\@entemp   \let\@memtempa\@enGroup         \else
+  \ifx \@enum@\@entemp   \let\@memtempa\@gobble          \else
+  \ifx^^ea\@entemp  % 가,
+    \let\@memtempa\@dhucs@enumerate@EA\else %%%%%
   \ifx^^e2\@entemp  % ①, ⑴, ⒜, ⓐ, ⅰ, Ⅰ
-    \let\@memtempa\@dhucs@enumerate\else %%%%%
+    \let\@memtempa\@dhucs@enumerate@Eii\else %%%%%
   \ifx^^e3\@entemp  % ㄱ, ㉠, ㉮, ㈀, ㈎
-    \let\@memtempa\@dhucs@enumerate
-  \fi\fi\fi}
-\def\@dhucs@enumerate#1#2#3{%
-  \bgroup\let\unihangulchar\@firstofone
-    \xdef\@dhucs@enum@temp{#1#2#3}\egroup
-  \ifnum\@dhucs@enum@temp=44032 \def\@tempa{\@enLabel\gana}\else
-  \ifnum\@dhucs@enum@temp=8560  \def\@tempa{\@enLabel\hroman}\else
-  \ifnum\@dhucs@enum@temp=8544  \def\@tempa{\@enLabel\hRoman}\else
-  \ifnum\@dhucs@enum@temp=9372  \def\@tempa{\@enLabel\peng}\else
-  \ifnum\@dhucs@enum@temp=9424  \def\@tempa{\@enLabel\oeng}\else
-  \ifnum\@dhucs@enum@temp=9332  \def\@tempa{\@enLabel\pnum}\else
-  \ifnum\@dhucs@enum@temp=9312  \def\@tempa{\@enLabel\onum}\else
-  \ifnum\@dhucs@enum@temp=12814 \def\@tempa{\@enLabel\pgana}\else
-  \ifnum\@dhucs@enum@temp=12910 \def\@tempa{\@enLabel\ogana}\else
-  \ifnum\@dhucs@enum@temp=12896 \def\@tempa{\@enLabel\ojaso}\else
-  \ifnum\@dhucs@enum@temp=12593 \def\@tempa{\@enLabel\jaso}\else
-  \ifnum\@dhucs@enum@temp=12800 \def\@tempa{\@enLabel\pjaso}\else
-    \PackageError{dhucs-enumerate}
-      {You can't use `\unexpanded{#1#2#3}' as enum label}
-      {Legal enum labels of hangul-ucs are: \MessageBreak\space\space
-        \unexpanded{가, ㄱ, ㉠, ㉮, ㈀, ㈎, ①, ⑴, ⒜, ⓐ, ⅰ, Ⅰ}.}
-  \fi\fi\fi\fi\fi \fi\fi\fi\fi\fi \fi\fi
-  \@tempa\relax}
+    \let\@memtempa\@dhucs@enumerate@Eiii\else
+                         \let\@memtempa\@enOther
+                         \@enhook
+  \fi\fi\fi\fi\fi\fi\fi\fi\fi\fi\fi
+  \@memtempa}
+
+\def\@dhucs@enumerate@error#1{%
+  \PackageError{dhucs-enumerate}
+    {You can't use `\unexpanded{#1}' as enum label}
+    {Legal enum labels of hangul-ucs are: \MessageBreak\space\space
+      \unexpanded{가, ㄱ, ㉠, ㉮, ㈀, ㈎, ①, ⑴, ⒜, ⓐ, ⅰ, Ⅰ}.}%
+}
+\def\@dhucs@enumerate@EA#1#2#3{%
+  \ifnum\pdfstrcmp{#1#2#3}{^^ea^^b0^^80}=\z@ \def\@tempa{\@enLabel\gana}\else
+    \@dhucs@enumerate@error{#1#2#3}%
+  \fi
+  \@tempa\relax
+}
+\def\@dhucs@enumerate@Eii#1#2#3{%
+  \ifnum\pdfstrcmp{#1#2#3}{^^e2^^85^^b0}=\z@ \def\@tempa{\@enLabel\hroman}\else
+  \ifnum\pdfstrcmp{#1#2#3}{^^e2^^85^^a0}=\z@ \def\@tempa{\@enLabel\hRoman}\else
+  \ifnum\pdfstrcmp{#1#2#3}{^^e2^^92^^9c}=\z@ \def\@tempa{\@enLabel\peng}\else
+  \ifnum\pdfstrcmp{#1#2#3}{^^e2^^93^^90}=\z@ \def\@tempa{\@enLabel\oeng}\else
+  \ifnum\pdfstrcmp{#1#2#3}{^^e2^^91^^b4}=\z@ \def\@tempa{\@enLabel\pnum}\else
+  \ifnum\pdfstrcmp{#1#2#3}{^^e2^^91^^a0}=\z@ \def\@tempa{\@enLabel\onum}\else
+    \@dhucs@enumerate@error{#1#2#3}%
+  \fi\fi\fi\fi\fi\fi
+  \@tempa\relax
+}
+\def\@dhucs@enumerate@Eiii#1#2#3{%
+  \ifnum\pdfstrcmp{#1#2#3}{^^e3^^88^^8e}=\z@ \def\@tempa{\@enLabel\pgana}\else
+  \ifnum\pdfstrcmp{#1#2#3}{^^e3^^89^^ae}=\z@ \def\@tempa{\@enLabel\ogana}\else
+  \ifnum\pdfstrcmp{#1#2#3}{^^e3^^89^^a0}=\z@ \def\@tempa{\@enLabel\ojaso}\else
+  \ifnum\pdfstrcmp{#1#2#3}{^^e3^^84^^b1}=\z@ \def\@tempa{\@enLabel\jaso}\else
+  \ifnum\pdfstrcmp{#1#2#3}{^^e3^^88^^80}=\z@ \def\@tempa{\@enLabel\pjaso}\else
+    \@dhucs@enumerate@error{#1#2#3}%
+  \fi\fi\fi\fi\fi
+  \@tempa\relax
+}
+
 \fi
 
 %%% subsection까지 항번을 붙이고 toc에 두자.
@@ -525,6 +550,7 @@
 \endinput
 
 %%% ChangeLog:
+%%%          2015/08/24 : dhuce-enumerate compatibility.
 %%%          2015/08/01 : etex.sty dropped
 %%% ver0.6   2014/06/12 : introduce new xob-font.sty
 %%% ver0.5   2014/06/06 : replace \renewcommand's with \setlength's.
