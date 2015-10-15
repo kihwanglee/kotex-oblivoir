@@ -1,3 +1,10 @@
+2015-10-15  Kangsoo Kim  <karnes at ktug org>
+
+	Version 2.1.6
+
+	* memhangul-common.sty
+	\@part, \@chapter renewal.
+
 2015-10-05  Kangsoo Kim  <karnes at ktug org>
 
 	Version 2.1.5

@@ -17,7 +17,7 @@
 %%% 편, 장 섹션 타이틀 재설정
 %%% 절의 섹션 타이틀은 수정하지 않음.
 %%
-\ProvidesPackage{memhangul-common}[2015/08/07]
+\ProvidesPackage{memhangul-common}[2015/10/15]
 
 \let\@CHAPAPP\@chapapp
 \def\refreshprepostchapters{%
@@ -69,6 +69,10 @@
 \long\def\@part[#1]#2{%
 %  \ifx#1\@empty\PrerenderUnicode{#2}\else\PrerenderUnicode{#1}\fi
   \M@gettitle{#1}%
+  \def\f@rtoc{#1}%
+  \@nameuse{part@f@rtoc@before@write@hook}%
+  \phantomsection
+  \mempreaddparttotochook
   \ifnum \c@secnumdepth >-2\relax
     \refstepcounter{part}%
     \addcontentsline{toc}{part}%
@@ -79,6 +83,7 @@
     \addcontentsline{toc}{part}{#1}%
     \mempartinfo{}{#1}{#2}%
   \fi
+  \mempostaddparttotochook
   \partmark{#1}%
   {\centering
    \interlinepenalty \@M
@@ -92,26 +97,26 @@
    \printparttitle{#2}\par}%
   \@endpart}
 
-
 \def\@spart#1{%
   \M@gettitle{#1}%
+  \phantomsection
   {\centering
    \interlinepenalty \@M
    \normalfont
    \printparttitle{#1}\par}%
   \@endpart}
 
-\def\@endpart{\afterpartskip
-  \if@twoside
-    \if@openright
-      \null
-      \thispagestyle{empty}%
-      \newpage
-    \fi
-  \fi
-  \if@tempswa
-    \twocolumn
-  \fi} 
+%\def\@endpart{\afterpartskip
+%  \if@twoside
+%    \if@openright
+%      \null
+%      \thispagestyle{empty}%
+%      \newpage
+%    \fi
+%  \fi
+%  \if@tempswa
+%    \twocolumn
+%  \fi} 
 
 %% CHAPTER
 %%%%%%%%%%%
@@ -202,6 +207,9 @@
 %% \chapter[toc]{hdr/title}
 %% \chapter{toc/hdr/title}
 \def\@chapter[#1]#2{%
+  \m@mpn@new@chaptrue%
+  \m@mpn@new@schapfalse%
+  \def\f@rbdy{#2}%
 %  \ifx\ch@pt@c\@empty % no optional args
 %    \def\f@rtoc{#2}%
 %    \def\f@rhdr{#2}%
@@ -279,11 +287,13 @@
       \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
     \fi
   \fi
+  \mempostaddchaptertotochook%
   \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
 %%% for chapter
   \ifanappendix
      \protected@edef\@currentlabel{\thechapter}%
   \fi
+  \memendofchapterhook%
 }
 
 \def\@makechapterhead#1{%
@@ -1140,4 +1150,5 @@
 
 \endinput
 
+%%% 2015/10/15: \@part, \@chapter renewal.
 %%% 2015/08/07: default chapter style, postchapternum (hoze & gromov)
