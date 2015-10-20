@@ -11,7 +11,7 @@
 %% version 2006/05/20 or later.
 %%
 \ProvidesClass{oblivoir-base}
-  [2015/08/24 v0.8 article-like class to typeset UTF-8 korean using memoir.]
+  [2015/10/19 v0.8.1 article-like class to typeset UTF-8 korean using memoir.]
 %\typeout{oblivoir requires memoir, dhucs, and memhangul. 2008/10/23.}
 
 %%% Acknowledgements:
@@ -134,6 +134,9 @@
 %  \else\errmessage{No room for a new #2}\fi\fi
 % }
 %\fi
+
+%% expl3
+\RequirePackage{xparse,expl3}
 
 %%% moreverb : 2008/10/23
 \if@moreverb
@@ -547,9 +550,16 @@
 }
 \fi
 
+%%% to avoid conflicts with etextools
+\ExplSyntaxOn
+\cs_if_exist:NF \globcount
+{ \let\globcount\newcount }
+\ExplSyntaxOff
+
 \endinput
 
 %%% ChangeLog:
+%%%          2015/10/19 : fix conflicts with etextools package.
 %%%          2015/08/24 : dhuce-enumerate compatibility.
 %%%          2015/08/01 : etex.sty dropped
 %%% ver0.6   2014/06/12 : introduce new xob-font.sty

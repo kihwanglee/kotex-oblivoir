@@ -14,7 +14,7 @@
 %% depends upon Dohyun Kim's xetexko and the author's memhangul-x.
 %%
 \ProvidesClass{oblivoir-xlua}
-  [2015/07/27 v0.8.2 article-like class to typeset UTF-8 korean using memoir.]
+  [2015/10/19 v0.8.3 article-like class to typeset UTF-8 korean using memoir.]
 \typeout{A variant of oblivoir class for Lua- or XeLaTeX.}
 
 \providecommand\@DisabledOption[1]{%
@@ -104,6 +104,9 @@
 }
 %
 \ProcessOptionsX
+
+% expl3
+\RequirePackage{expl3,xparse}
 
 %%% moreverb
 \if@moreverb
@@ -455,9 +458,16 @@
 }
 \fi
 
+%%% to avoid conflicts with etextools
+\ExplSyntaxOn
+\cs_if_exist:NF \globcount
+{ \let\globcount\newcount }
+\ExplSyntaxOff
+
 \endinput
 
 %%% ChangeLog:
+%%% 2015-10-19 : fix conflicts with etextools package.
 %%%% 2015-08-01 : drop etex.sty 
 %%% 2015-07-27 : fix nokorean bug 
 %%% 2015-07-10 : etex-pkg conflicts fixed.

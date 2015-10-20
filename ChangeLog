@@ -1,3 +1,12 @@
+2015-10-19  Kangsoo Kim  <karnes at ktug org>
+
+	Version 2.1.7
+
+	* oblivor-base.cls: version 0.8.1
+	fix conflicts with etextools package.
+	* oblivor-xlua.cls: version 0.8.3
+	fix conflicts with etextools package.
+
 2015-10-15  Kangsoo Kim  <karnes at ktug org>
 
 	Version 2.1.6
