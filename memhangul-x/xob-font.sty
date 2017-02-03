@@ -1,6 +1,7 @@
 %% xob-font.sty
 %%
 %% Copyright (c) 2014 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2017 Kihwang Lee <leekh at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,7 +15,7 @@
 %%  oblivoir hangul/hanja font setting.
 %%  part of oblivoir
 %%
-\ProvidesPackage{xob-font}[2014/06/24 v0.6 select hangul/hanja fonts for oblivoir]
+\ProvidesPackage{xob-font}[2017/02/03 v0.7 select hangul/hanja fonts for oblivoir]
 
 %%% obsolete options: retain \if@.. conditions for backward compatibility
 \newif\if@nowin\@nowinfalse
@@ -50,7 +51,7 @@
 
 \ExplSyntaxOn
 
-\xetex_if_engine:T
+\sys_if_engine_xetex:T
 {
 	\RequirePackage{xetexko-space}
 	\RequirePackage{xetexko-font}
@@ -153,7 +154,7 @@
 	}
 	\setmainhanjafont [ \_font_feature_str, \_additional_feature_str ] { \_regu_font_name }
 	
-	\luatex_if_engine:T
+	\sys_if_engine_luatex:T
 	{
 		\tl_if_exist:NT \hanjabyhanjafont
 		{
@@ -343,7 +344,7 @@
 		}
 	}
 	
-	\luatex_if_engine:T
+	\sys_if_engine_luatex:T
 	{
 		\tl_if_exist:NT \hanjabyhanjafont
 		{
@@ -671,6 +672,7 @@
 
 %%% end of file `xob-font.sty`
 %% CHANGES
+%% v0.7 : Use \sys_if_engine_xetex and \sys_if_engine_luatex instead of xetex_if_engine and luatex_if_engine to be compatible with latest l3kernel.
 %% v0.6 : HCR auto insert Script=Hangul, HAN disabled
 %% v0.5 : [nanum] sets Bold, [nanumx] sets ExtraBold for NanumMyeongjo
 %% v0.4 : hangul_bold_exist && hanja_bold_no_exist bug fixed.
