@@ -1,6 +1,6 @@
-%% File `oblivoir-xlua.cls`
+%% File `oblivoir-xl.cls`
 %%
-%% (C) Copyright 2006-2015 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2020 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -13,14 +13,16 @@
 %% an oblivoir-compatible package for using with LuaLaTeX or XeLaTeX.
 %% depends upon Dohyun Kim's xetexko and the author's memhangul-x.
 %%
-\ProvidesClass{oblivoir-xlua}
-  [2015/10/19 v0.8.3 article-like class to typeset UTF-8 korean using memoir.]
-\typeout{A variant of oblivoir class for Lua- or XeLaTeX.}
+\ProvidesClass{oblivoir-xl}
+  [2020/02/05 v0.8.4 article-like class to typeset Korean]
+%\typeout{A variant of oblivoir class for Lua- or XeLaTeX.}
 
 \providecommand\@DisabledOption[1]{%
   \typeout{[#1] option is deprecated}}
 
-\RequirePackage{xkeyval}
+%\RequirePackage{xkeyval}
+%% expl3 and xparse
+%\RequirePackage{xparse}
 
 %%% Disabled Options
 \DeclareOptionX{dvips}{\@DisabledOption{\CurrentOption}}
@@ -60,9 +62,10 @@
 \DeclareOptionX{microtype}{\@microtypetrue}
 \newif\if@subfigure\@subfigurefalse
 \DeclareOptionX{subfigure}{\@subfiguretrue}
-\DeclareOptionX{adjustmath}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
 \newif\if@manspace\@manspacefalse
 \DeclareOptionX{obspace}{\@manspacetrue}
+\DeclareOptionX{adjustmath}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}} %%% disabled 2020
+\DeclareOptionX{mathdisp}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
 %
 %%% new Options
 \DeclareOptionX{latinquote}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
@@ -78,9 +81,25 @@
 \DeclareOptionX{nowinname}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
 %
 \newif\ifPRELOAD\PRELOADfalse
-\DeclareOptionX{preload}[]{\PRELOADtrue\def\PRELOADstr{#1}}
-\def\PRELOADoptstr{}
-\DeclareOptionX{preloadoption}[]{\def\PRELOADoptstr{#1}}
+\DeclareOptionX{preload}[]{\PRELOADtrue\gdef\PRELOADstr{#1}}
+
+\ExplSyntaxOn
+\tl_new:N \g_preload_option_str 
+\DeclareOptionX{preloadoption}[]{
+	\tl_gset:Nn \g_preload_option_str { #1 }
+}
+\ExplSyntaxOff
+
+\newif\if@lwarp\@lwarpfalse
+\DeclareOptionX{lwarp}{\@lwarptrue}{\@lwarpfalse}
+\ExplSyntaxOn
+\tl_new:N \g_lwarp_option_str
+\DeclareOptionX{lwarpoption}[]{%
+	\tl_gset:Nn \g_lwarp_option_str { #1 }
+}
+\ExplSyntaxOff
+\def\LWARPlan{en-US}
+\DeclareOptionX{lwarplanguage}[]{\gdef\LWARPlan{#1}}
 
 %% [nounfonts] 
 \DeclareOptionX{unfonts}{\PassOptionsToPackage{\CurrentOption}{memhangul-x}}
@@ -105,9 +124,6 @@
 %
 \ProcessOptionsX
 
-% expl3
-\RequirePackage{expl3,xparse}
-
 %%% moreverb
 \if@moreverb
  \RequirePackage{moreverb}
@@ -115,14 +131,16 @@
 
 %%% preload
 \ifPRELOAD
- \RequirePackage[\PRELOADoptstr]{\PRELOADstr}
- \ifx\medspace\undefined\relax\else\let\medspace\relax\fi
+\ExplSyntaxOn
+	\RequirePackage[\g_preload_option_str]{\PRELOADstr}
+\ExplSyntaxOff
+\ifx\medspace\undefined\relax\else\let\medspace\relax\fi
 \fi
 
 %% LyX compatibility
-\ifx\@textsubscript\undefined\else
-  \let\@textsubscript\relax
-\fi
+%\ifx\@textsubscript\undefined\else
+%  \let\@textsubscript\relax
+%\fi
 
 %%% memoir/memhangul-ucs 로드.
 \if@chapter
@@ -144,11 +162,6 @@
  \fa@dblfoursix
 \fi
 
-%%% ams{math|symb}
-\if@amsmath
- \RequirePackage{amsmath,xob-amssymb}
-\fi
-
 %%%
 \ifopenrightdoc\openright\fi
 
@@ -161,6 +174,24 @@
 %\ifxetex\else\ifluatex\else
 %  \PackageError{xoblivoir}{This Document requires Xe(La)TeX or Lua(La)TeX!}{}
 %\fi\fi
+
+%%% lwarp
+\ExplSyntaxOn
+
+\if@lwarp
+	\ifluatex
+		\RequirePackage{luatexko}
+	\fi
+	\RequirePackage[\g_lwarp_option_str]{lwarp}
+	\RequirePackage{xob-lwarp}
+\fi
+
+\ExplSyntaxOff
+
+%%% ams{math|symb}
+\if@amsmath
+ \RequirePackage{amsmath,xob-amssymb}
+\fi
 
 \def\@Load@Memhangul{%
   \if@polyglossia
@@ -463,6 +494,9 @@
 \cs_if_exist:NF \globcount
 { \let\globcount\newcount }
 \ExplSyntaxOff
+
+%%% for LaTeX programmers
+\let\ifLwarp\if@lwarp
 
 \endinput
 

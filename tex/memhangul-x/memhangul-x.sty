@@ -1,6 +1,6 @@
 %% File `memhangul-x.sty`
 %%
-%% (C) Copyright 2006-2015 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2020 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,8 +14,8 @@
 %%    part of oblivoir v2
 %%
 \NeedsTeXFormat{LaTeX2e}
-\def\filedate{2015/10/05}
-\def\fileversion{11.10}
+\def\filedate{2020/02/05}
+\def\fileversion{11.11}
 \ProvidesPackage{memhangul-x}[\filedate Hangul Typography for (x)oblivoir]
 %\typeout{Hangul Typography for (x)oblivoir}
 
@@ -37,6 +37,7 @@
 %\newif\if@dvips{\@dvipsfalse}
 \DeclareOption{dvips}{\DisabledOption{dvips}}
 \DeclareOption{strictcharcheck}{\DisabledOption{strictcharcheck}}
+\DeclareOption{adjustmath}{\DisabledOption{adjustmath}}
 
 %%%% active options
 \newif\if@hsspace\@hsspacetrue
@@ -55,8 +56,8 @@
 \DeclareOption{nonfrench}{\@nonfrenchtrue}
 \newif\if@hanja\@hanjafalse
 \DeclareOption{hanja}{\@hanjatrue}
-\newif\if@mathdisp\@mathdispfalse
-\DeclareOption{adjustmath}{\@mathdisptrue}
+\newif\if@mathdisp\@mathdisptrue
+\DeclareOption{mathdisp}{\@mathdispfalse}
 
 \newif\if@arabicfrontmatter{\@arabicfrontmatterfalse}
 \DeclareOption{arabicfront}{\@arabicfrontmattertrue}
@@ -80,6 +81,7 @@
 \DeclareOption{nounfonts}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
 \DeclareOption{nanum}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
 \DeclareOption{hcr}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
+\DeclareOption{noto}{\PassOptionsToPackage{\CurrentOption}{xetexko-var}}
 \else\ifluatex
 %%% luatexko options
 \DeclareOption{gremph}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
@@ -93,6 +95,7 @@
 \DeclareOption{nounfonts}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
 \DeclareOption{nanum}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
 \DeclareOption{hcr}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
+\DeclareOption{noto}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
 \else
 %%% pdftex options
 \ifPDFTeX
@@ -106,6 +109,7 @@
 \DeclareOption{nounfonts}{\DisabledOption{nounfonts}}
 \DeclareOption{nanum}{\DisabledOption{nanum}}
 \DeclareOption{hcr}{\DisabledOption{hcr}}
+\DeclareOption{noto}{\DisableOption{noto}}
 \fi
 \fi\fi
 
@@ -143,7 +147,7 @@
     }
 \else
 \ifluatex
-  \RequirePackage{luatexko}
+  \@ifpackageloaded{luatexko}{}{\RequirePackage{luatexko}}
   \RequirePackage{xob-font}
   \RequirePackage{xob-dotemph}
 \else\ifxetex
@@ -339,7 +343,7 @@
   \if@hsspacenoquote\else\adjustquotespacing\fi
 \else
   \RequirePackage{memucs-setspace}
-  \linespread{1.333}
+  \linespread{1.33}
 \fi
 %\SetHangulspace{1.333}{1.1}
 

@@ -1,6 +1,6 @@
 %% xetexko-var.sty
 %%
-%% Copyright (c) 2007-2014 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2007-2020 Kangsoo Kim <karnes at ktug org>
 %% Copyright (c) 2013      Kihwang Lee <leekh at ktug org>
 %%
 %% This work may be distributed and/or modified under the
@@ -17,7 +17,7 @@
 %% 2013.08.26
 %%
 \ProvidesPackage{xetexko-var}
-   [2014/06/12 v0.13 Korean Typesetting under XeTeX]
+   [2020/02/05 v0.14 Korean Typesetting under XeTeX]
 
 %%% common options for xob-font
 \DeclareOption{gremph}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
@@ -35,8 +35,8 @@
 \DeclareOption{manualfontspec}{\@extfontspectrue}
 
 %%% unfonts
-\DeclareOption{unfonts}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
-\DeclareOption{nounfonts}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
+%\DeclareOption{unfonts}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
+%\DeclareOption{nounfonts}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
 \DeclareOption{nanum}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
 \DeclareOption{hcr}{\PassOptionsToPackage{\CurrentOption}{xob-font}}
 \ProcessOptions\relax
@@ -44,7 +44,9 @@
 %%% xetexko sub-styles
 \RequirePackage{xetexko-space}
 \RequirePackage{xetexko-josa}
+\if@lwarp\else
 \RequirePackage{xetexko-vertical}
+\fi
 
 %%% xoblivoir sub-styles
 \RequirePackage{xob-dotemph}
@@ -54,7 +56,7 @@
   \PackageWarning{xetexko-var}{Load xetexko-font and configure Korean Fonts manually!}{}
 \else
 %%% We will never use xetexko/luatexko's unfonts option.
-  \newif\if@unfonts\@unfontsfalse
+%  \newif\if@unfonts\@unfontsfalse
   \RequirePackage{xob-font}
 \fi
 

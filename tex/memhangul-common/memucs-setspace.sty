@@ -58,8 +58,8 @@
 
 % BP: add nodisplayskipstretch option and \setdisplayskipstretch command.
 
-\newcommand{\displayskipstretch}{\baselinestretch}
-\newcommand{\setdisplayskipstretch}[1]{\renewcommand{\displayskipstretch}{#1}}
+\providecommand{\displayskipstretch}{\baselinestretch}
+\providecommand{\setdisplayskipstretch}[1]{\renewcommand{\displayskipstretch}{#1}}
 \DeclareOption{nodisplayskipstretch}{\setdisplayskipstretch{1.0}}
 
 % GT: add George Pearsons' suggested options.
@@ -100,28 +100,28 @@
 	\fi
 }
 
-\newcommand\noadjustquotespacing{%
+\providecommand\noadjustquotespacing{%
 	\@singlespacequotefalse
 }
 
-\newcommand\adjustquotespacing{%
+\providecommand\adjustquotespacing{%
 	\@singlespacequotetrue
 }
 
-\newcommand\adjustfloatfnspacing{%
+\providecommand\adjustfloatfnspacing{%
 	\@singlespacefntrue
 }
 
-\newcommand\noadjustfloatfnspacing{%
+\providecommand\noadjustfloatfnspacing{%
 	\@singlespacefnfalse
 }
 
-% GT:  Sat 28 Sep 1996:  Widely using \newcommand, \renewcommand, and
-% \newenvironment, instead of \def.
+% GT:  Sat 28 Sep 1996:  Widely using \providecommand, \renewcommand, and
+% \provideenvironment, instead of \def.
 
 % ** Line space commands.
 
-\newcommand{\setstretch}[1]{%
+\providecommand{\setstretch}[1]{%
   \def\baselinestretch{#1}%
   \@currsize
 }
@@ -142,12 +142,12 @@
 % float environments.  The one and a half, double, and arbitrary
 % spacing commands are unaltered.
 
-\newcommand{\SetSinglespace}[1]{%
+\providecommand{\SetSinglespace}[1]{%
   \def\setspace@singlespace{#1}%
 }
 
 %% Karnes.
-\newcommand{\Set@Hangulspace}[2]{%
+\providecommand{\Set@Hangulspace}[2]{%
 	\def\setspace@hangulspace{#1}%
 	\def\setspace@hangulfspace{#2}%
 	\setstretch{#1}%
@@ -161,20 +161,20 @@
 	\setstretch{#1}%
 }
 
-\newcommand{\SetHangulVerbatimSpace}[1]{%
+\providecommand{\SetHangulVerbatimSpace}[1]{%
 	\def\setspace@hangulverbspace{#1}%
 }
 
 \let\tmp@current@hangulspace\setspace@hangulspace
 \let\tmp@current@hangulfspace\setspace@hangulfspace
 
-\newcommand{\ResetHangulspace}[2]{%
+\providecommand{\ResetHangulspace}[2]{%
 	\let\tmp@current@hangulspace\setspace@hangulspace%
 	\let\tmp@current@hangulfspace\setspace@hangulfspace%
 	\Set@Hangulspace{#1}{#2}%
 }
 
-\newcommand{\RestoreHangulspace}{%
+\providecommand{\RestoreHangulspace}{%
 	\Set@Hangulspace{\tmp@current@hangulspace}{\tmp@current@hangulfspace}%
 }
 
@@ -188,25 +188,25 @@
 \Set@Hangulspace{1.0}{1.0}
 \fi
 
-\newcommand{\singlespacing}{%
+\providecommand{\singlespacing}{%
   \setstretch {\setspace@singlespace}%  normally 1
   \vskip \baselineskip  % Correction for coming into singlespace
 }
 
 %% Karnes.
-\newcommand{\hangulspacing}{%
+\providecommand{\hangulspacing}{%
 	\setstretch{\setspace@hangulspace}% default
 }
 
-\newcommand{\hangulfspacing}{%
+\providecommand{\hangulfspacing}{%
 	\setstretch{\setspace@hangulfspace}%
 }
 
-\newcommand{\hangulverbspacing}{%
+\providecommand{\hangulverbspacing}{%
 	\setstretch{\setspace@hangulverbspace}%
 }
 
-\newcommand{\onehalfspacing}{%
+\providecommand{\onehalfspacing}{%
   \setstretch{1.25}%  default
   \ifcase \@ptsize \relax % 10pt
     \setstretch {1.25}%
@@ -217,7 +217,7 @@
   \fi
 }
 
-\newcommand{\doublespacing}{%
+\providecommand{\doublespacing}{%
   \setstretch {1.667}%  default
   \ifcase \@ptsize \relax % 10pt
     \setstretch {1.667}%
@@ -376,7 +376,7 @@
 
 % A single spaced quote (say) is done by surrounding singlespace with quote.
 
-\newenvironment{singlespace}{%
+\provideenvironment{singlespace}{%
   \vskip \baselineskip
   \setstretch {\setspace@singlespace}%
   \vskip -\baselineskip
@@ -386,7 +386,7 @@
 
 % GT (c/o Mark Olesen), Wed 15 April 1998.
 
-\newenvironment{singlespace*}{%
+\provideenvironment{singlespace*}{%
   \setstretch {\setspace@singlespace}%
   \vskip -\baselineskip
 }{%
@@ -399,11 +399,11 @@
 %
 % Next two definitions fixed for consistency with TeX 3.x
 
-% In order to use \newenvironment, while easily using same code for
+% In order to use \provideenvironment, while easily using same code for
 % end of each environment, the code that used to be in \endspacing has
 % been moved into a new (but internal) macro, \restore@spacing.
 
-\newcommand{\restore@spacing}{%
+\providecommand{\restore@spacing}{%
     \par
     \vskip \parskip
     \vskip \baselineskip
@@ -412,7 +412,7 @@
   \vskip -\baselineskip
 }
 
-\newenvironment{spacing}[1]{%
+\provideenvironment{spacing}[1]{%
   \par
   \begingroup             % moved from \endspacing by PGBR 29-1-91
     \setstretch {#1}%
@@ -421,7 +421,7 @@
 }
 
 % one and a half spacing is 1.5 x pt size
-\newenvironment{onehalfspace}{%
+\provideenvironment{onehalfspace}{%
   \begingroup
     \onehalfspacing
 }{%
@@ -429,7 +429,7 @@
 }
 
 % double spacing is 2 x pt size
-\newenvironment{doublespace}{%
+\provideenvironment{doublespace}{%
   \begingroup
     \doublespacing
 }{%
@@ -533,8 +533,8 @@
   \wrapright\the\afterevery@verbatim}
 
 %% Karnes : epigraph
-\newcommand\epigraphspacinghook{\setstretch{1.0}}
-\newcommand\epigraphspacing[1]{%
+\providecommand\epigraphspacinghook{\setstretch{1.0}}
+\providecommand\epigraphspacing[1]{%
 	\renewcommand\epigraphspacinghook{\setstretch{#1}}%
 }
 

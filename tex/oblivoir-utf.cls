@@ -1,4 +1,4 @@
-%% File `oblivoir.cls`
+%% File `oblivoir-utf.cls`
 %%
 %% (C) Copyright 2006-2015 Kangsoo Kim <karnes at ktug org>
 %%
@@ -10,8 +10,8 @@
 %% and version 1.3c or later is part of all distributions of LaTeX
 %% version 2006/05/20 or later.
 %%
-\ProvidesClass{oblivoir-base}
-  [2015/10/19 v0.8.1 article-like class to typeset UTF-8 korean using memoir.]
+\ProvidesClass{oblivoir-utf}
+  [2020/02/10 v0.8.2 article-like class to typeset UTF-8 korean using memoir.]
 %\typeout{oblivoir requires memoir, dhucs, and memhangul. 2008/10/23.}
 
 %%% Acknowledgements:
@@ -96,8 +96,8 @@
 %%% 2013-09-26
 %%% disabled option unfonts/nounfonts, 2014-06-13
 \newif\if@unfont\@unfontfalse
-\DeclareOptionX{unfonts}{\@unfonttrue}
-\DeclareOptionX{nounfonts}{\@unfontfalse}
+%\DeclareOptionX{unfonts}{\@unfonttrue}
+%\DeclareOptionX{nounfonts}{\@unfontfalse}
 \DeclareOptionX{nanum}{\@unfontfalse}
 \DeclareOptionX{uset1font}{\PassOptionsToPackage{\CurrentOption}{nanumfontsel}}
 
@@ -116,7 +116,17 @@
 \DeclareOptionX*{%
  \PassOptionsToClass{\CurrentOption}{memoir}%
 }
+\newif\if@lwarp\@lwarpfalse
+\DeclareOptionX{lwarp}{}
+\DeclareOptionX{lwarpoption}[]{}
+\DeclareOptionX{lwarplanguage}[]{}
+
 \ProcessOptionsX
+
+%%% \ifLwarp compatibility
+\ExplSyntaxOn
+\tl_new:N \g_lwarp_option_str
+\ExplSyntaxOff
 
 %%% moreroom, reported by Juho Lee, 2013-09-26.
 %%% 2015-08-01: LaTeX will do auto-alloc.

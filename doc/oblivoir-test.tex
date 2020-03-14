@@ -1,6 +1,6 @@
 %!TEX encoding = UTF-8 Unicode
 % arara: xelatex
-% arara: komkindex
+% arara: texindy: { language: Korean, codepage: utf8 }
 % arara: xelatex
 %%
 %% 이 파일은 oblivoir 패키지 문서의 일부로서, oblivoir 클래스의 여러 기능을
@@ -8,6 +8,7 @@
 %% pdflatex, xelatex, lualatex으로 컴파일할 수 있습니다. (결과의 완전한 동일성은
 %% 보장하지 못합니다.)
 %% 
+%% 2020/02/05. 
 %% 2015/04/22. memoir url 수정
 %% 2014/06/15. 부분 수정.
 %% 2013/09/28. xoblivoir ver2 버전으로 포팅.
@@ -18,7 +19,7 @@
 %% public domain.
 %%
 
-\documentclass[demo,chapter,openany,amsmath,gremph,adjustmath]{oblivoir}
+\documentclass[demo,chapter,openany,amsmath,gremph,lwarp]{oblivoir}
 %%% amsmath 옵션은 amsmath, amssymb 패키지를 로드해준다..
 
 %% display overfullrule
@@ -35,7 +36,7 @@
 	\setmainfont{TeX Gyre Pagella}
  	\setsansfont[Scale=.95]{TeX Gyre Heros}
 %% \setkomain/sansfont : see oblivoir-simpledoc.
-	\setkomainfont[HCRBatangLVT]()(-Bold)()
+	\setkomainfont(HCRBatangLVT)(*-Bold)(UnGraphic)
 	\setkosansfont[NanumGothic]()[](HCRDotumLVT)
 %% 수학 폰트
 %	\usepackage{unicode-math}
@@ -63,11 +64,16 @@
 
 \usepackage{cite}
 
-\ifPDFTeX
+%\ifPDFTeX
 \usepackage{graphicx}
-\fi
-\usepackage[dvipsnames]{xcolor}
+%\fi
 %% pdf 정보
+\makeatletter
+\if@lwarp
+\usepackage{xcolor}
+\def\epigraph#1#2{#1\quad #2}
+\else
+\usepackage[dvipsnames]{xcolor}
 \hypersetup{%
     bookmarks=true,%
     plainpages=false,%
@@ -75,6 +81,8 @@
     pdfauthor={Karnes Kim},%
     pdfcreator={Karnes Kim}
 }
+\fi
+\makeatother
 
 \nonfrenchspacing
 %% nonfrench를 설정하는 경우에는 \xspaceskip도 정해주자.
@@ -331,6 +339,9 @@
 작성되었다. 이 문서의 원본은 memhangul을 개발하던 당시
 테스트용으로 사용된 바, 가장 먼저 만들어진 oblivoir 문서이다.
 
+현재는 |oblivoir|와 |xoblivoir|가 사실상 동일하다. 그러므로 이 글에서
+|xoblivoir|라 한 것은 모두 |oblivoir|로 바꾸어도 된다.
+
 해당 문단의 여백에 사용되고 있는 명령이 나와 있으므로 참고할 수 있을
 것이다. 실제로 xoblivoir 사용설명서를 작성하기 어려운 것이
 기본적인 것은 모두 memoir에 바탕을 두고 있는 데다가
@@ -343,7 +354,7 @@
 이 문서는 다음 순서로 컴파일할 수 있다. |$ENGINE|은 \util{pdflatex}, \util{xelatex}, \util{lualatex} 가운데 하나이고
 |$JOBNAME|은 파일 이름(\texttt{xobtesttest})이다.
 한편, 색인을 만드는 유틸리티 |$MAKEINDEXENGINE|은 \util{pdflatex} 상황에서는
-\util{komkindex}이고 그밖의 경우에는 \util{kotexindy}이다.
+\util{komkindex}이고 그밖의 경우에는 \util{texindy}이다.
 
 \begin{verbatim}
  #  $ENGINE $JOBNAME
@@ -612,7 +623,7 @@ memoir 패키지의 인덱스 만들기의 특징 때문이다. 처음 한 번�
     기능이 있다.}
 verse, quote와 같은 환경을 조금 바꾸어서 행간을 약간 줄여주는
 기능이 있다. 이 부분에서 \dispcmd{adjustfloatfnspacing}을 불러보겠다.
-\showcommand{adjustfloatfnspacing}
+\showcommand{adjustfloatfnspacing}%
 다음번 각주는 행간이 조금 달라져야 한다.
 \adjustfloatfnspacing
 float 안에 놓인 것과 같아지도록.\footnote{%
@@ -933,16 +944,18 @@ y=e^x \text{라면}, \qquad y'=e^x
 이다.
 
 또, $y=\log x$의 도함수를 구해본다.
-\begin{displaymath}
-\begin{split}
+%\begin{displaymath}
+%\[
+\begin{align*}
 y' &= \lim_{h\to0}\frac{\log(x+h)-\log x}{h} \\
    &= \lim_{h\to0}\frac{1}{h}\log\left(1+ \frac{h}{x}\right) \\
    &= \frac{1}{x}\lim_{h\to0}\frac{x}{h}\log\left(1+\frac{h}{x}\right) \\
    &= \frac{1}{x}\lim_{\frac{h}{x}\to0}\log\left(1+\frac{h}{x}\right)^{\frac{x}{h}} \\
    &= \frac{1}{x}\log e \\
    &= \frac{1}{x}.
-\end{split}
-\end{displaymath}
+\end{align*}
+%\]
+%\end{displaymath}
 
 따라서, 
 \[
@@ -1081,15 +1094,15 @@ $G'(x) \ge 0$. 따라서 $G(x) \ge 0$임을 말할 수 있다. 그러므로
 \begin{figure}
 \centering
 \begin{minipage}{.75\textwidth}
-\begin{tabbing}
-1111\=11111111111111111111\= \kill
-(1) \> 대상기호(상수) \> $ c_{1}, c_{2}, c_{3}, c_{4}, \ldots $ \\
-(2) \> 함수기호 \> $ f_{1}, f_{2}, f_{3}, f_{4}, \ldots $ \\
-(3) \> 술어기호 \> $ P_{1}, P_{2}, P_{3}, P_{4}, \ldots $ \\
-(4) \> 자유변수 \> $ a_{1}, a_{2}, a_{3}, a_{4}, \ldots $ \\
-(5) \> 속박변수 \> $ x_{1}, x_{2}, x_{3}, x_{4}, \ldots $ \\
-(6) \> 논리기호 \> $ \land, \lor, \rightarrow, \lnot, \forall, \exists $
-\end{tabbing}
+%\begin{tabbing}
+%1111\=11111111111111111111\= \kill \\
+%(1) \> 대상기호(상수) \> $ c_{1}, c_{2}, c_{3}, c_{4}, \ldots $ \\
+%(2) \> 함수기호 \> $ f_{1}, f_{2}, f_{3}, f_{4}, \ldots $ \\
+%(3) \> 술어기호 \> $ P_{1}, P_{2}, P_{3}, P_{4}, \ldots $ \\
+%(4) \> 자유변수 \> $ a_{1}, a_{2}, a_{3}, a_{4}, \ldots $ \\
+%(5) \> 속박변수 \> $ x_{1}, x_{2}, x_{3}, x_{4}, \ldots $ \\
+%(6) \> 논리기호 \> $ \land, \lor, \rightarrow, \lnot, \forall, \exists $
+%\end{tabbing}
 \end{minipage}
 \caption{기본 기호}\label{fig:syms}
 \end{figure}
@@ -1271,10 +1284,10 @@ $0$이라는 최소수가 존재하기 때문에 진실이 되나 실수의 모�
 거의 같은 결과를 얻게끔 되어 있다.
 따라서, 이 문서는 \hologo{pdfLaTeX}, \hologo{XeLaTeX}, \hologo{LuaLaTeX} 어느 것으로도 컴파일된다. \showcommand{hologo}
 
-\section{kotexindy에 관하여}
-찾아보기를 만들려면 |kotexindy|를 사용하라. 예를 들면 다음과 같다.
+\section{texindy에 관하여}
+찾아보기를 만들려면 |texindy|를 사용하라. 예를 들면 다음과 같다.
 \begin{verbatim}
-$ kotexindy memucstest.idx
+$ texindy -L korean -C utf8 oblivor-test.idx
 \end{verbatim}
 찾아보기를 찍는 명령은 |\printindex|이다. \showcommand{printindex}
 

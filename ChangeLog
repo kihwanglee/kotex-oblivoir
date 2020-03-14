@@ -1,3 +1,17 @@
+2020-02-09  Kangsoo Kim  <karnes at ktug org>
+
+	Version 2.2
+
+	* Full integration of oblivoir.cls and xoblivoir.cls.
+	* Bug fixes.
+	* oblivoir.cls: version 2.2
+	* oblivoir-utf.cls: version 0.8.2
+	* oblivoir-xl.cls: version 0.8.4
+	* memhangul-x.sty: version 11.11
+	* xetex-var.sty: version 0.14
+	* xob-font.sty: version 0.8
+	* xob-lwarp.sty: new file
+
 2017-02-03  Kihwang Lee  <leekh at ktug org>
 
 	Version 2.1.8

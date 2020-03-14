@@ -18,7 +18,10 @@
 %% ver 0.02
 %%   사륙배판, 국판, 신국판 정의.
 %%   marginnote 영역 설정은 제외되어 있음.
-\ProvidesPackage{fapapersize}
+%% ver 0.1
+%%   option 1in added
+%%
+\ProvidesPackage{fapapersize}[2020/02/10 v0.1]
 %%%
 %%% 옵션
 %%% dbl4x6 : 사륙배판
@@ -33,6 +36,9 @@
 \DeclareOption{newmum}{%
   \AtEndOfPackage{\usefapapersize{154mm,225mm,25mm,*,25mm,*}}%
 }
+\DeclareOption{1in}{%
+  \AtEndOfPackage{\usefapapersize{*,*,1in,*,1in,*}}%
+ }
 \newif\ifStockSize@\StockSize@false
 \DeclareOption{stock}{%
   \StockSize@true
