@@ -15,7 +15,7 @@
 %%  oblivoir hangul/hanja font setting.
 %%  part of oblivoir
 %%
-\ProvidesPackage{xob-font}[2020/02/04 v0.8 select hangul/hanja fonts for oblivoir]
+\ProvidesPackage{xob-font}[2020/03/20 v0.8.1 select hangul/hanja fonts for oblivoir]
 
 %%% obsolete options: retain \if@.. conditions for backward compatibility
 \newif\if@nowin\@nowinfalse
@@ -104,11 +104,11 @@
 		\tl_set:Nn  \_font_feature_str { Ligatures = TeX, }
 	}
 
-	\bool_if:nT \ital_fake_bool
+	\bool_if:NT \ital_fake_bool
 	{
 	  \tl_if_eq:NNTF \_ital_font_name \_regu_font_name
 	  {
-	  	\tl_put_right:Nn \_font_feature_str { AutoFakeSlant, }
+	  	\tl_put_right:Nn \_font_feature_str { ItalicFeatures = { FakeSlant = .15 }, }
 	  }
 	  {
 	    \tl_put_right:Nn \_font_feature_str { ItalicFeatures = { FakeSlant = { 0.15 } }, }
@@ -116,7 +116,7 @@
 	  \tl_put_right:Nn \_font_feature_str { BoldItalicFeatures = { FakeSlant = { 0.15 } }, }
 	}
 
-	\bool_if:nT \bold_prov_bool
+	\bool_if:NT \bold_prov_bool
 	{
 	  \tl_put_right:Nn \_font_feature_str 
 	    {
@@ -131,11 +131,11 @@
 
 	\bool_if:nF \in_hanja_mode
 	{
-		\bool_if:nT \hangulscript_bool
+		\bool_if:NT \hangulscript_bool
 		{ \tl_put_right:Nn \_font_feature_str { Script = Hangul, } }
 	}
 	
-	\bool_if:nT \mono_mode
+	\bool_if:NT \mono_mode
 	{
 		\tl_put_right:Nn \_font_feature_str { Scale = \_mono_scale, } 
 	}
@@ -210,8 +210,8 @@
 	
 	\cs:w set #1 hangulfont \cs_end:
 	    [ \_font_feature_str, \_additional_feature_str,
-	      FontFace = {bx}{n}{ Font={\_bold_font_name} , \_font_feature_str },
-	      FontFace = {m}{up}{ Font={\_regu_font_name} , \_font_feature_str }  
+%	      FontFace = {bx}{n}{ Font={\_bold_font_name} , \_font_feature_str },
+%	      FontFace = {m}{up}{ Font={\_regu_font_name} , \_font_feature_str }  
 	    ] 
 	    { \_regu_font_name }
 
@@ -295,17 +295,17 @@
 		\tl_clear:N \ko_hanja_features
 	}
 
-	\bool_if:nTF \setko_bold_process
+	\bool_if:NTF \setko_bold_process
 	{
-		\bool_if:nTF \setko_hanja_bold_process
+		\bool_if:NTF \setko_hanja_bold_process
 		{
 			\cs:w setkor #1 font \cs_end:
 				{ \ko_regu_font_name }
 				[ \ko_features ]
-			\bool_if:nTF \ital_fake_bool
+			\bool_if:NTF \ital_fake_bool
 			{
 				\cs:w set #1 hanjafont \cs_end:
-					[ \ko_hanja_features, AutoFakeSlant, BoldItalicFeatures={FakeSlant={0.15}} ]
+					[ \ko_hanja_features, ItalicFeatures = {FakeSlant=.15}, BoldItalicFeatures={FakeSlant={0.15}} ]
 					{ \ko_hanja_regu_font_name }
 			}
 			{
@@ -325,16 +325,16 @@
 		}
 	}
 	{
-		\bool_if:nTF \setko_hanja_bold_process
+		\bool_if:NTF \setko_hanja_bold_process
 		{
 			\cs:w setkor #1 font \cs_end:
 				( \ko_bold_font_name       )
 				( \ko_ital_font_name       )
 				{ \ko_regu_font_name       }
-			\bool_if:nTF \ital_fake_bool
+			\bool_if:NTF \ital_fake_bool
 			{
 				\cs:w set #1 hanjafont \cs_end:
-					[ \ko_hanja_features, AutoFakeSlant, BoldItalicFeatures={FakeSlant={0.15}} ]
+					[ \ko_hanja_features, ItalicFeatures={FakeSlant=.15}, BoldItalicFeatures={FakeSlant={0.15}} ]
 					{ \ko_hanja_regu_font_name }
 			}
 			{
@@ -367,7 +367,7 @@
 
 \NewDocumentCommand \process_korob_only_hangul { m }
 {
-	\bool_if:nTF \setko_bold_process
+	\bool_if:NTF \setko_bold_process
 	{
 		\cs:w setkor #1 font \cs_end:
 			{ \ko_regu_font_name }
@@ -406,7 +406,7 @@
 		}
 		\IfValueTF { #5 }
 		{
-			\tl_if_empty:nTF { #5}
+			\tl_if_empty:nTF { #5 }
 			{
 				\tl_set_eq:NN    \ko_ital_font_name \ko_regu_font_name
 			}
@@ -489,7 +489,7 @@
 
 \DeclareDocumentCommand \setkorfontorigmethod { m o m o }
 {
-	\bool_if:nTF \ext_loc_bool
+	\bool_if:NTF \ext_loc_bool
 	{
 		\tl_set:Nn \ext_loc_feature { ExternalLocation, }
 	}
@@ -591,7 +591,7 @@
 		\bool_set_false:N \latin_mono_mode
 	}
 	
-	\bool_if:nTF \latin_mono_mode
+	\bool_if:NTF \latin_mono_mode
 	{
 		\tl_clear:N \latin_feature
 	}
@@ -671,20 +671,21 @@
 	\fi
 	\setkosansfont(NanumGothic)(*Bold)(*)
 	\setkomonofont(NanumGothic)
-\else
+\fi
 %%% [hcr] adds [Script=Hangul] feature automatically.
 \if@hcrfonts
 	\setkomainfont(HCRBatangLVT)(HCRBatangLVT-Bold)(HCRBatangLVT)
 	\setkosansfont(HCRDotumLVT)(HCRDotumLVT-Bold)(HCRDotumLVT)
 	\setkomonofont(HCRDotumLVT)
-\else
-\setkomainfont(UnBatang.ttf)(UnBatangBold.ttf)(UnGraphic.ttf)
-\fi\fi
+\fi
+%\setkomainfont(UnBatang.ttf)(UnBatangBold.ttf)(UnGraphic.ttf)
+%\fi\fi
 
 \endinput
 
 %%% end of file `xob-font.sty`
 %% CHANGES
+%% v0.8.1 : minor bug fix
 %% v0.8 : suport fontspec’s FontFace feature.
 %% v0.7 : Use \sys_if_engine_xetex and \sys_if_engine_luatex instead of xetex_if_engine and luatex_if_engine to be compatible with latest l3kernel.
 %% v0.6 : HCR auto insert Script=Hangul, HAN disabled
