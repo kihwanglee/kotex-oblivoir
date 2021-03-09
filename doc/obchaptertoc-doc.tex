@@ -1,0 +1,137 @@
+\documentclass[a4paper,oneside]{oblivoir}
+
+\usepackage{fapapersize}
+\usefapapersize{*,*,30mm,50mm,35mm,*}
+
+\setmainfont{TeX Gyre Pagella}
+\setkomainfont(Noto Serif CJK KR)
+\setkosansfont(Noto Sans CJK KR Light)(Noto Sans CJK KR Medium)
+
+\usepackage{obchaptertoc}
+
+\ExplSyntaxOn
+
+\renewcommand*\sideparform{\raggedright}
+\sideparmargin{right}
+\NewDocumentCommand \pkgcmd { m }
+{
+	\cs{#1}
+	\sidepar{\cs{#1}}
+}
+
+\ExplSyntaxOff
+
+\makeatletter
+\makechapterstyle{thisdoc}{%
+	\chapterstyle{section}
+	\renewcommand\clearforchapter{\par}
+	\setlength\beforechapskip{2\onelineskip}
+%	\setlength\midchapskip{10pt}
+	\setlength\afterchapskip{1.33\onelineskip}
+	\renewcommand*\chaptitlefont{\sffamily\LARGE}
+	\renewcommand*\chapnamefont{\sffamily\large}
+	\renewcommand*\chapnumfont{\sffamily\Large}
+	\renewcommand*\pre@chapter{}
+	\renewcommand*\post@chapter{}
+	\renewcommand*\memendofchapterhook{\chaptertoc}
+	\renewcommand*\printchapternum{\chapnumfont\thechapter}
+}
+
+\chapterstyle{thisdoc}
+
+\begin{document}
+
+\calccentering{\unitlength}
+
+\title{chapter toc for oblivoir}
+\author{Nova de Hi}
+\date{2020/09/02 \quad v2.0}
+\begin{adjustwidth}{\unitlength}{-\unitlength}
+\maketitle
+\end{adjustwidth}
+
+\section{개요}
+chaptertoc에 대해서는 게시판의 이곳저곳에 이런저런 솔루션들이 있습니다. 패키지도 많고요. memoir 관련해서 yihoze께서 (언젠지 기억나지 않지만) chaptertoc를 위한 외부 파일 기법으로 제안하셨던 것도 있었던 기억이 나네요.
+
+그런데 뭔가 oblivoir에서 깔끔하게 동작하지 않든가, 손봐야 하는 곳이 너무 많든가 하더라고요. 작년 memoir 스터디그룹에서 이 문제를 다루었는데, 그 때 토론한 내용을 바탕으로 패키지로 만들었습니다. 다른 추가적인 것 없이 오로지 oblivoir와 memoir 명령만으로 chaptertoc를 만들도록 했습니다.
+
+사용설명서를 만들기 귀찮기 때문에... 복잡한 패키지도 아니고 해서, 사용법을 여기에 간단히 기록해둡니다.
+
+\section{옵션}
+
+[v2.0] 다음 옵션을 줄 수 있습니다.
+\begin{verbatim}
+\usepackage[level=part]{obchaptertoc}
+\end{document}
+\end{verbatim}
+
+level로 제공할 수 있는 값은 \verb|book|, \verb|part|이고, 기본값은 \verb|chapter|입니다.
+아무 것도 주지 않으면 이 값이 \verb|chapter|인 것과 같습니다.
+
+이를 통하여 parttoc를 만들 수 있습니다. 예컨대, 
+\begin{verbatim}
+\usepackage[level=part]{obchaptertoc}
+\chaptertocmaxlevel{chapter}
+\renewcommand\chaptertocfont{\normalfont\normalsize\selectfont}
+\renewcommand\printparttitle[1]{#1\par\vspace{40pt}\chaptertoc}
+\end{verbatim}
+이것은 가장 간단한 parttoc를 위한 코드입니다.
+
+참고로, 이 패키지는 part에는 parttoc를 붙이고 chapter에 또다시 chaptertoc를 붙이는
+(비상식적인) 상황은 고려하지 않았습니다. 따라서, 비록 parttoc를 작성하더라도 
+식자 명령은 여전히 \cs{chaptertoc}입니다. 다른 설정 명령도 마찬가지입니다.
+
+\section{명령}
+
+\subsection{\cs{chaptertoc} 명령}
+
+명령이 주어진 위치에 현재 chapter의 chaptertoc를 식자합니다. 보통은 장 타이틀이 끝나고 본문이 시작하기 전에 위치할 테니까 \cs{memendofchapterhook}에 넣어두어도 됩니다.
+
+\subsection{\cs{ChapterTOCafterskiptrue}\texttt{|false}}
+
+디폴트는 true입니다. 이 값이 참이면 \cs{chaptertoc}를 식자하고 \cs{par}해줍니다. 그런데 framed 환경에 넣는다든가 장식을 하려 할 때 마지막에 한 줄이 생기는 것을 회피해야 할 때가 있습니다. 이럴 때 \cs{ChapterTOCafterskipfalse}로 지정합니다.
+
+\subsection{\cs{chaptertocmaxlevel}}
+
+chaptertoc를 어느 수준까지 만들 것인가 지정합니다. 인자로 section, subsection 등 장절 명령의 이름을 적어줄 수 있고, depth 카운터를 나타내는 숫자를 적어도 됩니다. 디폴트는 subsection까지를 chaptertoc로 만드는 것입니다. 
+
+\section{포매팅}
+
+\subsection{\cs{ChapterTOCFormat} 명령}
+
+chaptertoc의 모든 포매팅 설정은 memoir의 \verb|\cft...| 명령으로 합니다. 그러나 이 명령을 재정의하는 코드를 그냥 preamble에 넣으면 그것은 문서 전체의 toc에 해당하는 것이 되기 때문에 chaptertoc를 위한 cft 설정 명령들을 \cs{ChapterTOCFormat} 명령의 인자로 주어야 합니다. 예를 들면,
+\begin{verbatim}
+\ChapterTOCFormat{%
+	\renewcommand\cftsectionfont{\sffamily\small}
+	\setlength{\cftsectionnumwidth}{3em}
+}
+\end{verbatim}
+이런 식으로 모든 chaptertoc용 cft 설정 명령들을 여기에 모아서 지정하면 됩니다.
+
+\subsection{\cs{chaptertocfont}}
+
+위에 보인 바와 같이 chaptertoc 내의 section, subsection등의 폰트를 다 renewcommand할 수 있지만, 가끔 chaptertoc 전체의 폰트를 지정하고 싶을 때가 있습니다. 이것은 \cs{chaptertocfont}라는 매크로를 재정의하면 됩니다. \cs{cftsectionfont} 등이 우선이고 이렇게 개별적으로 폰트를 지정하지 않았다면 \cs{chaptertocfont}의 설정을 따릅니다. 기본값은 \verb|\rmfamily\normalsize|입니다.
+
+\subsection{\cs{TOCFormatsameas}}
+
+그런데 이런 식으로 설정하다보면 section에 대해서 한 설정을 subsection에 대해서도 일일이 해주어야 하는 것이 귀찮을 수 있습니다. \cs{TOCFormatsameas} 명령은 3개의 인자를 취하는데, \verb|#1|은 설정하고자 하는 section level 이름, \verb|#2|는 이미 설정되어 있는 section level 이름, \verb|#3|은 동일하게 변경하고자 하는 매크로의 끝이름입니다. 다음 예는,
+\begin{verbatim}
+\TOCFormatsamsas{subsection}{section}{dotsep,presnum}
+\end{verbatim}
+이것은 \cs{cftsubsectiondotsep}을 \cs{cftsectiondotsep}과 같게 하고, \cs{cftsubsectionpresnum}을 \cs{cftsectionpresnum}과 동일하게 설정하라는 의미입니다. 마지막 인자는 필요한 것을 더 추가할 수 있습니다.
+
+
+\section{기타}
+
+스타일 파일과 테스트 파일을 함께 묶어 올립니다. 테스트 파일 test.tex을 보시면 어떻게 사용하는지 한눈에 알 수 있을 것입니다. 이 패키지는 오로지 oblivoir만을 위하여 작성된 것으로, 다른 클래스가 로드되면 에러를 보이면서 멈춥니다. 심지어 memoir와도 함께 쓰지 못합니다.
+
+후의 수정을 쉽게 하기 위해 답글로 파일을 업로드하겠습니다.
+
+사실 이 스타일 파일은 앞서 <문장강화> 소스를 올릴 적에 간략히 작성했던 것을 버그를 고치고 기능을 보충한 것입니다.
+
+version 2.0은 KTUG 게시판에 parttoc에 대한 질문이 올라온 것을 보고 확장하였습니다.
+
+ 
+
+\end{document}
+

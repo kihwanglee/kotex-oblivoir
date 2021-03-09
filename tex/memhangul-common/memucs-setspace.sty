@@ -1,6 +1,6 @@
 %% File `memucs-setspace.sty`
 %%
-%% Copyright (c) 2007-2013 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2007-2021 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -50,8 +50,8 @@
 
 \NeedsTeXFormat {LaTeX2e}[1994/12/09]
 \def \filename {memucs-setspace.sty}
-\def \filedate {2007/09/21}
-\def \fileversion {6.7-memucs8}
+\def \filedate {2021/03/03}
+\def \fileversion {6.7-mu9}
 \ProvidesPackage {memucs-setspace}[\filedate\space\fileversion\space
   Contributed and Supported LaTeX2e package]
 \typeout {Package: `memucs-setspace', a modified version of `setspace', \fileversion\space <\filedate>}
@@ -334,41 +334,116 @@
 % cannot (AFAIK) be avoided, because LaTeX (2e) LACKS appropriate
 % standard hooks and/or context markers.
 \if@singlespacefn
-\def\m@mold@footnotetext{\@memsetspace@footnotetext}
-\renewcommand{\@footnotetext}[1]{\m@mold@footnotetext{#1}\m@mmf@prepare} 
-\long\def\@memsetspace@footnotetext#1{%
-  \insert\footins{%
-% GT:  Next line added.  Hook desired here!
-	\@floatfnspacinghook\memucsfninterwordhook
-%    \def\baselinestretch {\setspace@hangulfspace}%
-%	\@SetFloatspaces
-    \reset@font\footnotesize
-    \interlinepenalty\interfootnotelinepenalty
-    \splittopskip\footnotesep
-    \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
-    \hsize\columnwidth
-    \@parboxrestore
+%%%%\def\m@mold@footnotetext{\@memsetspace@footnotetext}
+%%%%\renewcommand{\@footnotetext}[1]{\m@mold@footnotetext{#1}\m@mmf@prepare} 
+%%%%\long\def\@memsetspace@footnotetext#1{%
+%%%%  \insert\footins{%
+%%%%% GT:  Next line added.  Hook desired here!
+%%%%	\@floatfnspacinghook\memucsfninterwordhook
+%%%%%    \def\baselinestretch {\setspace@hangulfspace}%
+%%%%%	\@SetFloatspaces
+%%%%    \reset@font\footnotesize
+%%%%    \interlinepenalty\interfootnotelinepenalty
+%%%%    \splittopskip\footnotesep
+%%%%    \splitmaxdepth \dp\strutbox \floatingpenalty \@MM
+%%%%    \hsize\columnwidth
+%%%%    \@parboxrestore
+%%%%    \protected@edef\@currentlabel{%
+%%%%      \csname p@footnote\endcsname\@thefnmark
+%%%%    }%
+%%%%    \color@begingroup
+%%%%      \@makefntext{%
+%%%%        \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}%
+%%%%    \color@endgroup}}
+%%%%
+%%%%% Minipage footnotes.
+%%%%\renewcommand{\@mpfootnotetext}[1]{%
+%%%%  \global\setbox\@mpfootins\vbox{%
+%%%%    \unvbox\@mpfootins
+%%%%%  GT:  Next line added.  Hook desired here!
+%%%%	\@floatfnspacinghook\memucsfninterwordhook
+%%%%%    \def\baselinestretch {\setspace@hangulfspace}%
+%%%%    \foottextfont \hsize\columnwidth \@parboxrestore
+%%%%    \protected@edef\@currentlabel{\csname p@mpfootnote\endcsname\@thefnmark}%
+%%%%  \color@begingroup
+%%%%    \@makefntext{%
+%%%%      \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}%
+%%%%  \color@endgroup}}
+
+\renewcommand{\@footnotetext}[1]{%
+  \ifm@mfnmargin%   use marginpar
+    \marginpar{%
+%    \def\baselinestretch{\m@m@footnote@spacing}%
+        \@floatfnspacinghook\memucsfninterwordhook
+    \reset@font
+    \foottextfont
     \protected@edef\@currentlabel{%
-      \csname p@footnote\endcsname\@thefnmark
-    }%
+      \csname p@footnote\endcsname\@thefnmark}%
+    \color@begingroup
+      \@makefntext{\ignorespaces#1}%
+    \color@endgroup}%
+  \else% regular feet
+    \insert\footins{%
+ %   \def\baselinestretch{\m@m@footnote@spacing}%
+         \@floatfnspacinghook\memucsfninterwordhook
+    \reset@font
+    \foottextfont
+    \@preamfntext
+    \hsize\columnwidth
+    \protected@edef\@currentlabel{%
+      \csname p@footnote\endcsname\@thefnmark}%
     \color@begingroup
       \@makefntext{%
-        \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}%
-    \color@endgroup}}
+        \rule\z@\footnotesep\ignorespaces{\foottextfont #1}%
+        \@finalstrut\strutbox}%
+    \color@endgroup}%
+  \fi%
+  \m@mmf@prepare}
 
-% Minipage footnotes.
 \renewcommand{\@mpfootnotetext}[1]{%
   \global\setbox\@mpfootins\vbox{%
     \unvbox\@mpfootins
-%  GT:  Next line added.  Hook desired here!
-	\@floatfnspacinghook\memucsfninterwordhook
-%    \def\baselinestretch {\setspace@hangulfspace}%
+%    \def\baselinestretch{\m@m@footnote@spacing}%
+         \@floatfnspacinghook\memucsfninterwordhook
     \foottextfont \hsize\columnwidth \@parboxrestore
-    \protected@edef\@currentlabel{\csname p@mpfootnote\endcsname\@thefnmark}%
+    \protected@edef\@currentlabel{%
+      \csname p@mpfootnote\endcsname\@thefnmark}%
   \color@begingroup
+  \reset@font%
     \@makefntext{%
-      \rule\z@\footnotesep\ignorespaces#1\@finalstrut\strutbox}%
+      \rule\z@\footnotesep\ignorespaces{\foottextfont #1}%
+      \@finalstrut\strutbox}%
   \color@endgroup}}
+
+\renewcommand{\@sidefootnotetext}[1]{\insert\sidefootins{%
+  \hsize\sidefootwidth
+  \@parboxrestore
+%    \def\baselinestretch{\m@m@footnote@spacing}%
+         \@floatfnspacinghook\memucsfninterwordhook
+  \sidefootform \normalsize\normalfont\sidefoottextfont
+  \splittopskip=\ht\strutbox
+  \splitmaxdepth=\dp\strutbox
+  \allowbreak
+  \prevdepth=\dp\strutbox
+  \vskip-\parskip
+  \protected@edef\@currentlabel{%
+    \csname p@sidefootnote\endcsname\@thesidefnmark}%
+\color@begingroup
+\@makesidefntext{{\sidefoottextfont #1}}%
+\color@endgroup
+  \ifvmode\else
+    \unskip\@finalstrut\strutbox
+  \fi
+  \par
+  \ifdim\prevdepth>\dp\strutbox \prevdepth=\dp\strutbox\fi
+  \ifdim\prevdepth>99\p@
+    \nobreak
+    \vskip-\prevdepth
+    \allowbreak
+    \vskip\dp\strutbox
+  \fi
+  \vskip\sidefootvsep}%
+  \m@mmf@prepare}
 
 \else\fi
 

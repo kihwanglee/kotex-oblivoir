@@ -1,0 +1,174 @@
+%
+% arara: xelatex
+
+\documentclass[a4paper,amsmath]{oblivoir}
+
+\usepackage{fapapersize}
+\usefapapersize{*,*,1in,*,1in,*}
+
+\setmainfont{Crimson Pro}
+\setsansfont{Open Sans}
+\setmonofont{Roboto Mono}
+\setkomainfont[Noto Serif CJK KR]()( Bold)
+\setkosansfont[Noto Sans CJK KR]()( Bold)
+
+\usepackage[default=false,exception={vmatrix}]{ob-mathleading}
+\usepackage{mathtools}
+
+\newcommand\pkg[1]{\textsf{#1}}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{listings,breakable}
+
+\begin{document}
+
+\title{ob-mathleading}
+\author{Nova de Hi}
+\date{2018/12/25, v0.0.1}
+
+\maketitle
+
+\begin{abstract}
+\pkg{amsmath} 패키지의 여러 줄 수식 환경의 행 간격을 본문의 행 간격과는 무관하게 일정하게
+고정하거나 임의로 변경할 수 있도록 하는 패키지이다. 본문 행 간격의 기본값이 $1$이 아닌 
+한국어 문서에서 활용할 목적으로 제작하였다.
+\end{abstract}
+
+\tableofcontents*
+
+\section{목적과 기능}
+
+\pkg{amsmath}의 여러 줄 수식을 \pkg{oblivoir}에서 쓸 적에 한글 문서의 기본 행간의 영향을 받아
+수식의 행간격이 느슨해지는 것을 방지하기 위하여 여러 줄 수식 환경에 대하여 기본 행간격을 주는 것이 
+이 패키지의 목적이다.
+
+본문의 문단과 별행 수식 사이의 간격과 같은 것은 이 패키지가 제어하지 아니하며 ``여러 줄 수식''에 대해서만
+효과가 있다.
+
+이 패키지를 사용하지 않았을 때 \pkg{oblivoir} 문서를 작성한 결과와 이 패키지를 사용한 결과를 비교하여 보아라.
+\[
+    \begin{bmatrix} a & b & c \\ p & q & f \\ g & j & i \end{bmatrix}, 
+    \begin{bmatrix} 1 & 0 \\ 0 & 1\end{bmatrix},
+    \begin{bmatrix} 1 & 0 & \ast\! \\ 0 & 1 & \ast\! \end{bmatrix},
+    \begin{bmatrix} 1 & 0 \\ 0 & 1 \\ 0 & 0 \end{bmatrix},
+    \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}
+\]
+\begin{obMathLeading}
+\[ 
+    \begin{bmatrix} a & b & c \\ p & q & f \\ g & j & i \end{bmatrix}, 
+    \begin{bmatrix} 1 & 0 \\ 0 & 1\end{bmatrix},
+    \begin{bmatrix} 1 & 0 & \ast\! \\ 0 & 1 & \ast\! \end{bmatrix},
+    \begin{bmatrix} 1 & 0 \\ 0 & 1 \\ 0 & 0 \end{bmatrix},
+    \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}
+\]
+\end{obMathLeading}
+
+\section{사용법}
+
+\subsection{기본적인 사용법}
+
+문서의 preamble에 패키지의 사용을 선언한다.
+
+\begin{tcblisting}{listing only}
+    \usepackage{ob-mathleading}
+\end{tcblisting}
+
+``적절한'' 행간격을 얻기 위해서는 이렇게 선언하는 것으로 충분하다. 패키지의 수식 행간격 기본값은 $1$이다.
+
+\subsection{명령과 환경}
+
+일관성있는 문서를 작성하기 위해서는 문서 전체에 걸쳐서 동일한 수식 행간격을 유지하는 것이 바람직하다.
+그러나 부득이하게 특정 부분이나 특정 수식에 대해서만 행간을 늘리거나 줄여야 할 필요가 있을 수 있다.
+이 패키지는 이럴 경우에 대응하기 위하여 하나의 명령(선언)과 하나의 환경을 제공한다.
+
+\begin{tcblisting}{listing only}
+    \obmathleading{<value>}
+\end{tcblisting}
+
+\verb|<value>|에는 stretch 값을 \verb|1.2|, \verb|2|와 같이 준다. 이 선언 이후에는 수식 행간격이 변경되며 이 변경은 지역적(\emph{local})이므로
+현재의 범위(scope) 내에서 유효하다.
+
+\begin{tcblisting}{listing only}
+    \begin{obMathLeading}[<value>]
+        ...
+    \end{obMathLeading}
+\end{tcblisting}
+
+\verb|obMathLeading| 환경은 이 환경 안에 오는 수식에만 영향을 끼친다. 옵션 인자가 주어지지 않으면
+기본값인 $1$이 사용되며 옵션 인자가 주어지면 그것을 stretch로 사용하여 행간격을 조절한다.
+환경 안에는 \pkg{amsmath}의 여러 줄 수식 환경이 올 수 있다.
+
+\subsection{패키지 옵션}
+
+\subsubsection{옵션 \texttt{mathleading}}
+
+문서 전체에 걸쳐 수식 행간격을 임의로 조절하고자 한다면
+\begin{tcblisting}{listing only}
+    \usepackage[mathleading=<value>]{ob-mathleading}
+\end{tcblisting}
+\noindent 와 같이 지정한다. \verb|<value>|에는 stretch 값이 온다. 패키지의 기본값은 \verb|1|이다.
+
+\subsubsection{옵션 \texttt{exception}}
+
+이 패키지가 영향을 미치는 \pkg{amsmath}의 수식 환경의 리스트는 다음과 같다.
+
+\begin{quote}
+\begin{ttfamily}
+    array, matrix, pmatrix, bmatrix, Bmatrix, vmatrix, Vmatrix, 
+    cases, align, aligned, alignat, alignedat, gather, gathered,
+    split, multline, xalignat, xxalignat
+\end{ttfamily}
+\end{quote} 
+
+이 가운데 행간 조절 적용을 배제하고자 하는 환경의 이름을 쉼표로 분리하고 중괄호로 묶어서 열거할 수 있다.
+
+\begin{tcblisting}{listing only}
+    \usepackage[exception={cases,vmatrix}]{ob-mathleading}
+\end{tcblisting}
+
+다만 이 경우에 \texttt{align, alignat, xalignat, xxalignat}는 모두 동일한 
+것으로 취급되며 \texttt{align}만을 대표 이름으로 다룬다. \texttt{align}과 \texttt{aligned}는
+서로 다른 환경이므로 별도로 취급된다.
+
+다음 보기는 \verb|exception={vmatrix}| 옵션을 준 상태의 예시이다.
+
+\begin{tcblisting}{listing above text}
+\begin{obMathLeading}
+\[
+    \begin{bmatrix} a & b & c \\ p & q & f \\ g & j & i \end{bmatrix}, 
+    \begin{bmatrix} 1 & 0 \\ 0 & 1\end{bmatrix},
+    \begin{bmatrix} 1 & 0 & \ast\! \\ 0 & 1 & \ast\! \end{bmatrix},
+    \begin{bmatrix} 1 & 0 \\ 0 & 1 \\ 0 & 0 \end{bmatrix},
+    \begin{vmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{vmatrix}
+\]
+\end{obMathLeading}
+\end{tcblisting}
+
+\subsubsection{옵션 \texttt{default}}
+
+일반적인 상황은 아니겠지만 수식 행간격을 조절하는 이 패키지의 기능을 사용하지 않으면서 단지 명령과 환경, \verb|\obmathleading|이나
+\verb|obMathLeading|만을 활용하고자 한다면 
+\begin{tcblisting}{listing only}
+    \usepackage[default=false]{ob-mathleading}
+\end{tcblisting}
+이와 같이 \verb|[default=false]|를 옵션으로 줄 수 있다. 패키지의 기본값은 \verb|true|이다.
+
+\subsubsection{옵션 \texttt{noallowdisplaybreaks}}
+
+이 패키지는 \verb|\allowdisplaybreaks|를 실행해준다. 이 기능을 억제하고자 한다면
+패키지 옵션으로 \verb|[noallowdisplaybreaks]|를 선언한다. 마지막의 \verb|s|를 빠뜨리지 않도록
+유의하라.
+
+\section{적용 범위}
+
+이 패키지는 (이름에 나타난 바와 같이) \pkg{oblivoir}를 위하여 작성되기는 하였지만 \pkg{oblivoir} 클래스에
+의존하지 않는다. 그러므로 다른 클래스의 문서에서도 동작할 것이다.
+
+\pkg{amsmath}는 필수적이며 \pkg{etoolbox}를 로드한다.
+
+\section{감사의 말}
+
+테스트 문서와 예제 소스를 제공하신 ktug 게시판의 Progress 님, 패키지 제작의 동기를 제공하신 조인성 교수께 감사드린다.
+
+
+\end{document}

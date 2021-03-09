@@ -1,0 +1,143 @@
+%%
+%% ob-unfontsdefault.sty
+%% part of xob-font.sty
+%%
+%% public domain
+%%
+\ProvidesExplPackage{ob-unfontsdefault}
+	{2020/10/26}
+	{v0.4}
+	{Un and Baekmuk Fonts for xetexko}
+
+\RequirePackage{l3keys2e}
+
+\msg_new:nnn { ksxeunfonts } { errormsg } { Legacy~TeX~engine~not~supported }
+
+\sys_if_engine_pdftex:T { 
+	\msg_error:nn { ksxeunfonts } { errormsg }
+}
+
+\keys_define:nn { ksxeunfonts }
+{
+	mj	.tl_set:N	= \opt_mjfont_tl,
+	mjbold	.tl_set:N	= \opt_mjboldfont_tl,
+	mjitalic	.tl_set:N	= \opt_mjitalicfont_tl,
+	mjbolditalic	.tl_set:N	= \opt_mjbolditalicfont_tl,
+	gt	.tl_set:N	= \opt_gtfont_tl,
+	gtbold	.tl_set:N	= \opt_gtboldfont_tl,
+	gtitalic	.tl_set:N	= \opt_gtitalicfont_tl,
+	gtbolditalic	.tl_set:N	= \opt_gtbolditalicfont_tl,
+	renderer	.tl_set:N 	= \opt_renderer_tl,
+	fakeitalic	.bool_set:N	= \opt_fakeitalic_bool,
+	jamo	.bool_set:N	= \opt_script_bool,
+	mjinterhangul	.tl_set:N	= \opt_mjinterhangul_tl,
+	gtinterhangul	.tl_set:N	= \opt_gtinterhangul_tl,
+	mjwordspace	.tl_set:N	= \opt_mjwordspace_tl,
+	gtwordspace	.tl_set:N	= \opt_gtwordspace_tl,
+	untaza	.bool_set:N	= \opt_untaza_bool,
+	more	.tl_set:N 	= \opt_moreopt_tl,
+	other	.tl_set:N	= \opt_otheropt_tl,
+	baekmuk	.bool_set:N = \opt_baekmuk_bool,
+}
+
+\keys_set:nn { ksxeunfonts }
+{
+	mj = UnBatang.ttf,
+	mjbold	= UnBatangBold.ttf,
+	mjitalic	= UnGraphic.ttf,
+	mjbolditalic	= UnGraphicBold.ttf,
+	gt = UnDotum.ttf,
+	gtbold = UnDotumBold.ttf,
+	gtitalic = UnDinaru.ttf,
+	gtbolditalic = UnYetgul.ttf,
+	renderer = OpenType,
+	fakeitalic = false,
+	jamo = false,
+	mjinterhangul = .06em,
+	gtinterhangul = .04em,
+	mjwordspace = {.95,.45,.25},
+	gtwordspace = {.96,.45,.2},
+	more = {},
+	other = {},
+	baekmuk = false,
+}
+
+\ProcessKeysOptions { ksxeunfonts }
+
+\bool_if:NT \opt_baekmuk_bool
+{
+    \keys_set:nn { ksxeunfonts }
+    {
+    	mj = batang.ttf,
+    	mjbold	= *,
+    	mjitalic	= *,
+    	mjbolditalic	= *,
+    	gt = dotum.ttf,
+    	gtbold = *,
+    	gtitalic = gulim.ttf,
+    	gtbolditalic = hline.ttf,
+    	renderer = OpenType,
+    	fakeitalic = true,
+    	jamo = false,
+    	mjinterhangul = .06em,
+    	gtinterhangul = .045em,
+    	mjwordspace = {.48,.3,.2},
+    	gtwordspace = {.50,.3,.2},
+    	more = {BoldFeatures={FakeBold=1.1},BoldItalicFeatures={FakeBold=1.1}},
+    }
+}
+
+\sys_if_engine_luatex:T {
+	\hangulbyhangulfont=1
+}
+
+\bool_if:NTF \opt_fakeitalic_bool
+{
+	\tl_set:Nn \l_fakeitalic_option_tl { 
+		BoldItalicFeatures = { FakeSlant = { 0.167 } },
+		AutoFakeSlant,
+	}
+}
+{
+	\tl_set:Nn \l_fakeitalic_option_tl { }
+}
+
+\bool_if:NTF \opt_script_bool
+{
+	\tl_set:Nn \l_script_option_tl { Script = Hangul, }
+}
+{
+	\tl_set:Nn \l_script_option_tl {}
+}
+
+\setmainhangulfont{\opt_mjfont_tl}[
+	BoldFont = \opt_mjboldfont_tl,
+	ItalicFont = \opt_mjitalicfont_tl,
+	BoldItalicFont = \opt_mjbolditalicfont_tl,
+	Renderer = \opt_renderer_tl,
+	InterHangul = -\opt_mjinterhangul_tl,
+	WordSpace = {\opt_mjwordspace_tl},
+	\l_script_option_tl \l_fakeitalic_option_tl
+	\opt_moreopt_tl,
+	\opt_otheropt_tl
+]
+
+\setsanshangulfont{\opt_gtfont_tl}[
+	BoldFont = \opt_gtboldfont_tl,
+	ItalicFont = \opt_gtitalicfont_tl,
+	BoldItalicFont = \opt_gtbolditalicfont_tl,
+	Renderer = \opt_renderer_tl,
+	InterHangul = -\opt_gtinterhangul_tl,
+	WordSpace = {\opt_gtwordspace_tl},
+	\l_fakeitalic_option_tl
+	\opt_moreopt_tl,
+	\opt_otheropt_tl
+]
+
+\bool_if:NT \opt_untaza_bool
+{
+	\setmonohangulfont { UnTaza.ttf }
+	\setmonohanjafont { UnDotum.ttf }
+}
+
+\endinput

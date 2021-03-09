@@ -1,6 +1,6 @@
 %% File `memhangul-common.sty`
 %%
-%% (C) Copyright 2013-2020 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2013-2021 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -17,7 +17,7 @@
 %%% 편, 장 섹션 타이틀 재설정
 %%% 절의 섹션 타이틀은 수정하지 않음.
 %%
-\ProvidesPackage{memhangul-common}[2020/02/05]
+\ProvidesPackage{memhangul-common}[2021/03/03]
 
 \let\@CHAPAPP\@chapapp
 \def\refreshprepostchapters{%
@@ -66,8 +66,41 @@
 %   \fi
 %   \printparttitle{#2}\par}%
 %  \@endpart}
+%%%%\long\def\@part[#1]#2{%
+%%%%%  \ifx#1\@empty\PrerenderUnicode{#2}\else\PrerenderUnicode{#1}\fi
+%%%%  \M@gettitle{#1}%
+%%%%  \def\f@rtoc{#1}%
+%%%%  \@nameuse{part@f@rtoc@before@write@hook}%
+%%%%  \phantomsection
+%%%%  \mempreaddparttotochook
+%%%%  \ifnum \c@secnumdepth >-2\relax
+%%%%    \refstepcounter{part}%
+%%%%    \addcontentsline{toc}{part}%
+%%%%%      {\protect\partnumberline{\thepart}#1}%
+%%%%      {\protect\partnumberline{\hparttitlehead}#1}%
+%%%%    \mempartinfo{\thepart}{#1}{#2}%
+%%%%  \else
+%%%%    \addcontentsline{toc}{part}{#1}%
+%%%%    \mempartinfo{}{#1}{#2}%
+%%%%  \fi
+%%%%  \mempostaddparttotochook
+%%%%  \partmark{#1}%
+%%%%  {\centering
+%%%%   \interlinepenalty \@M
+%%%%   \normalfont
+%%%%   \ifnum \c@secnumdepth >-2\relax
+%%%%%     \printpartname \partnamenum \printpartnum
+%%%%%     \midpartskip
+%%%%     \prepartnum \partnamenum \printpartnum \partnamenum \postpartnum
+%%%%     \midpartskip
+%%%%   \fi
+%%%%   \printparttitle{#2}\par}%
+%%%%  \@endpart}
+
+
+\def\obparttitlealignment{\centering}
+
 \long\def\@part[#1]#2{%
-%  \ifx#1\@empty\PrerenderUnicode{#2}\else\PrerenderUnicode{#1}\fi
   \M@gettitle{#1}%
   \def\f@rtoc{#1}%
   \@nameuse{part@f@rtoc@before@write@hook}%
@@ -76,17 +109,19 @@
   \ifnum \c@secnumdepth >-2\relax
     \refstepcounter{part}%
     \addcontentsline{toc}{part}%
-%      {\protect\partnumberline{\thepart}#1}%
-      {\protect\partnumberline{\hparttitlehead}#1}%
-    \mempartinfo{\thepart}{#1}{#2}%
+%      {\protect\partnumberline{\thepart}\f@rtoc}%
+      {\protect\partnumberline{\hparttitlehead}\f@rtoc}%
+    \mempartinfo{\thepart}{\f@rtoc}{#2}%
   \else
-    \addcontentsline{toc}{part}{#1}%
-    \mempartinfo{}{#1}{#2}%
+    \addcontentsline{toc}{part}{\f@rtoc}%
+    \mempartinfo{}{\f@rtoc}{#2}%
   \fi
   \mempostaddparttotochook
   \partmark{#1}%
-  {\centering
+  {%\centering
+   \obparttitlealignment
    \interlinepenalty \@M
+   \parskip\z@
    \normalfont
    \ifnum \c@secnumdepth >-2\relax
 %     \printpartname \partnamenum \printpartnum
@@ -206,39 +241,111 @@
 %% \chapter[toc][hdr]{title}
 %% \chapter[toc]{hdr/title}
 %% \chapter{toc/hdr/title}
+%%%%\def\@chapter[#1]#2{%
+%%%%  \m@mpn@new@chaptrue%
+%%%%  \m@mpn@new@schapfalse%
+%%%%  \def\f@rbdy{#2}%
+%%%%%  \ifx\ch@pt@c\@empty % no optional args
+%%%%%    \def\f@rtoc{#2}%
+%%%%%    \def\f@rhdr{#2}%
+%%%%%    \PrerenderUnicode{#2}%
+%%%%%  \else                  % at least one opt arg
+%%%%%    \let\f@rtoc\ch@pt@c
+%%%%%    \ifx\@empty#1\@empty
+%%%%%      \let\f@rhdr\ch@pt@c
+%%%%%      \PrerenderUnicode{#1#2}%
+%%%%%    \else
+%%%%%      \def\f@rhdr{#1}%
+%%%%%      \PrerenderUnicode{#1}%
+%%%%%    \fi
+%%%%%  \fi
+%%%%  \ifx\ch@pt@c\m@m@empty % no optional args
+%%%%    \def\f@rtoc{#1}%
+%%%%    \def\f@rhdr{#1}%
+%%%%%    \PrerenderUnicode{#1}%
+%%%%  \else                  % at least one opt arg
+%%%%    \def\f@rtoc{\ch@pt@c}%
+%%%%    \nametest{#1}{#2}%
+%%%%    \ifsamename          % one opt arg
+%%%%      \def\f@rhdr{\ch@pt@c}%
+%%%%%      \PrerenderUnicode{#1#2}%
+%%%%    \else                % two opt args
+%%%%      \def\f@rhdr{#1}%
+%%%%%      \PrerenderUnicode{#1}%
+%%%%    \fi
+%%%%  \fi 
+%%%%  \m@m@Andfalse
+%%%%  \ifnum \c@secnumdepth >\m@ne
+%%%%    \if@mainmatter
+%%%%      \m@m@Andtrue
+%%%%    \fi
+%%%%  \fi
+%%%%  \ifm@m@And
+%%%%   \ifanappendix
+%%%%    \refstepcounter{APPchapter}%
+%%%%   \else
+%%%%    \refstepcounter{chapter}%
+%%%%   \fi
+%%%%  \fi
+%%%%  \chaptermark{\f@rhdr}
+%%%%  \ifartopt
+%%%%    \@makechapterhead{#2}%
+%%%%    \@afterheading
+%%%%  \else
+%%%%    \insertchapterspace
+%%%%    \if@twocolumn
+%%%%      \@topnewpage[\@makechapterhead{#2}]%
+%%%%    \else
+%%%%      \@makechapterhead{#2}%
+%%%%    \fi
+%%%%    \@afterheading
+%%%%  \fi
+%%%%  \ifm@m@And
+%%%%    \ifanappendix
+%%%%      \addcontentsline{toc}{appendix}{%
+%%%%%       \protect\chapternumberline{\thechapter}\f@rtoc}%
+%%%%       \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%%%%%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%    \else
+%%%%      \addcontentsline{toc}{chapter}{%
+%%%%%        \protect\chapternumberline{\thechapter}\f@rtoc}%
+%%%%        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%%%%%      \memchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%       \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%    \fi
+%%%%  \else
+%%%%    \addcontentsline{toc}{chapter}{\f@rtoc}%
+%%%%    \ifanappendix
+%%%%      \memappchapinfo{}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%    \else
+%%%%      \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
+%%%%    \fi
+%%%%  \fi
+%%%%  \mempostaddchaptertotochook%
+%%%%  \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
+%%%%%%% for chapter
+%%%%  \ifanappendix
+%%%%     \protected@edef\@currentlabel{\thechapter}%
+%%%%  \fi
+%%%%  \memendofchapterhook%
+%%%%}
+
 \def\@chapter[#1]#2{%
   \m@mpn@new@chaptrue%
   \m@mpn@new@schapfalse%
   \def\f@rbdy{#2}%
-%  \ifx\ch@pt@c\@empty % no optional args
-%    \def\f@rtoc{#2}%
-%    \def\f@rhdr{#2}%
-%    \PrerenderUnicode{#2}%
-%  \else                  % at least one opt arg
-%    \let\f@rtoc\ch@pt@c
-%    \ifx\@empty#1\@empty
-%      \let\f@rhdr\ch@pt@c
-%      \PrerenderUnicode{#1#2}%
-%    \else
-%      \def\f@rhdr{#1}%
-%      \PrerenderUnicode{#1}%
-%    \fi
-%  \fi
-  \ifx\ch@pt@c\m@m@empty % no optional args
-    \def\f@rtoc{#1}%
-    \def\f@rhdr{#1}%
-%    \PrerenderUnicode{#1}%
+  \ifx\ch@pt@c\@empty % no optional args
+    \def\f@rtoc{#2}%
+    \def\f@rhdr{#2}%
   \else                  % at least one opt arg
-    \def\f@rtoc{\ch@pt@c}%
-    \nametest{#1}{#2}%
-    \ifsamename          % one opt arg
-      \def\f@rhdr{\ch@pt@c}%
-%      \PrerenderUnicode{#1#2}%
-    \else                % two opt args
+    \let\f@rtoc\ch@pt@c
+    \ifx\@empty#1\@empty
+      \let\f@rhdr\ch@pt@c
+    \else
       \def\f@rhdr{#1}%
-%      \PrerenderUnicode{#1}%
     \fi
-  \fi 
+  \fi
   \m@m@Andfalse
   \ifnum \c@secnumdepth >\m@ne
     \if@mainmatter
@@ -265,18 +372,16 @@
     \fi
     \@afterheading
   \fi
+  \@nameuse{chapter@f@rtoc@before@write@hook}%
+  \mempreaddchaptertotochook%
   \ifm@m@And
     \ifanappendix
       \addcontentsline{toc}{appendix}{%
-%       \protect\chapternumberline{\thechapter}\f@rtoc}%
        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
-%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
        \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
     \else
       \addcontentsline{toc}{chapter}{%
-%        \protect\chapternumberline{\thechapter}\f@rtoc}%
         \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
-%      \memchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
        \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
     \fi
   \else
@@ -289,7 +394,6 @@
   \fi
   \mempostaddchaptertotochook%
   \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
-%%% for chapter
   \ifanappendix
      \protected@edef\@currentlabel{\thechapter}%
   \fi
@@ -319,14 +423,30 @@
 	\prechapternum \chapternamenum \printchapternum 
 	\chapternamenum \postchapternum \afterchapternum}{}{}
 
+%%%\renewcommand{\@m@mschapter}[2][\@empty]{%
+%%%  \@schapter{#2}%
+%%%  \ifx \@empty#1
+%%%    \def\f@rhdr{#2}%
+%%%%    \PrerenderUnicode{#2}%
+%%%  \else   % opt arg
+%%%    \def\f@rhdr{#1}%
+%%%%    \PrerenderUnicode{#1}%
+%%%    \setcounter{secnumdepth}{-10}%
+%%%    \chaptermark{#1}%
+%%%    \setcounter{secnumdepth}{\value{maxsecnumdepth}}%
+%%%  \fi
+%%%  \ifanappendix
+%%%    \memappchapstarinfo{\f@rhdr}{#2}%
+%%%  \else
+%%%    \memchapstarinfo{\f@rhdr}{#2}%
+%%%  \fi}
+
 \renewcommand{\@m@mschapter}[2][\@empty]{%
   \@schapter{#2}%
   \ifx \@empty#1
     \def\f@rhdr{#2}%
-%    \PrerenderUnicode{#2}%
   \else   % opt arg
     \def\f@rhdr{#1}%
-%    \PrerenderUnicode{#1}%
     \setcounter{secnumdepth}{-10}%
     \chaptermark{#1}%
     \setcounter{secnumdepth}{\value{maxsecnumdepth}}%
@@ -335,18 +455,20 @@
     \memappchapstarinfo{\f@rhdr}{#2}%
   \else
     \memchapstarinfo{\f@rhdr}{#2}%
-  \fi}
+  \fi
+  \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{#2}\fi}
 
-\def\@makeschapterhead#1{%
-  \chapterheadstart
-%  {\parindent \z@ \raggedright \normalfont
-  {\parindent \z@ \raggedright \normalfont \memucsinterwordchapterskiphook
-   \printchapternonum
-   \interlinepenalty\@M
-   \printchaptertitle{#1}
-   \afterchaptertitle
-  }
-}
+
+%%%%\def\@makeschapterhead#1{%
+%%%%  \chapterheadstart
+%%%%%  {\parindent \z@ \raggedright \normalfont
+%%%%  {\parindent \z@ \raggedright \normalfont \memucsinterwordchapterskiphook
+%%%%   \printchapternonum
+%%%%   \interlinepenalty\@M
+%%%%   \printchaptertitle{#1}
+%%%%   \afterchaptertitle
+%%%%  }
+%%%%}
 
 %%%%%%%%%%%%%
 
@@ -759,24 +881,47 @@
 \InputIfFileExists{memhangul-patch.sty}{}{}
 
 %%% fig, tab caption
+%%%\def\obCaptionFont#1{\def\@figtabcaptfont@{#1}}
+%%%\providecommand\@figtabcaptfont@{\normalfont}
+%%%\if@figtabcapt@
+%%%\AtBeginDocument{
+%%%\@ifpackageloaded{caption}{%  requested by Progress
+%%%	\DeclareCaptionLabelFormat{xob-cnm-parens}{\cnm{#1~#2}}
+%%%	\captionsetup{labelformat=xob-cnm-parens,labelsep=space}
+%%%}%
+%%%{%
+%%%	\precaption{{\@figtabcaptfont@\cnm@char@open}}
+%%%	\captiondelim{{\@figtabcaptfont@\cnm@char@close}\quad}
+%%%	\renewcommand\cfttablepresnum{\cnm@char@open\tablename\space}
+%%%	\renewcommand\cfttableaftersnum{\cnm@char@close}
+%%%	\setlength\cfttablenumwidth{3.8em}
+%%%	\renewcommand\cftfigurepresnum{\cnm@char@open\figurename\space}
+%%%	\renewcommand\cftfigureaftersnum{\cnm@char@close}
+%%%	\setlength\cftfigurenumwidth{4.5em}
+%%%}
+%%%}
+%%%\fi
+
 \def\obCaptionFont#1{\def\@figtabcaptfont@{#1}}
+\def\obCaptionnameOpen{\cnm@char@open}
+\def\obCaptionnameClose{\cnm@char@close}
 \providecommand\@figtabcaptfont@{\normalfont}
 \if@figtabcapt@
-\AtBeginDocument{
+\AtBeginDocument{%
 \@ifpackageloaded{caption}{%  requested by Progress
-	\DeclareCaptionLabelFormat{xob-cnm-parens}{\cnm{#1~#2}}
-	\captionsetup{labelformat=xob-cnm-parens,labelsep=space}
+        \DeclareCaptionLabelFormat{xob-cnm-parens}{\cnm{#1~#2}}
+        \captionsetup{labelformat=xob-cnm-parens,labelsep=space}
 }%
 {%
-	\precaption{{\@figtabcaptfont@\cnm@char@open}}
-	\captiondelim{{\@figtabcaptfont@\cnm@char@close}\quad}
-	\renewcommand\cfttablepresnum{\cnm@char@open\tablename\space}
-	\renewcommand\cfttableaftersnum{\cnm@char@close}
-	\setlength\cfttablenumwidth{3.8em}
-	\renewcommand\cftfigurepresnum{\cnm@char@open\figurename\space}
-	\renewcommand\cftfigureaftersnum{\cnm@char@close}
-	\setlength\cftfigurenumwidth{4.5em}
-}
+        \precaption{{\@figtabcaptfont@\obCaptionnameOpen}}
+        \captiondelim{{\@figtabcaptfont@\obCaptionnameClose}\quad}
+        \renewcommand\cfttablepresnum{\obCaptionnameOpen\tablename\space}
+        \renewcommand\cfttableaftersnum{\obCaptionnameClose}
+        \setlength\cfttablenumwidth{3.8em}
+        \renewcommand\cftfigurepresnum{\obCaptionnameOpen\figurename\space}
+        \renewcommand\cftfigureaftersnum{\obCaptionnameClose}
+        \setlength\cftfigurenumwidth{4.5em}
+}%
 }
 \fi
 
@@ -1175,6 +1320,166 @@
 \if@defaulthangulpagestyle
  \pagestyle{hangul}
 \fi
+
+%%% 2021/03/03: adjustwidth
+\newdimen\memucsadjustwidthtopsep
+\renewenvironment{adjustwidth}[2]{%
+  \begin{list}{}{%
+  	\ifdim\onelineskip=\baselineskip
+		\memucsadjustwidthtopsep\z@\else
+		\memucsadjustwidthtopsep=\dimexpr\onelineskip-\baselineskip\relax
+	\fi
+%    \topsep\z@%
+	\topsep.5\memucsadjustwidthtopsep
+    \listparindent\parindent%
+    \parsep\parskip%
+    \@ifmtarg{#1}{\setlength{\leftmargin}{\z@}}%
+                 {\setlength{\leftmargin}{#1}}%
+    \@ifmtarg{#2}{\setlength{\rightmargin}{\z@}}%
+                 {\setlength{\rightmargin}{#2}}%
+    }
+    \item[]}{\end{list}}
+
+\renewenvironment{adjustwidth*}[2]{%
+  \begin{list}{}{%
+%    \topsep\z@%
+	\topsep.5\memucsadjustwidthtopsep
+    \listparindent\parindent%
+    \parsep\parskip%
+    \checkoddpage
+    \ifoddpage  % odd numbered page
+      \@ifmtarg{#1}{\setlength{\leftmargin}{\z@}}%
+                   {\setlength{\leftmargin}{#1}}%
+      \@ifmtarg{#2}{\setlength{\rightmargin}{\z@}}%
+                   {\setlength{\rightmargin}{#2}}%
+    \else       % even numbered page
+      \@ifmtarg{#2}{\setlength{\leftmargin}{\z@}}%
+                   {\setlength{\leftmargin}{#2}}%
+      \@ifmtarg{#1}{\setlength{\rightmargin}{\z@}}%
+                   {\setlength{\rightmargin}{#1}}%
+    \fi
+    }
+    \item[]}{\end{list}}
+
+
+%%% lists
+%%% newly added
+\newcommand*{\oblivoirlists}{%
+  \@ifstar{\ob@sfirmlists}{\ob@firmlists}}
+
+\newcommand*{\ob@sfirmlists}{
+  \setlength{\partopsep}{\z@ \@plus \p@ \@minus \p@}%
+  \parsepi = 0.0833\onelineskip \@plus 0.04\onelineskip \@minus \p@
+  \itemsepi = \parsepi
+  \topsepi = \parsepi
+  \parsepii = 0.04\onelineskip \@plus \p@ \@minus \p@
+  \topsepii = \parsepi
+  \topsepiii = \parsepii
+  \everylistparindent\listparindent}
+
+\newcommand*{\ob@firmlists}{
+  \setlength{\partopsep}{0.05\onelineskip \@plus 0.02\onelineskip
+                                         \@minus 0.02\onelineskip}%
+  \parsepi = 0.0833\onelineskip \@plus 0.04\onelineskip \@minus \p@
+  \itemsepi = \parsepi
+  \topsepi = \parsepi
+  \parsepii = 0.04\onelineskip \@plus \p@ \@minus \p@
+  \topsepii = \parsepi
+  \topsepiii = \parsepii
+  \everylistparindent\listparindent}
+
+\newcommand{\oblivoirlist}{%
+  \setlength{\itemsep}{0.3\itemsep}\setlength{\parskip}{0.3\parskip}}
+
+\newcommand\obadjustlists{%
+  \global\let\defaultlist\firmlist
+  \global\let\defaultlists\firmlists
+  \global\let\firmlist\oblivoirlist
+  \global\let\firmlists\oblivoirlists
+  \defaultlists
+}
+
+
+%%% \ReleaseMacros
+%%% newly added
+\ExplSyntaxOn 
+\NewDocumentCommand \ReleaseMacros { m }
+{
+	\clist_set:Nn \l_tmpa_clist { #1 }
+	\clist_map_inline:Nn \l_tmpa_clist
+	{
+		\cs_undefine:N ##1
+	}
+}
+\@onlypreamble\ReleaseMacros
+
+\ExplSyntaxOff
+
+
+%%%% trim K mark
+\providecommand*{\tmarkKtm}{%
+  \begin{picture}(0,0)%
+    \unitlength 1mm
+    \thinlines
+    \put(0,4){\line(0,1){8}}
+  \end{picture}}
+\providecommand*{\tmarkKml}{%
+  \begin{picture}(0,0)%
+    \unitlength 1mm
+    \thinlines
+    \put(-4,0){\line(-1,0){8}}
+  \end{picture}}
+\providecommand*{\tmarkKmr}{%
+  \begin{picture}(0,0)%
+    \unitlength 1mm
+    \thinlines
+    \put(4,0){\line(1,0){8}}
+  \end{picture}}
+\providecommand*{\tmarkKbm}{%
+  \begin{picture}(0,0)%
+    \unitlength 1mm
+    \thinlines
+    \put(0,-12){\line(0,1){8}}
+  \end{picture}}
+\providecommand*{\Ktrimpictl}{%
+  \begin{picture}(0,0)
+    \unitlength 1mm
+    \thinlines
+    \put(-4,0){\line(-1,0){10}}
+    \put(0,4){\line(0,1){10}}
+  \end{picture}}
+\providecommand*{\Ktrimpictr}{%
+  \begin{picture}(0,0)
+    \unitlength 1mm
+    \thinlines
+    \put(4,0){\line(1,0){10}}
+    \put(0,4){\line(0,1){10}}
+  \end{picture}}
+\providecommand*{\Ktrimpicbl}{%
+  \begin{picture}(0,0)
+    \unitlength 1mm
+    \thinlines
+    \put(-4,0){\line(-1,0){10}}
+    \put(0,-4){\line(0,-1){10}}
+  \end{picture}}
+\providecommand*{\Ktrimpicbr}{%
+  \begin{picture}(0,0)
+    \unitlength 1mm
+    \thinlines
+    \put(4,0){\line(1,0){10}}
+    \put(0,-4){\line(0,-1){10}}
+  \end{picture}}
+ 
+\providecommand*{\trimKmarks}{%
+  \let\tmarktl\Ktrimpictl
+  \let\tmarktr\Ktrimpictr
+  \let\tmarkbl\Ktrimpicbl
+  \let\tmarkbr\Ktrimpicbr
+  \let\tmarktm\tmarkKtm
+  \let\tmarkbm\tmarkKbm
+  \let\tmarkml\tmarkKml
+  \let\tmarkmr\tmarkKmr
+}
 
 
 

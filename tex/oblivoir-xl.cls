@@ -1,6 +1,6 @@
 %% File `oblivoir-xl.cls`
 %%
-%% (C) Copyright 2006-2020 Kangsoo Kim <karnes at ktug org>
+%% (C) Copyright 2006-2021 Kangsoo Kim <karnes at ktug org>
 %%
 %% This work may be distributed and/or modified under the
 %% conditions of the LaTeX Project Public License, either version 1.3c
@@ -14,7 +14,7 @@
 %% depends upon Dohyun Kim's xetexko and the author's memhangul-x.
 %%
 \ProvidesClass{oblivoir-xl}
-  [2020/02/05 v0.8.4 article-like class to typeset Korean]
+  [2020/03/03 v0.8.5 article-like class to typeset Korean]
 %\typeout{A variant of oblivoir class for Lua- or XeLaTeX.}
 
 \providecommand\@DisabledOption[1]{%

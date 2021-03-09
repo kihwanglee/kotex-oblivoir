@@ -1,0 +1,223 @@
+%%%
+%%% \chaptertoc for oblivoir
+%%% part of kotex-oblivoir package.
+%%%
+%%% written by Nova de Hi
+%%%
+\ProvidesPackage{obchaptertoc}[2020/09/03, v2.0]
+\RequirePackage{l3keys2e}
+
+\ExplSyntaxOn
+\msg_new:nnn { obchaptertoc } { haltmsg } { class~oblivoir~not~loaded }
+\@ifclassloaded{oblivoir}{}{\msg_error:nn { obchaptertoc } { haltmsg }}
+
+\keys_define:nn { obchaptoc }
+{
+	level	.tl_set:N 	= \opt_level_tl
+}
+
+\tl_set:Nn \opt_level_tl { chapter } % default
+\ProcessKeysOptions { obchaptoc }
+
+\ExplSyntaxOff
+
+\RequirePackage{etoolbox}
+%%%
+%%%%%% hooking oblivoir's chapter command
+%%%\def\@chapter[#1]#2{%
+%%%  \m@mpn@new@chaptrue%
+%%%  \m@mpn@new@schapfalse%
+%%%  \def\f@rbdy{#2}%
+%%%  \ifx\ch@pt@c\m@m@empty % no optional args
+%%%    \def\f@rtoc{#1}%
+%%%    \def\f@rhdr{#1}%
+%%%  \else                  % at least one opt arg
+%%%    \def\f@rtoc{\ch@pt@c}%
+%%%    \nametest{#1}{#2}%
+%%%    \ifsamename          % one opt arg
+%%%      \def\f@rhdr{\ch@pt@c}%
+%%%    \else                % two opt args
+%%%      \def\f@rhdr{#1}%
+%%%    \fi
+%%%  \fi 
+%%%  \m@m@Andfalse
+%%%  \ifnum \c@secnumdepth >\m@ne
+%%%    \if@mainmatter
+%%%      \m@m@Andtrue
+%%%    \fi
+%%%  \fi
+%%%  \ifm@m@And
+%%%   \ifanappendix
+%%%    \refstepcounter{APPchapter}%
+%%%   \else
+%%%    \refstepcounter{chapter}%
+%%%   \fi
+%%%  \fi
+%%%  \chaptermark{\f@rhdr}
+%%%  \ifartopt
+%%%    \@makechapterhead{#2}%
+%%%    \@afterheading
+%%%  \else
+%%%    \insertchapterspace
+%%%    \if@twocolumn
+%%%      \@topnewpage[\@makechapterhead{#2}]%
+%%%    \else
+%%%      \@makechapterhead{#2}%
+%%%    \fi
+%%%    \@afterheading
+%%%  \fi
+%%%  \@nameuse{chapter@f@rtoc@before@write@hook}%
+%%%  \mempreaddchaptertotochook%
+%%%  \ifm@m@And
+%%%    \ifanappendix
+%%%      \addcontentsline{toc}{appendix}{%
+%%%       \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%%%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+%%%    \else
+%%%      \addcontentsline{toc}{chapter}{%
+%%%        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%%%       \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
+%%%    \fi
+%%%  \else
+%%%    \addcontentsline{toc}{chapter}{\f@rtoc}%
+%%%    \ifanappendix
+%%%      \memappchapinfo{}{\f@rtoc}{\f@rhdr}{#2}%
+%%%    \else
+%%%      \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
+%%%    \fi
+%%%  \fi
+%%%  \mempostaddchaptertotochook%
+%%%  \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
+%%%  \ifanappendix
+%%%     \protected@edef\@currentlabel{\thechapter}%
+%%%  \fi
+%%%  \memendofchapterhook%
+%%%}
+
+\newcounter{tocmarker} 
+% start marker
+\ExplSyntaxOn 
+
+\clist_new:N \l_upperlevel_clist
+
+\str_case_e:nnTF { \opt_level_tl }
+{
+	{ book } {  \clist_set:Nn \l_upperlevel_clist { book } }
+	{ chapter } { \clist_set:Nn \l_upperlevel_clist { part, book, chapter } }
+	{ part } { \clist_set:Nn \l_upperlevel_clist { book, part } }
+	{ apppage } {  \clist_set:Nn \l_upperlevel_clist { apppage }  }
+}
+{
+	\cs_set:cn { mempostadd \opt_level_tl totochook: }
+	{
+		\stepcounter{tocmarker}\cftinserthook{toc}{start-\thetocmarker}
+	}
+	\cs_set_eq:cc { mempostadd \opt_level_tl totochook } { mempostadd \opt_level_tl totochook: }
+	
+	\clist_map_inline:Nn \l_upperlevel_clist 
+	{
+    	\cs_set:cn { mempreadd #1 totochook: }
+    	{
+    		\cftinserthook{toc}{end-\thetocmarker}
+    	}
+    	\cs_set_eq:cc { mempreadd #1 totochook } { mempreadd #1 totochook: }
+	}
+}
+{
+    \renewcommand\mempreaddchaptertotochook{\cftinserthook{toc}{end-\thetocmarker}} 
+    \renewcommand\mempreaddparttotochook {\cftinserthook{toc}{end-\thetocmarker}} 
+    \renewcommand\mempreaddbooktotochook {\cftinserthook{toc}{end-\thetocmarker}} 
+    \renewcommand\mempreaddapppagetotochook{\cftinserthook{toc}{end-\thetocmarker}} 
+    
+	\renewcommand\mempostaddchaptertotochook{%
+		\stepcounter{tocmarker}\cftinserthook{toc}{start-\thetocmarker}}
+}
+\ExplSyntaxOff
+
+\let\normalchangetocdepth\changetocdepth
+
+\def\chaptertocfont{\rmfamily}
+\def\chaptertocsecfont{\normalfont\normalsize}
+
+\NewDocumentCommand\@ChapterTOCFormat{}
+{%
+  \setlength{\cftsectionindent}{0pt}
+  \setlength{\cftsubsectionindent}{\cftsectionnumwidth}
+  \setlength{\cftsubsubsectionindent}{\cftsubsectionindent}
+  \addtolength{\cftsubsubsectionindent}{\cftsubsectionnumwidth}
+  \renewcommand\cftsectionfont{\chaptertocsecfont}
+%  \renewcommand\cftsectionpresnum{}
+%  \renewcommand\cftsectionaftersnum{}
+%  \renewcommand\cftsectiondotsep{\cftnodots}
+%  \renewcommand\cftsubsectiondotsep{\cftnodots}
+%  \renewcommand\cftsectionpagefont{\chaptertocsecfont}
+%  \renewcommand\cftsubsectionfont{\chaptertocsecfont}
+%  \renewcommand\cftsubsectionpagefont{\chaptertocsecfont}
+%  \renewcommand\cftsubsubsectionfont{\chaptertocsecfont}
+%  \renewcommand\cftsubsubsectionpagefont{\chaptertocsecfont}
+%  \renewcommand\cftsectionformatpnum[1]{}
+%  \renewcommand\cftsubsectionformatpnum[1]{}
+}
+
+\NewDocumentCommand\ChapterTOCFormat{+m}
+{
+	\apptocmd\@ChapterTOCFormat{#1}{}{}
+}
+
+\newskip\afterchaptertocskip
+\let\afterchaptertocskip\bigskip
+
+\ExplSyntaxOn
+
+\newcounter{obchaptocmaxdepth}\setcounter{obchaptocmaxdepth}{2} % default = subsection
+\NewDocumentCommand \chaptertocmaxlevel { m }
+{
+	\regex_match:nnTF { [0-9] } { #1 }
+	{
+		\setcounter{obchaptocmaxdepth} { #1 }
+	}
+	{
+		\@setclcnt{#1}{obchaptocmaxdepth}
+	}
+}
+
+\NewDocumentCommand \TOCFormatsameas { m m m }
+{
+	\clist_set:Nn \l_tmpa_clist { #3 }
+	\clist_map_inline:Nn \l_tmpa_clist 
+	{
+		\cs_set_eq:cc { cft #1 ##1 } { cft #2 ##1 }
+	}
+}
+
+\ExplSyntaxOff
+
+\newif\ifChapterTOCafterskip
+\ChapterTOCafterskiptrue
+
+\newcommand\chaptertoc{
+  \begingroup
+  \chaptertocfont
+  \let\@orig@markboth\markboth
+  \renewcommand\markboth[2]{}
+  \setcounter{@memmarkcntra}{\value{tocdepth}}
+  \let\changetocdepth\@gobble
+  \normalchangetocdepth{-10}
+  \cftinsertcode{start-\thetocmarker}{\normalchangetocdepth{\theobchaptocmaxdepth}}
+  \cftinsertcode{end-\thetocmarker}{\normalchangetocdepth{-10}}
+  \let\tocheadstart\relax
+  \let\printtoctitle\@gobble
+  \let\aftertoctitle\relax
+  %%% formatting chaptertoc
+  \@ChapterTOCFormat
+  \tableofcontents*
+  \endgroup
+  \setcounter{tocdepth}{\value{@memmarkcntra}}
+  \m@mindentafterchapter
+  \ifChapterTOCafterskip
+	  \par\afterchaptertocskip
+  \fi
+  \@afterheading
+}
+
+\endinput

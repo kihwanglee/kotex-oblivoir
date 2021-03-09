@@ -1,6 +1,6 @@
 %% xob-font.sty
 %%
-%% Copyright (c) 2014-2020 Kangsoo Kim <karnes at ktug org>
+%% Copyright (c) 2014-2021 Kangsoo Kim <karnes at ktug org>
 %% Copyright (c) 2017-2020 Kihwang Lee <leekh at ktug org>
 %%
 %% This work may be distributed and/or modified under the
@@ -15,7 +15,7 @@
 %%  oblivoir hangul/hanja font setting.
 %%  part of oblivoir
 %%
-\ProvidesPackage{xob-font}[2020/03/20 v0.8.1 select hangul/hanja fonts for oblivoir]
+\ProvidesPackage{xob-font}[2021/03/03 v0.9 select hangul/hanja fonts for oblivoir]
 
 %%% obsolete options: retain \if@.. conditions for backward compatibility
 \newif\if@nowin\@nowinfalse
@@ -59,6 +59,8 @@
 
 \if@gremph    \bool_set_false:N \ital_fake_bool    \else \bool_set_true:N  \ital_fake_bool    \fi
 \if@oldhangul \bool_set_true:N  \hangulscript_bool \else \bool_set_false:N \hangulscript_bool \fi
+
+\bool_new:N \opt_mainfontdeclared_bool
 
 \bool_set_false:N \bold_prov_bool
 \bool_set_false:N \in_hanja_mode
@@ -624,8 +626,6 @@
 	
 }
 
-\ExplSyntaxOff
-
 %%% starred version commands are provided for backward compatibility.
 \protected\def\setkormainfont{%
 	\@ifstar{\setkorfontorigstar*{main}}{%
@@ -641,7 +641,7 @@
 %%% \setkomainfont[BASENAME](Regu)(Bold)(Ital)[Feature]%
 %%%				  [HJBASENAME](HJREGU)(HJBOLD)(HJITAL)[HJFeatures]
 %%% no spaces allowed between optional arguments, e.g., [...]*nospace*[...]
-\protected\def\setkomainfont{\setkorfontxob{main}}
+\protected\def\setkomainfont{\bool_set_true:N \opt_mainfontdeclared_bool\setkorfontxob{main}}
 \protected\def\setkosansfont{\setkorfontxob{sans}}
 \protected\def\setkomonofont{\setkorfontxob{mono}}
 
@@ -663,28 +663,40 @@
 %		\setkomonofont(UnTaza.ttf)
 %\fi
 
-\if@nanumfonts
-	\if@nanumxfonts
-		\setkomainfont(NanumMyeongjo)(*ExtraBold)(*)[](NanumGothic)(*Bold)
-	\else
-		\setkomainfont(NanumMyeongjo)(*Bold)(*)[](NanumGothic)(*Bold)
-	\fi
-	\setkosansfont(NanumGothic)(*Bold)(*)
-	\setkomonofont(NanumGothic)
-\fi
-%%% [hcr] adds [Script=Hangul] feature automatically.
-\if@hcrfonts
-	\setkomainfont(HCRBatangLVT)(HCRBatangLVT-Bold)(HCRBatangLVT)
-	\setkosansfont(HCRDotumLVT)(HCRDotumLVT-Bold)(HCRDotumLVT)
-	\setkomonofont(HCRDotumLVT)
-\fi
+\AddToHook{env/document/before}{%
+	\bool_if:NF \opt_mainfontdeclared_bool
+	{
+        \if@nanumfonts
+        	\if@nanumxfonts
+        		\setkomainfont(NanumMyeongjo)(*ExtraBold)(*)[](NanumGothic)(*Bold)
+        	\else
+        		\setkomainfont(NanumMyeongjo)(*Bold)(*)[](NanumGothic)(*Bold)
+        	\fi
+        	\setkosansfont(NanumGothic)(*Bold)(*)
+        	\setkomonofont(NanumGothic)
+        \else
+        %%% [hcr] adds [Script=Hangul] feature automatically.
+        \if@hcrfonts
+        	\setkomainfont(HCRBatangLVT)(HCRBatangLVT-Bold)(HCRBatangLVT)
+        	\setkosansfont(HCRDotumLVT)(HCRDotumLVT-Bold)(HCRDotumLVT)
+        	\setkomonofont(HCRDotumLVT)
+        \else
+        %%% 2020/03/03: Now UnFonts is set to default
+        \RequirePackage{ob-unfontsdefault}
+        \fi
+        \fi
+    }
+}
 %\setkomainfont(UnBatang.ttf)(UnBatangBold.ttf)(UnGraphic.ttf)
 %\fi\fi
+
+\ExplSyntaxOff
 
 \endinput
 
 %%% end of file `xob-font.sty`
 %% CHANGES
+%% v0.9 : unfontsxe introduced
 %% v0.8.1 : minor bug fix
 %% v0.8 : suport fontspec’s FontFace feature.
 %% v0.7 : Use \sys_if_engine_xetex and \sys_if_engine_luatex instead of xetex_if_engine and luatex_if_engine to be compatible with latest l3kernel.

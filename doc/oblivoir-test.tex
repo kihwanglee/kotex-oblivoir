@@ -19,7 +19,8 @@
 %% public domain.
 %%
 
-\documentclass[demo,chapter,openany,amsmath,gremph,lwarp]{oblivoir}
+%\documentclass[demo,chapter,openany,amsmath,gremph,lwarp]{oblivoir}
+\documentclass[demo,chapter,openany,amsmath,gremph]{oblivoir}
 %%% amsmath 옵션은 amsmath, amssymb 패키지를 로드해준다..
 
 %% display overfullrule
@@ -28,6 +29,8 @@
 %% 페이지 레이아웃. fapapersize를 이용한다..
 \usepackage{fapapersize}
 \usefapapersize{220mm,276mm,20mm,80mm,30mm,35mm}
+
+\usepackage{ob-mathleading}
 
 % 폰트 설정
 \ifPDFTeX

@@ -1,3 +1,10 @@
+2021-03-03	Kangsoo Kim	<karnes at ktug org>
+
+	Version 3.0
+	
+	* fixed several bugs.
+	* oblivoir has now obchaptertoc and ob-mathleading sub packages.
+
 2020-03-20	Kangsoo Kim	<karnes at ktug.org>
 
 	Version 2.2.1

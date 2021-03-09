@@ -95,16 +95,16 @@
 
 \begin{document}
 
-\title{초간단 \obclass{} v2.2 사용법}
+\title{초간단 \obclass{} v3.0 사용법}
 
-\date{2020년 2월}
+\date{2021년 3월}
 
 \author{x-ob-liv-oir }
 
 \maketitle
 
 \begin{abstract}
-\obclass{} 클래스 2.0 버전은 그 동안 별도의 브랜치로 개발되어 오던
+\obclass{} 클래스 3.0 버전은 그 동안 별도의 브랜치로 개발되어 오던
 \xobclass와 \obclass를 통합하여 완전히 동일한 클래스가 되었다.
 이 문서는 \obclass{} 즉 \xobclass를
 사용하는 방법을 간략히 기술한다.
@@ -796,6 +796,9 @@ fontspec 설명서와 \xetexko, \luatexko\ 설명서를 참고하라.
 
 \subsection{기정의 폰트 세트}
 
+기정의 글꼴 옵션은 \texttt{[nanum]}과 \texttt{[hcr]}이 있다. 나눔 글꼴과 함초롬 글꼴
+자체는 자신이 스스로 설치하여야 한다.
+
 클래스 옵션으로 \texttt{[nanum]}을 지정하면 본문이 나눔명조와 나눔고딕으로 식자된다.\footnote{%
 \XeTeX 이나 \LuaTeX 에서는 은 바탕을 기본 글꼴로 하고 있다. \hologo{pdfTeX}을 위한
 kotex-utf의 경우는 여전히 nanumtype1이다.}
@@ -809,6 +812,15 @@ kotex-utf의 경우는 여전히 nanumtype1이다.}
 	\cs{setkomainfont} 명령의 인자로 HCR 계열이 지정되면 이 옵션이 자동으로 추가된다.
 	그밖의 폰트에서 옛한글을 처리하게 하려면(예를 들어 Malgun Gothic, UnBatang 등)
 	feature 추가 옵션으로 \texttt{[Script=Hangul]}을 지정할 수 있다.}
+
+문서의 Preamble에 \verb|\setkomainfont| 명령을 쓴 적이 없고 \texttt{[hcr]}이나 \texttt{[nanum]} 클래스 옵션도 부여하지 않는다면 문서는 은 글꼴로 식자한다. oblivoir는
+은 글꼴의 자간과 어간을 조금 조절하는 것을 기본값으로 한다. 만약 은 글꼴에 아무런 
+조작을 가하지 않은 상태로 쓰고 싶다면 \verb|\setkomainfont| 등의 명령으로 은 글꼴을
+지정하라.
+
+은 글꼴을 기본 글꼴로서 다루는 가장 중요한 이유는 이것이 \TeX\,Live에 포함되어 배포되기
+때문에 별도의 폰트 설치를 요구하지 않기 때문이며, 이 글꼴은 한글 \LaTeX 의 발전사와
+깊이 연관되어 있는 중요한 글꼴이기 때문이기도 하다.
 
 %클래스 옵션 \texttt{[unfonts]}는 은 바탕, 은 돋움, 은 타자, 은 그래픽을 이용하여 본문 글꼴을 식자하게 한다.
 %\texttt{[gremph]}일 때 바탕글꼴의 이탤릭이 은 그래픽으로 찍힌다. 또한 이 옵션은 \texttt{[Script=Hangul]}을
@@ -1434,6 +1446,98 @@ oblivoir가 추가적으로 제공하는 페이지 스타일로 \texttt{hangul}�
 \pagestyle{hangul}
 \end{boxedverbatim}
 
+\subsection{crop mark: K style}
+
+출판 현장에서 oblivoir를 이용하여 단행본을 제작하려 할 적에 \textsf{memoir}의
+기본 crop mark가 너무 길어서 불평하는 경우가 있었다. 우리나라의 출판 현장에
+알맞도록 조금 짧은 crop mark를 다음 명령으로 그릴 수 있게 하였다.
+\begin{boxedverbatim}
+\trimKmark
+\end{boxedverbatim}
+
+\subsection{chaptertoc}
+
+\marginpar{v3.0}
+chaptertoc란 장 표제면에 그 chapter에 해당하는 절(section) 이하의 목록을
+만드는 것을 말한다. 이 목적을 위한 별도의 패키지가 있고 oblivoir에서 해당 패키지를
+활용하는 것도 가능하다. 한편 oblivoir v3.0은 \textsf{obchaptertoc}라는 부수
+패키지를 제공하는데 이것은 \textsf{memoir}의 기능만을 이용하고 다른 패키지에
+의존하지 않으면서 chaptertoc를 제작하게 한 것이다.
+이 기능은 오직 \verb|\chapter|보다 높은 수준의 문서구분명령에서만 동작하며
+\verb|\section| 이하 수준의 명령에 대해서는 고려하지 않았다. 따라서 \verb|[chapter]| 옵션이
+주어진 경우에 유효하다고 하겠다.
+
+\begin{boxedverbatim}
+\usepackage{obchaptertoc}
+%%
+\chaptertoc
+\end{boxedverbatim}
+
+이 패키지는 원래 독자적으로 개발되었던 것으로 안내 문서를 따로 가지고 있다(한국어).
+문서를 읽으려면
+\begin{verbatim}
+# texdoc obchaptertoc
+\end{verbatim}
+
+\subsection{mathleading}
+
+oblivoir는 한국어 문서에 대하여 기본 행간을 넓혀서 조판하기 때문에 여러 줄 수식의 경우에도
+그 영향을 받아서 행간격이 늘어지는 경우가 있었다.
+\textsf{amsmath}의 여러 줄 수식에 대하여 이 문제를 조절할 수 있게 하는 \textsf{ob-mathleading}
+패키지를 포함하였다. 따로 문서가 마련되어 있으므로 이를 참조하라.
+
+\begin{boxedverbatim}
+\usepackage{ob-mathleading}
+\end{boxedverbatim}
+
+문서를 읽으려면,
+\begin{verbatim}
+# texdoc ob-mathleading
+\end{verbatim}
+
+\subsection{\cs{ReleaseMacro} 명령}
+
+여러 \LaTeX\ 패키지를 로드하여 쓰다 보면 어떤 명령이 이미 정의되었다는 에러를
+만날 때가 있다. 이럴 때는 해당 패키지를 로딩하기 전에
+\begin{boxedverbatim}
+\ReleaseMacro{\XeTeX,\XeLaTeX}
+\end{boxedverbatim}
+과 같이 선언하여 이미 정의된 매크로를 무력화하는 시도를 해볼 수 있다.
+이 명령은 preamble에서만 쓰게 되어 있다.
+
+
+\subsection{oblivoirlist}
+
+나열 환경의 아이템 간 간격을 제어하기 위하여 \verb|\oblivoirlist|와 
+\verb|\oblivoirlists| 명령을 마련하였다. \verb|\oblivoirlists|는
+해당 선언 이후 모든 나열환경을 \verb|\oblivoirlist| 간격으로 만든다.
+
+\begin{itemize}\oblivoirlist
+\item 배
+\item 사과
+\item 복숭아
+\end{itemize}
+
+다음 보기와 비교하여 보아라.
+
+\begin{itemize}
+\item 배
+\item 사과
+\item 복숭아
+\end{itemize}
+
+\textsf{memoir}의 \verb|\firmlist|와 \verb|\tightlist|는 여전히 동작한다.
+
+\subsection{sidefootnote와 footnotesinmargin}
+
+\footnotesinmargin
+oblivoir 2.0까지 \verb|\footnotesinmargin|이 동작하지 않던 문제를 고쳤다.\footnote{이 각주는 마진에 놓인다.} 
+
+\verb|\sidefootnote|에서 발생하던 문제점도 해결하였다.\sidefootnote{이 각주는 사이드 풋노트이다.}
+
+\footnotesatfoot
+\textsf{memoir} 설명서에 설명된 것과 동일하게 동작한다.\footnote{상세한 것은 memoir manual을 볼 것.}
+
 \section{HTML 제작}
 
 \textsf{lwarp}를 이용하여 HTML을 제작하려면 문서에 \textsf{lwarp} 
@@ -1619,6 +1723,9 @@ Lua\TeX 과 \XeTeX 이라는 유니코드 텍 엔진의 등장은, 이러한 모
 
 
 \section{변경 이력}
+
+2021년의 3.0 버전은 상당히 많은 버그와 의도와 다른 동작을 수정하고 새로운 
+기능을 추가하였다.
 
 2020년의 2.2 버전은 그 동안 알려진 몇 가지 버그를 수정하고 약간의 기능을
 추가하는 데 그쳤다.
