@@ -241,111 +241,36 @@
 %% \chapter[toc][hdr]{title}
 %% \chapter[toc]{hdr/title}
 %% \chapter{toc/hdr/title}
-%%%%\def\@chapter[#1]#2{%
-%%%%  \m@mpn@new@chaptrue%
-%%%%  \m@mpn@new@schapfalse%
-%%%%  \def\f@rbdy{#2}%
-%%%%%  \ifx\ch@pt@c\@empty % no optional args
-%%%%%    \def\f@rtoc{#2}%
-%%%%%    \def\f@rhdr{#2}%
-%%%%%    \PrerenderUnicode{#2}%
-%%%%%  \else                  % at least one opt arg
-%%%%%    \let\f@rtoc\ch@pt@c
-%%%%%    \ifx\@empty#1\@empty
-%%%%%      \let\f@rhdr\ch@pt@c
-%%%%%      \PrerenderUnicode{#1#2}%
-%%%%%    \else
-%%%%%      \def\f@rhdr{#1}%
-%%%%%      \PrerenderUnicode{#1}%
-%%%%%    \fi
-%%%%%  \fi
-%%%%  \ifx\ch@pt@c\m@m@empty % no optional args
-%%%%    \def\f@rtoc{#1}%
-%%%%    \def\f@rhdr{#1}%
-%%%%%    \PrerenderUnicode{#1}%
-%%%%  \else                  % at least one opt arg
-%%%%    \def\f@rtoc{\ch@pt@c}%
-%%%%    \nametest{#1}{#2}%
-%%%%    \ifsamename          % one opt arg
-%%%%      \def\f@rhdr{\ch@pt@c}%
-%%%%%      \PrerenderUnicode{#1#2}%
-%%%%    \else                % two opt args
-%%%%      \def\f@rhdr{#1}%
-%%%%%      \PrerenderUnicode{#1}%
-%%%%    \fi
-%%%%  \fi 
-%%%%  \m@m@Andfalse
-%%%%  \ifnum \c@secnumdepth >\m@ne
-%%%%    \if@mainmatter
-%%%%      \m@m@Andtrue
-%%%%    \fi
-%%%%  \fi
-%%%%  \ifm@m@And
-%%%%   \ifanappendix
-%%%%    \refstepcounter{APPchapter}%
-%%%%   \else
-%%%%    \refstepcounter{chapter}%
-%%%%   \fi
-%%%%  \fi
-%%%%  \chaptermark{\f@rhdr}
-%%%%  \ifartopt
-%%%%    \@makechapterhead{#2}%
-%%%%    \@afterheading
-%%%%  \else
-%%%%    \insertchapterspace
-%%%%    \if@twocolumn
-%%%%      \@topnewpage[\@makechapterhead{#2}]%
-%%%%    \else
-%%%%      \@makechapterhead{#2}%
-%%%%    \fi
-%%%%    \@afterheading
-%%%%  \fi
-%%%%  \ifm@m@And
-%%%%    \ifanappendix
-%%%%      \addcontentsline{toc}{appendix}{%
-%%%%%       \protect\chapternumberline{\thechapter}\f@rtoc}%
-%%%%       \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
-%%%%%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
-%%%%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
-%%%%    \else
-%%%%      \addcontentsline{toc}{chapter}{%
-%%%%%        \protect\chapternumberline{\thechapter}\f@rtoc}%
-%%%%        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
-%%%%%      \memchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
-%%%%       \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
-%%%%    \fi
-%%%%  \else
-%%%%    \addcontentsline{toc}{chapter}{\f@rtoc}%
-%%%%    \ifanappendix
-%%%%      \memappchapinfo{}{\f@rtoc}{\f@rhdr}{#2}%
-%%%%    \else
-%%%%      \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
-%%%%    \fi
-%%%%  \fi
-%%%%  \mempostaddchaptertotochook%
-%%%%  \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
-%%%%%%% for chapter
-%%%%  \ifanappendix
-%%%%     \protected@edef\@currentlabel{\thechapter}%
-%%%%  \fi
-%%%%  \memendofchapterhook%
-%%%%}
-
 \def\@chapter[#1]#2{%
   \m@mpn@new@chaptrue%
   \m@mpn@new@schapfalse%
   \def\f@rbdy{#2}%
-  \ifx\ch@pt@c\@empty % no optional args
-    \def\f@rtoc{#2}%
-    \def\f@rhdr{#2}%
+%  \ifx\ch@pt@c\@empty % no optional args
+%    \def\f@rtoc{#2}%
+%    \def\f@rhdr{#2}%
+%    \PrerenderUnicode{#2}%
+%  \else                  % at least one opt arg
+%    \let\f@rtoc\ch@pt@c
+%    \ifx\@empty#1\@empty
+%      \let\f@rhdr\ch@pt@c
+%      \PrerenderUnicode{#1#2}%
+%    \else
+%      \def\f@rhdr{#1}%
+%      \PrerenderUnicode{#1}%
+%    \fi
+%  \fi
+  \ifx\ch@pt@c\m@m@empty % no optional args
+    \def\f@rtoc{#1}%
+    \def\f@rhdr{#1}%
   \else                  % at least one opt arg
-    \let\f@rtoc\ch@pt@c
-    \ifx\@empty#1\@empty
-      \let\f@rhdr\ch@pt@c
-    \else
+    \def\f@rtoc{\ch@pt@c}%
+    \nametest{#1}{#2}%
+    \ifsamename          % one opt arg
+      \def\f@rhdr{\ch@pt@c}%
+    \else                % two opt args
       \def\f@rhdr{#1}%
     \fi
-  \fi
+  \fi 
   \m@m@Andfalse
   \ifnum \c@secnumdepth >\m@ne
     \if@mainmatter
@@ -372,16 +297,18 @@
     \fi
     \@afterheading
   \fi
-  \@nameuse{chapter@f@rtoc@before@write@hook}%
-  \mempreaddchaptertotochook%
   \ifm@m@And
     \ifanappendix
       \addcontentsline{toc}{appendix}{%
+%       \protect\chapternumberline{\thechapter}\f@rtoc}%
        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
        \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
     \else
       \addcontentsline{toc}{chapter}{%
+%        \protect\chapternumberline{\thechapter}\f@rtoc}%
         \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%      \memchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
        \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
     \fi
   \else
@@ -394,11 +321,81 @@
   \fi
   \mempostaddchaptertotochook%
   \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
+%%% for chapter
   \ifanappendix
      \protected@edef\@currentlabel{\thechapter}%
   \fi
   \memendofchapterhook%
 }
+
+%%%\def\@chapter[#1]#2{%
+%%%  \m@mpn@new@chaptrue%
+%%%  \m@mpn@new@schapfalse%
+%%%  \def\f@rbdy{#2}%
+%%%  \ifx\ch@pt@c\@empty % no optional args
+%%%    \def\f@rtoc{#2}%
+%%%    \def\f@rhdr{#2}%
+%%%  \else                  % at least one opt arg
+%%%    \let\f@rtoc\ch@pt@c
+%%%    \ifx\@empty#1\@empty
+%%%      \let\f@rhdr\ch@pt@c
+%%%    \else
+%%%      \def\f@rhdr{#1}%
+%%%    \fi
+%%%  \fi
+%%%  \m@m@Andfalse
+%%%  \ifnum \c@secnumdepth >\m@ne
+%%%    \if@mainmatter
+%%%      \m@m@Andtrue
+%%%    \fi
+%%%  \fi
+%%%  \ifm@m@And
+%%%   \ifanappendix
+%%%    \refstepcounter{APPchapter}%
+%%%   \else
+%%%    \refstepcounter{chapter}%
+%%%   \fi
+%%%  \fi
+%%%  \chaptermark{\f@rhdr}
+%%%  \ifartopt
+%%%    \@makechapterhead{#2}%
+%%%    \@afterheading
+%%%  \else
+%%%    \insertchapterspace
+%%%    \if@twocolumn
+%%%      \@topnewpage[\@makechapterhead{#2}]%
+%%%    \else
+%%%      \@makechapterhead{#2}%
+%%%    \fi
+%%%    \@afterheading
+%%%  \fi
+%%%  \@nameuse{chapter@f@rtoc@before@write@hook}%
+%%%  \mempreaddchaptertotochook%
+%%%  \ifm@m@And
+%%%    \ifanappendix
+%%%      \addcontentsline{toc}{appendix}{%
+%%%       \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%%%       \memappchapinfo{\thechapter}{\f@rtoc}{\f@rhdr}{#2}%
+%%%    \else
+%%%      \addcontentsline{toc}{chapter}{%
+%%%        \protect\chapternumberline{\hchaptertitlehead}\f@rtoc}%
+%%%       \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
+%%%    \fi
+%%%  \else
+%%%    \addcontentsline{toc}{chapter}{\f@rtoc}%
+%%%    \ifanappendix
+%%%      \memappchapinfo{}{\f@rtoc}{\f@rhdr}{#2}%
+%%%    \else
+%%%      \memchapinfo{\hchaptertitlehead}{\f@rtoc}{\f@rhdr}{#2}%
+%%%    \fi
+%%%  \fi
+%%%  \mempostaddchaptertotochook%
+%%%  \ifheadnameref\M@gettitle{\f@rhdr}\else\M@gettitle{\f@rtoc}\fi
+%%%  \ifanappendix
+%%%     \protected@edef\@currentlabel{\thechapter}%
+%%%  \fi
+%%%  \memendofchapterhook%
+%%%}
 
 %\def\@makechapterhead#1{%
 %  \chapterheadstart%  \vspace*{50\p@}%
