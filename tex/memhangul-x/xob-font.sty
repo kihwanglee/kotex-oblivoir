@@ -15,7 +15,7 @@
 %%  oblivoir hangul/hanja font setting.
 %%  part of oblivoir
 %%
-\ProvidesPackage{xob-font}[2021/03/03 v0.9 select hangul/hanja fonts for oblivoir]
+\ProvidesPackage{xob-font}[2021/03/15 v0.9.1 select hangul/hanja fonts for oblivoir]
 
 %%% obsolete options: retain \if@.. conditions for backward compatibility
 \newif\if@nowin\@nowinfalse
@@ -44,6 +44,7 @@
 \relax
 
 \RequirePackage{xparse}
+\RequirePackage{etoolbox}
 \@ifclassloaded{oblivoir}{}{%
 	\RequirePackage{fontspec}
 	\RequirePackage{kotex}
@@ -662,6 +663,9 @@
 %		\setmonoscale{1.05}
 %		\setkomonofont(UnTaza.ttf)
 %\fi
+
+%%% \setmainhangulfont
+\pretocmd{\setmainhangulfont}{\bool_set_true:N \opt_mainfontdeclared_bool}{}{}
 
 \AddToHook{env/document/before}{%
 	\bool_if:NF \opt_mainfontdeclared_bool

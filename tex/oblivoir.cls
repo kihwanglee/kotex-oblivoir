@@ -10,7 +10,7 @@
 %% and version 1.3c or later is part of all distributions of LaTeX
 %% version 2006/05/20 or later.
 %%
-\ProvidesClass{oblivoir}[2021/03/03 v3.0]
+\ProvidesClass{oblivoir}[2021/03/15 v3.0.1]
 
 \RequirePackage{xkeyval}
 \RequirePackage{xparse}

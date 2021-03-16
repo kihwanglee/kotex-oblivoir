@@ -15,6 +15,7 @@
 	footnote,
 	nobookmarks,
 	microtype,
+	figtabcapt,
 %	lwarp
 ]{oblivoir}
 
@@ -95,7 +96,7 @@
 
 \begin{document}
 
-\title{초간단 \obclass{} v3.0 사용법}
+\title{초간단 \obclass{} v3.0.1 사용법}
 
 \date{2021년 3월}
 
@@ -813,7 +814,7 @@ kotex-utf의 경우는 여전히 nanumtype1이다.}
 	그밖의 폰트에서 옛한글을 처리하게 하려면(예를 들어 Malgun Gothic, UnBatang 등)
 	feature 추가 옵션으로 \texttt{[Script=Hangul]}을 지정할 수 있다.}
 
-문서의 Preamble에 \verb|\setkomainfont| 명령을 쓴 적이 없고 \texttt{[hcr]}이나 \texttt{[nanum]} 클래스 옵션도 부여하지 않는다면 문서는 은 글꼴로 식자한다. oblivoir는
+문서의 Preamble에 \verb|\setkomainfont| 또는 \verb|\setmainhangulfont| 명령을 쓴 적이 없고 \texttt{[hcr]}이나 \texttt{[nanum]} 클래스 옵션도 부여하지 않는다면 문서는 은 글꼴로 식자한다. oblivoir는
 은 글꼴의 자간과 어간을 조금 조절하는 것을 기본값으로 한다. 만약 은 글꼴에 아무런 
 조작을 가하지 않은 상태로 쓰고 싶다면 \verb|\setkomainfont| 등의 명령으로 은 글꼴을
 지정하라.
@@ -844,8 +845,9 @@ kotex-utf의 경우는 여전히 nanumtype1이다.}
 
 \subsection{폰트 설정 명령 (\protect\cs{setkor...} 명령군)}
 
-이전 버전의 oblivoir에서는 다음 세 명령을 제공하였다.
-이 명령군도 여전히 유지되고 있는데 그것은 이전에 작성된 문서와의 호환성을 위해서이다.
+이전 버전의 oblivoir에서는 다음 세 명령을 제공하였다. 3.0버전부터 이 명령들은
+사용하지 않는 것으로 본다. 다만 이전에 작성된 문서와의 호환성을 위해서 에러가 발생하지는
+않게 해두었다.
 이 명령군에 대해서는 더 설명하지 않는다.
 
 \begin{boxedverbatim}
@@ -1495,14 +1497,15 @@ oblivoir는 한국어 문서에 대하여 기본 행간을 넓혀서 조판하�
 # texdoc ob-mathleading
 \end{verbatim}
 
-\subsection{\cs{ReleaseMacro} 명령}
+\subsection{\cs{ReleaseMacros} 명령}
 
 여러 \LaTeX\ 패키지를 로드하여 쓰다 보면 어떤 명령이 이미 정의되었다는 에러를
 만날 때가 있다. 이럴 때는 해당 패키지를 로딩하기 전에
 \begin{boxedverbatim}
-\ReleaseMacro{\XeTeX,\XeLaTeX}
+\ReleaseMacros{\XeTeX,\XeLaTeX}
 \end{boxedverbatim}
 과 같이 선언하여 이미 정의된 매크로를 무력화하는 시도를 해볼 수 있다.
+둘 이상의 명령을 쉼표로 구분하여 지정할 수 있다.
 이 명령은 preamble에서만 쓰게 되어 있다.
 
 
@@ -1537,6 +1540,41 @@ oblivoir 2.0까지 \verb|\footnotesinmargin|이 동작하지 않던 문제를 �
 
 \footnotesatfoot
 \textsf{memoir} 설명서에 설명된 것과 동일하게 동작한다.\footnote{상세한 것은 memoir manual을 볼 것.}
+
+\subsection{[figtabcapt] 그림과 표의 캡션}
+
+클래스 옵션으로 \texttt{[figtabcapt]}를 지시하면 기본적으로 다음과 같은 모양으로 캡션이 바뀐다.
+
+\begin{boxedverbatim}
+\caption{그림과 표의 캡션}
+\end{boxedverbatim}
+\begin{minipage}{\linewidth}
+\centering
+<그림 1> \quad 그림과 표의 캡션
+\end{minipage}
+
+\medskip
+
+``그림 1'' 부분을 둘러싸는 delimiter를 다음 명령으로 바꿀 수 있다. 이 가운데
+\verb|\obCaptionFont|는 캡션 텍스트에 영향을 미치는 명령이 아니고 라벨의 delimiter를
+식자하는 데만 사용되는 폰트 명령이다.
+\begin{boxedverbatim}
+\renewcommand*\obCaptionnameOpen{[}
+\renewcommand*\obCaptionnameClose{]}
+\obCaptionFont{\sffamily\bfseries}
+\end{boxedverbatim}
+\renewcommand*\obCaptionnameOpen{[}
+\renewcommand*\obCaptionnameClose{]}
+\obCaptionFont{\sffamily}
+
+\begin{figure}[h]
+\caption{그림과 표의 캡션}
+\end{figure}
+
+
+이를 제외한 다른 부분, 이를테면 label과 caption text의 폰트를 바꾸는 것 등은 memoir의
+해당 명령을 이용한다. 즉, \verb|\captionnamefont|, \verb|\captiontitlefont| 등을 이용하라는 것이다.
+
 
 \section{HTML 제작}
 
